@@ -136,7 +136,7 @@ def get_steps(filename):
     return steps_left, steps_right
 
 # phases
-def get_seg(): 
+def get_seg(filename): 
     """Gets the gait events segmentation from the metadata JSON file. 
 
     Arguments:
