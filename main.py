@@ -77,7 +77,7 @@ def print_trial_info(metadata_dict):
         print(info_msg.format(**display_dict), file=f)
         #for name, value in metadata_dict.items():
          #   f.write(f"{name} = {value}\n")
-        
+
 
 def load_XSens(filename):
     
@@ -273,6 +273,10 @@ if __name__ == "__main__":
                         help='Time series for the right foot sensor.')
     parser.add_argument('-i2', metavar='data_lf',
                         help='Time series for the right foot sensor.')
+    parser.add_argument('-i3', metavar='steps_lim',
+                        help='Time series for the right foot sensor.')
+    parser.add_argument('-i4', metavar='seg_lim',
+                        help='Time series for the right foot sensor.')
     parser.add_argument('-freq', metavar='freq',
                         help='Acquistion frequency.')
     parser.add_argument('-age', metavar='age', type=int,
@@ -287,9 +291,10 @@ if __name__ == "__main__":
     freq = args.freq
 
     # load data (only lower back in this demo)
-    raw_lb = args.i0
+    data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0))
+    steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3))
+    seg_lim = import_data.get_seg(os.path.join(data_WD, args.i4))
     print("ok charge")
-    data_lb = import_XSens(os.path.join(data_WD, raw_lb))
     sys.exit(0)
     
 
