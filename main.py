@@ -211,14 +211,8 @@ if __name__ == "__main__":
         description='Return a semiogram for a given trial.')
     parser.add_argument('-i0', metavar='data_lb',
                         help='Time series for the lower back sensor.')
-    parser.add_argument('-i1', metavar='data_rf',
-                        help='Time series for the right foot sensor.')
-    parser.add_argument('-i2', metavar='data_lf',
-                        help='Time series for the right foot sensor.')
-    parser.add_argument('-i3', metavar='steps_lim',
-                        help='Time series for the right foot sensor.')
-    parser.add_argument('-i4', metavar='seg_lim',
-                        help='Time series for the right foot sensor.')
+    parser.add_argument('-i1', metavar='gait_events',
+                        help='Metadata with gait events.')
     parser.add_argument('-freq', metavar='freq',
                         help='Acquistion frequency.')
     parser.add_argument('-age', metavar='age', type=int,
@@ -234,8 +228,8 @@ if __name__ == "__main__":
 
     # load data (only lower back in this demo)
     data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0))
-    steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3))
-    seg_lim = import_data.get_seg(os.path.join(data_WD, args.i4))
+    steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1))
+    seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
     print("ok charge")
     sys.exit(0)
     
