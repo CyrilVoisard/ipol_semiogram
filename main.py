@@ -223,8 +223,8 @@ if __name__ == "__main__":
                         help='Maximum for Z-score.')
     args = parser.parse_args()
 
-    # DEBUG: import
     freq = args.freq
+    age = args.age
 
     # load data (only lower back in this demo)
     data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0))
