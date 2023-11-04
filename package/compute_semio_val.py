@@ -27,7 +27,7 @@ def compute_semio_val(age, steps_lim, seg_lim, data_tronc, perso_feat, freq=100)
     age1 = ages[ref][0]
     age2 = ages[ref][1]
     r = 'ScoreT7S-' + str(age1) + '-' + str(age2)
-    path = osp.join('modeles', r) + '.json'
+    path = osp.join('models', r) + '.json'
     with open(path) as json_data:
         d = np.array(json.load(json_data))
         # print(d)
