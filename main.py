@@ -279,5 +279,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # DEBUG: print metadata
-    print(a)    
+    print("ok charge", age)    
     sys.exit(0)
