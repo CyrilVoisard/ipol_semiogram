@@ -224,8 +224,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     freq = args.freq
-    age = args.age
-
+    #age = args.age
+    age = None 
+    
     # load data (only lower back in this demo)
     data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0))
     seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
