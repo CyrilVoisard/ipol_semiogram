@@ -6,7 +6,7 @@ from scipy.integrate import cumtrapz
 from scipy import stats
 
 # os.chdir('/Users/cyril/Library/Mobile Documents/com~apple~CloudDocs/Borelli/4 - Classes et fonctions')
-from semio_package import features as ft
+from package import features as ft
 
 
 def DFT(x, fs=100):
