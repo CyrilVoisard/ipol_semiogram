@@ -133,6 +133,24 @@ def get_steps(filename):
         steps_dict = json.load(steps_file)
     steps_left = steps_dict["LeftFootEvents"]
     steps_right = steps_dict["RightFootEvents"]
+
+    foot = []
+    to = []
+    hs = []
+
+    for i in range(len(steps_right)):
+        foot.append(1)
+        to.append(steps_left[i, 0])
+        hs.append(steps_left[i, 1])
+
+    for i in range(len(steps_left)):
+        foot.append(0)
+        to.append(steps_left[i, 0])
+        hs.append(steps_left[i, 1])
+    
+    convert_dict = {'Foot': int, 'HS': int, 'FF': int, 'XX': int, 'HO': int, 'TO': int, 'HS_2': int,
+                    'Score': str, 'N': str, 'Phase': str}
+    
     return steps_left, steps_right
 
 # phases
@@ -153,3 +171,14 @@ def get_seg(filename):
     start = min(np.min(seg_dict["LeftFootEvents"]), np.min(seg_dict["RightFootEvents"]))
     end = max(np.max(seg_dict["LeftFootEvents"]), np.max(seg_dict["RightFootEvents"]))
     return pd.DataFrame([start, start_u, end_u, end])
+
+def inside(to, hs, seg_lim):
+    seg_lim = pd.DataFrame(seg_lim)
+    if (hs <= seg_lim.iloc[1, 0]) & (to <= seg_lim.iloc[1, 0]):
+            in_ = True
+        else:
+            if (hs >= seg_lim.iloc[2, 0]) & (to >= seg_lim.iloc[2, 0]):
+                in_ = True
+            else:
+                in_ = False
+    return in_
