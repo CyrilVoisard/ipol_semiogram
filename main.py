@@ -287,9 +287,11 @@ if __name__ == "__main__":
     freq = args.freq
 
     # load data (only lower back in this demo)
-    data_lb = import_XSens(args.i0)
+    raw_lb = args.i0
     print("ok charge", freq)    
     sys.exit(0)
+    data_lb = import_XSens(args.i0)
+    
 
     # compute semio values (dictionnaries)
     criteria, parameters = compute_semio.compute_semio_val(age, steps_lim, seg_lim, data_lb, freq)
