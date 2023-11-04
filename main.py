@@ -10,7 +10,7 @@ from scipy.signal import butter, filtfilt
 from scipy import interpolate
 import sys
 
-from package import import_data, compute_semio
+from package import import_data, compute_semio_val
 
 # if you need to access a file next to the source code, use the variable ROOT
 ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -231,9 +231,8 @@ if __name__ == "__main__":
     seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
     steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
     
-
     # compute semio values (dictionnaries)
-    criteria, parameters = compute_semio.compute_semio_val(age, steps_lim, seg_lim, data_lb, freq)
+    criteria_names, criteria, parameters = compute_semio_val.compute_semio_val(age, steps_lim, seg_lim, data_lb, freq)
     print("ok charge")
     sys.exit(0)
 
