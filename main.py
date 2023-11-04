@@ -288,7 +288,7 @@ if __name__ == "__main__":
 
     # load data (only lower back in this demo)
     raw_lb = args.i0
-    print("ok charge", raw_lb)    
+    print("ok charge")    
     sys.exit(0)
     data_lb = import_XSens(args.i0)
     
