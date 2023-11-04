@@ -8,8 +8,20 @@ from scipy import interpolate
 import sys
 
 
-def load_XSens(filename):
+# XSens data 
 
+def load_XSens(filename):
+    """Load the data from a file.
+
+    Arguments:
+        filename {str} -- File path
+
+    Returns
+    -------
+    Pandas dataframe
+        signal
+    """
+    
     signal = pd.read_csv(filename, delimiter="\t", skiprows=1, header=0)
     t = signal["PacketCounter"]
     t_0 = t[0]
@@ -32,35 +44,84 @@ def load_XSens(filename):
     return signal
 
 
-def import_XSens(path, start=0, end=200, ordre=8, fc=14):
-    data = load_XSens(path)
+def import_XSens(path, start=0, end=200, order=8, fc=14):
+    """Import and pre-process the data from a file.
 
+    Arguments:
+        filename {str} -- file path
+        start {int} -- start of the calibration period
+        end {int} -- end of the calibration period
+        order {int} -- order of the Butterworth low-pass filter
+        fc {int} -- cut-off frequency of the Butterworth low-pass filter
+
+    Returns
+    -------
+    Pandas dataframe
+        data
+    """
+    
+    data = load_XSens(path)
+    
     data["FreeAcc_X"] = data["Acc_X"] - np.mean(data["Acc_X"][start:end])
     data["FreeAcc_Y"] = data["Acc_Y"] - np.mean(data["Acc_Y"][start:end])
     data["FreeAcc_Z"] = data["Acc_Z"] - np.mean(data["Acc_Z"][start:end])
 
-    data = filtre_sig(data, "Acc", ordre, fc)
-    data = filtre_sig(data, "FreeAcc", ordre, fc)
-    data = filtre_sig(data, "Gyr", ordre, fc)
+    data = filter_sig(data, "Acc", order, fc)
+    data = filter_sig(data, "FreeAcc", order, fc)
+    data = filter_sig(data, "Gyr", order, fc)
 
     return data
 
 
-def filtre_sig(data, type_sig, ordre, fc):
-    data[type_sig + "_X"] = filtre_passe_bas(data[type_sig + "_X"], ordre, fc)
-    data[type_sig + "_Y"] = filtre_passe_bas(data[type_sig + "_Y"], ordre, fc)
-    data[type_sig + "_Z"] = filtre_passe_bas(data[type_sig + "_Z"], ordre, fc)
+def filter_sig(data, type_sig, order, fc):
+    """Application of Butterworth low-pass filter to a Dataframe
+
+    Arguments:
+        data {dataframe} -- pandas dataframe
+        type_sig {str} -- "Acc", "Gyr" or "Mag"
+        order {int} -- order of the Butterworth low-pass filter
+        fc {int} -- cut-off frequency of the Butterworth low-pass filter
+
+    Returns
+    -------
+    Pandas dataframe
+        data
+    """
+    data[type_sig + "_X"] = low_pass_filter(data[type_sig + "_X"], order, fc)
+    data[type_sig + "_Y"] = low_pass_filter(data[type_sig + "_Y"], order, fc)
+    data[type_sig + "_Z"] = low_pass_filter(data[type_sig + "_Z"], order, fc)
 
     return data
 
 
-def filtre_passe_bas(sig, ordre=8, fc=14, fe=100):
-    # Fréquence d'échantillonnage fe en Hz
-    # Fréquence de nyquist
+def low_pass_filter(sig, order=8, fc=14, fe=100):
+    """Definition of a Butterworth low-pass filter
+
+    Arguments:
+        sig {dataframe} -- pandas dataframe
+        order {int} -- order of the Butterworth low-pass filter
+        fc {int} -- cut-off frequency of the Butterworth low-pass filter
+        fe {int} -- acquisition frequency for the data
+    Returns
+    -------
+    ndarray
+        filter
+    """
+    
     f_nyq = fe / 2.  # Hz
 
-    # Préparation du filtre de Butterworth en passe-bas
-    (b, a) = butter(N=ordre, Wn=(fc / f_nyq), btype='low', analog=False)
+    # definition of the Butterworth low-pass filter
+    (b, a) = butter(N=order, Wn=(fc / f_nyq), btype='low', analog=False)
 
-    # Application du filtre
+    # application
     return filtfilt(b, a, sig)
+
+
+# steps
+
+def get_steps(): 
+    return Null
+
+# phases
+def get_seg(): 
+    return Null
