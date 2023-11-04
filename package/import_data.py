@@ -118,7 +118,7 @@ def low_pass_filter(sig, order=8, fc=14, fe=100):
 
 
 # steps
-def get_steps(filename): 
+def get_steps(filename, seg_lim): 
     """Gets the gait events segmentation from the metadata JSON file. 
 
     Arguments:
@@ -139,19 +139,22 @@ def get_steps(filename):
     hs = []
 
     for i in range(len(steps_right)):
-        foot.append(1)
-        to.append(steps_left[i, 0])
-        hs.append(steps_left[i, 1])
+        if inside(steps_right[i, 0], steps_right[i, 1], seg_lim):
+            foot.append(1)
+            to.append(steps_right[i, 0])
+            hs.append(steps_right[i, 1])
 
     for i in range(len(steps_left)):
-        foot.append(0)
-        to.append(steps_left[i, 0])
-        hs.append(steps_left[i, 1])
+        if inside(steps_left[i, 0], steps_left[i, 1], seg_lim):
+            foot.append(0)
+            to.append(steps_left[i, 0])
+            hs.append(steps_left[i, 1])
     
     convert_dict = {'Foot': int, 'HS': int, 'FF': int, 'XX': int, 'HO': int, 'TO': int, 'HS_2': int,
                     'Score': str, 'N': str, 'Phase': str}
     
     return steps_left, steps_right
+    
 
 # phases
 def get_seg(filename): 
@@ -171,6 +174,7 @@ def get_seg(filename):
     start = min(np.min(seg_dict["LeftFootEvents"]), np.min(seg_dict["RightFootEvents"]))
     end = max(np.max(seg_dict["LeftFootEvents"]), np.max(seg_dict["RightFootEvents"]))
     return pd.DataFrame([start, start_u, end_u, end])
+    
 
 def inside(to, hs, seg_lim):
     """Renseigne sur si le pas considéré est valide, c'est à dire qu'il n'est pas inclus dans le demi-tour. 
