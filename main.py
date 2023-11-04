@@ -279,6 +279,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # DEBUG: print metadata
-    freq = args.freq
-    print("ok charge", args.a)    
+    freq = args.f
+    print("ok charge", args.f)    
     sys.exit(0)
