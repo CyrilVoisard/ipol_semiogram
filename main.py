@@ -268,17 +268,17 @@ if __name__ == "__main__":
                         help='Time series for the right foot sensor.')
     parser.add_argument('-i2', metavar='data_lf',
                         help='Time series for the right foot sensor.')
-    parser.add_argument('-f', metavar='freq',
+    parser.add_argument('-freq', metavar='freq',
                         help='Acquistion frequency.')
-    parser.add_argument('-a', metavar='age', type=int,
+    parser.add_argument('-age', metavar='age', type=int,
                         help='Age of the subject.')
-    parser.add_argument('-mi', metavar='min_z', type=int,
+    parser.add_argument('-min_z', metavar='min_z', type=int,
                         help='Minimum for Z-score.')
-    parser.add_argument('-ma', metavar='max_z', type=int,
+    parser.add_argument('-max_z', metavar='max_z', type=int,
                         help='Maximum for Z-score.')
     args = parser.parse_args()
 
     # DEBUG: print metadata
-    freq = args.f
-    print("ok charge", args.f)    
+    freq = args.freq
+    print("ok charge", args.freq)    
     sys.exit(0)
