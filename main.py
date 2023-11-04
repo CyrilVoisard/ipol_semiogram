@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
+
 import os
 import json
 import numpy as np
@@ -6,6 +9,8 @@ import pandas as pd
 from scipy.signal import butter, filtfilt
 from scipy import interpolate
 import sys
+
+from semio_package import compute_semio, 
 
 # if you need to access a file next to the source code, use the variable ROOT
 ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -278,7 +283,21 @@ if __name__ == "__main__":
                         help='Maximum for Z-score.')
     args = parser.parse_args()
 
-    # DEBUG: print metadata
+    # DEBUG: import
     freq = args.freq
-    print("ok charge", args.freq)    
+
+    # load data (only lower back in this demo)
+    data_lb = import_XSens(args.i0)
+    print("ok charge", freq)    
     sys.exit(0)
+
+    # compute semio values (dictionnaries)
+    criteria, parameters = compute_semio.compute_semio_val(age, steps_lim, seg_lim, data_lb, freq)
+
+    # print semiogram values
+    print_semio_parameters(parameters)
+
+    print_semio_criteria(criteria)
+
+    # semiogram design
+    radar_design.new_radar_superpose({"unique": semio_val}, None, id_exp, output, age)
