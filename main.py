@@ -289,7 +289,7 @@ if __name__ == "__main__":
     # load data (only lower back in this demo)
     raw_lb = args.i0
     print("ok charge")
-    data_lb = import_XSens(os.path.join(ROOT, raw_lb))
+    data_lb = import_XSens(os.path.join(data_WD, raw_lb))
     sys.exit(0)
     
 
