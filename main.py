@@ -262,23 +262,23 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
         description='Return a semiogram for a given trial.')
-    parser.add_argument('--i0', metavar='data_lb',
+    parser.add_argument('-i0', metavar='data_lb',
                         help='Time series for the lower back sensor.')
-    parser.add_argument('--i1', metavar='data_rf',
+    parser.add_argument('-i1', metavar='data_rf',
                         help='Time series for the right foot sensor.')
-    parser.add_argument('--i2', metavar='data_lf',
+    parser.add_argument('-i2', metavar='data_lf',
                         help='Time series for the right foot sensor.')
-    parser.add_argument('--f', metavar='freq',
+    parser.add_argument('-f', metavar='freq',
                         help='Acquistion frequency.')
-    parser.add_argument('--a', metavar='age', type=int,
+    parser.add_argument('-a', metavar='age', type=int,
                         help='Age of the subject.')
-    parser.add_argument('--mi', metavar='min_z', type=int,
+    parser.add_argument('-mi', metavar='min_z', type=int,
                         help='Minimum for Z-score.')
-    parser.add_argument('--ma', metavar='max_z', type=int,
+    parser.add_argument('-ma', metavar='max_z', type=int,
                         help='Maximum for Z-score.')
     args = parser.parse_args()
 
     # DEBUG: print metadata
     freq = args.freq
-    print("ok charge", args.freq)    
+    print("ok charge", args.a)    
     sys.exit(0)
