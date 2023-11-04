@@ -150,6 +150,6 @@ def get_seg(filename):
     with open(filename) as seg_file:
         seg_dict = json.load(seg_file)
     [start_u, end_u] = seg_dict["UTurnBoundaries"]
-    start = np.min(np.min(seg_dict["LeftFootEvents"]), np.min(seg_dict["RightFootEvents"]))
-    end = np.max(np.max(seg_dict["LeftFootEvents"]), np.max(seg_dict["RightFootEvents"]))
+    start = min(np.min(seg_dict["LeftFootEvents"]), np.min(seg_dict["RightFootEvents"]))
+    end = max(np.max(seg_dict["LeftFootEvents"]), np.max(seg_dict["RightFootEvents"]))
     return pd.DataFrame([start, start_u, end_u, end])
