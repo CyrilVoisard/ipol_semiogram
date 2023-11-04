@@ -228,8 +228,8 @@ if __name__ == "__main__":
 
     # load data (only lower back in this demo)
     data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0))
-    steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1))
     seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
+    steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
     print("ok charge")
     sys.exit(0)
     
