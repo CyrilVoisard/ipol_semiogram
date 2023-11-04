@@ -119,9 +119,19 @@ def low_pass_filter(sig, order=8, fc=14, fe=100):
 
 # steps
 
-def get_steps(): 
-    return Null
+def get_steps(filename): 
+    """Gets the gait events segmentation from the metadata JSON file. 
+
+    Arguments:
+        filename {str} -- File path
+        
+    Returns
+    -------
+    Pandas dataframe
+        steps_lim
+    """
+    return 0
 
 # phases
 def get_seg(): 
-    return Null
+    return 0
