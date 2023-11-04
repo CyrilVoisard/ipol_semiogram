@@ -8,8 +8,6 @@ from scipy import interpolate
 import sys
 
 # if you need to access a file next to the source code, use the variable ROOT
-# for example:
-#    torch.load(os.path.join(ROOT, 'weights.pth'))
 ROOT = os.path.dirname(os.path.realpath(__file__))
 
 # Save the current CWD
@@ -17,12 +15,6 @@ data_WD = os.getcwd()
 
 # Change the CWD to ROOT
 os.chdir(ROOT)
-
-FOLDER = "GaitData"
-CODE_LIST = [filename.replace("_lf.txt", "") for filename in os.listdir(FOLDER) if filename.endswith("_lf.txt")]
-
-COLUMN_NAMES = {'TOX': 1, 'TAX': 2, 'TAY': 3, 'RAV': 4, 'RAZ': 5, 'RRY': 6, 'LAV': 7, 'LAZ': 8, 'LRY': 9}
-
 
 def load_metadata(subject, trial):
     """Return the metadata dict for the given subject-trial.
