@@ -173,6 +173,18 @@ def get_seg(filename):
     return pd.DataFrame([start, start_u, end_u, end])
 
 def inside(to, hs, seg_lim):
+    """Renseigne sur si le pas considéré est valide, c'est à dire qu'il n'est pas inclus dans le demi-tour. 
+
+    Arguments:
+        to {int} -- Toe-Off time
+        hs {int} -- Heel-Strike time
+        seg_lim {panda DataFrame} -- boundaries of the trial
+        
+    Returns
+    -------
+    Boolean
+        in_
+    """
     seg_lim = pd.DataFrame(seg_lim)
     if (hs <= seg_lim.iloc[1, 0]) & (to <= seg_lim.iloc[1, 0]):
             in_ = True
