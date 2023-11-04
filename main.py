@@ -230,12 +230,12 @@ if __name__ == "__main__":
     data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0))
     seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
     steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
-    print("ok charge")
-    sys.exit(0)
     
 
     # compute semio values (dictionnaries)
     criteria, parameters = compute_semio.compute_semio_val(age, steps_lim, seg_lim, data_lb, freq)
+    print("ok charge")
+    sys.exit(0)
 
     # print semiogram values
     print_semio_parameters(parameters)
