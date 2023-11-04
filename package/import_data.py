@@ -139,16 +139,16 @@ def get_steps(filename, seg_lim):
     hs = []
 
     for i in range(len(steps_right)):
-        if inside(steps_right[i, 0], steps_right[i, 1], seg_lim):
+        if inside(steps_right[i][0], steps_right[i][1], seg_lim):
             foot.append(1)
-            to.append(steps_right[i, 0])
-            hs.append(steps_right[i, 1])
+            to.append(steps_right[i][0])
+            hs.append(steps_right[i][1])
 
     for i in range(len(steps_left)):
-        if inside(steps_left[i, 0], steps_left[i, 1], seg_lim):
+        if inside(steps_left[i][0], steps_left[i][1], seg_lim):
             foot.append(0)
-            to.append(steps_left[i, 0])
-            hs.append(steps_left[i, 1])
+            to.append(steps_left[i][0])
+            hs.append(steps_left[i][1])
 
     _dict = {'Foot': foot, 'TO': to, 'HS': hs}
     type_dict = {'Foot': int, 'HS': int, 'TO': int}
