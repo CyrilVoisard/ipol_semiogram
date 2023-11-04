@@ -6,7 +6,7 @@ import scipy
 import os
 import os.path as osp
 import json
-from semio_package import features as ft
+from package import features as ft
 
 
 def compute_semio_val(age, steps_lim, seg_lim, data_tronc, perso_feat, freq=100):
