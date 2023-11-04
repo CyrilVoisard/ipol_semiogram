@@ -149,11 +149,13 @@ def get_steps(filename, seg_lim):
             foot.append(0)
             to.append(steps_left[i, 0])
             hs.append(steps_left[i, 1])
+
+    _dict = {'Foot': foot, 'TO': to, 'HS': hs}
+    type_dict = {'Foot': int, 'HS': int, 'TO': int}
+    steps_lim = pd.DataFrame(_dict)
+    steps_lim = steps_lim.astype(type_dict)
     
-    convert_dict = {'Foot': int, 'HS': int, 'FF': int, 'XX': int, 'HO': int, 'TO': int, 'HS_2': int,
-                    'Score': str, 'N': str, 'Phase': str}
-    
-    return steps_left, steps_right
+    return steps_lim
     
 
 # phases
@@ -192,9 +194,9 @@ def inside(to, hs, seg_lim):
     seg_lim = pd.DataFrame(seg_lim)
     if (hs <= seg_lim.iloc[1, 0]) & (to <= seg_lim.iloc[1, 0]):
             in_ = True
+    else:
+        if (hs >= seg_lim.iloc[2, 0]) & (to >= seg_lim.iloc[2, 0]):
+            in_ = True
         else:
-            if (hs >= seg_lim.iloc[2, 0]) & (to >= seg_lim.iloc[2, 0]):
-                in_ = True
-            else:
-                in_ = False
+            in_ = False
     return in_
