@@ -70,6 +70,16 @@ def det_max(s, start, end, ml=False):
         
 
 def ihr(sig):
+    """Compute the iHR of a signal
+    
+    Arguments:
+        sig {vector} -- time series
+
+    Returns
+    -------
+    float
+        iHR
+    """
     peak_list = DFT(sig)
 
     peak_pair_sum = 0
@@ -87,8 +97,19 @@ def ihr(sig):
         
 
 def DFT(x, fs=100):
-    # Function to calculate the discrete Fourier Transform coefficient from the fundamental frequency.
+    """Compute the discrete Fourier Transform coefficient from the fundamental frequency.
     # https://www.f-legrand.fr/scidoc/docimg/numerique/tfd/periodique2/periodique2.html
+    
+    Arguments:
+        x {vector} -- time series
+        fs {int} -- acquisition frequency
+
+    Returns
+    -------
+    list
+        peak_list
+    """
+    # Function to calculate the 
 
     f0 = 100 / len(x)
 
