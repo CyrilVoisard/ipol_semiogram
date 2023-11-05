@@ -433,11 +433,11 @@ def get_stride_list(data_tronc, seg_lim, steps_lim, freq=100):
     steps_lim = steps_lim.sort_values(by="HS")
     print("steps_lim", steps_lim)
     for i in range(1, len(steps_lim) - 4): # On ne prend pas en compte les 2 derniers pas qui peuvent être freinés
-        t_tot = steps_lim["HS"][i + 2] - steps_lim["HS"][i]
-        if ((steps_lim["Foot"][i] + steps_lim["Foot"][i + 1] == 1)
-                & (steps_lim["Foot"][i + 1] + steps_lim["Foot"][i + 2] == 1)):
+        t_tot = steps_lim["HS"].iloc[i + 2] - steps_lim["HS"].iloc[i]
+        if ((steps_lim["Foot"].iloc[i] + steps_lim["Foot"].iloc[i + 1] == 1)
+                & (steps_lim["Foot"].iloc[i + 1] + steps_lim["Foot"].iloc[i + 2] == 1)):
 
-            if inside([steps_lim["HS"][i], steps_lim["HS"][i + 2]], seg_lim):
+            if inside([steps_lim["HS"].iloc[i], steps_lim["HS"].iloc[i + 2]], seg_lim):
                 t.append(t_tot)
 
     t = rmoutliers(t)
@@ -453,14 +453,14 @@ def get_double_stance_time_list(data_tronc, seg_lim, steps_lim, freq=100):
 
     steps_lim = steps_lim.sort_values(by="HS")
     for i in range(1, len(steps_lim) - 4):
-        st1 = (steps_lim["TO"][i + 2] - steps_lim["HS"][i + 1])
-        st2 = (steps_lim["TO"][i + 1] - steps_lim["HS"][i])
-        t_tot = steps_lim["HS"][i + 2] - steps_lim["HS"][i]
+        st1 = (steps_lim["TO"].iloc[i + 2] - steps_lim["HS"].iloc[i + 1])
+        st2 = (steps_lim["TO"].iloc[i + 1] - steps_lim["HS"].iloc[i])
+        t_tot = steps_lim["HS"].iloc[i + 2] - steps_lim["HS"].iloc[i]
         st = (st1 + st2) / t_tot
-        if ((steps_lim["Foot"][i] + steps_lim["Foot"][i + 1] == 1) &
-            (steps_lim["Foot"][i + 1] + steps_lim["Foot"][i + 2] == 1)) & (st1 > 0) & (st2 > 0):
+        if ((steps_lim["Foot"].iloc[i] + steps_lim["Foot"].iloc[i + 1] == 1) &
+            (steps_lim["Foot"].iloc[i + 1] + steps_lim["Foot"].iloc[i + 2] == 1)) & (st1 > 0) & (st2 > 0):
 
-            if inside([steps_lim["HS"][i], steps_lim["HS"][i + 2]], seg_lim):
+            if inside([steps_lim["HS"].iloc[i], steps_lim["HS"].iloc[i + 2]], seg_lim):
                 dst_t.append(st)
 
     dst_t = rmoutliers(dst_t)
