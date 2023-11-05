@@ -378,7 +378,7 @@ def new_radar_aggreg(semio_val_ag, date, id, output, age=None, min_r=-10, max_r=
     return None
 
 
-def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_r=-10, max_r=4, color_diff=False, name="test"):
+def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_r=-10, max_r=4, color_diff=True, name="test"):
     print("color_diff", color_diff)
     properties = ['Springiness', 'Sturdiness', 'Smoothness',
                   'Steadiness', 'Stability', 'Symmetry',
