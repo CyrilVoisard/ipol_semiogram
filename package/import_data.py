@@ -179,7 +179,7 @@ def get_seg(filename):
     
 
 def inside(to, hs, seg_lim):
-    """Renseigne sur si le pas considéré est valide, c'est à dire qu'il n'est pas inclus dans le demi-tour. 
+    """Check whether the considered step is valid, meaning it is not included in the half-turn.
 
     Arguments:
         to {int} -- Toe-Off time
