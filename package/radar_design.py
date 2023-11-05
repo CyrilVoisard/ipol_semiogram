@@ -11,12 +11,12 @@ from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
 
 def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_r=-10, max_r=4, color_diff=True, name="test"):
-    print("color_diff", color_diff)
+
     properties = ['Springiness', 'Sturdiness', 'Smoothness',
                   'Steadiness', 'Stability', 'Symmetry',
                   'Synchronisation']
 
-    # A mettre en global ?
+    # representations in the case of an overlay
     line_list = ["-", "--", "."]
     marker_list = ["o", "s", "D"]
 
@@ -26,11 +26,12 @@ def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_
     cmap1 = LinearSegmentedColormap.from_list("mycmap", list(zip(nodes, colors)))
     norm = mpl.colors.Normalize(vmin=-20, vmax=4)
 
-    # Make figure background the same colors as axes
+    # make figure background the same colors as axes
     fig = plt.figure(figsize=(11, 8), facecolor='white')
     mpl.rc('axes', facecolor='white')
     mpl.rc('grid', color='white', linewidth=1, linestyle='-')
-    # Use a polar axes
+    
+    # use a polar axes
     try:
         axes = plt.subplot(111, polar=True, axisbg='white')
         axes.grid(False)
@@ -38,24 +39,21 @@ def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_
         axes = plt.subplot(111, polar=True, facecolor='white')
         axes.grid(False)
 
-    # Set ticks to the number of properties (in radians)
+    # set ticks to the number of properties (in radians)
     t = np.arange(0, 2 * np.pi, 2 * np.pi / len(properties))
     plt.xticks(t, [])
     axes.set_rlabel_position(48)
-    # Set yticks from -4 to +4
-    # rang = [-4, -3, -2, -1, 0, 1, 2, 3, 4]
+    
+    # set yticks from min_r to max_r
     rang = [i for i in range(min_r, max_r + 1, 2)]
     rang_plot = [i for i in range(min_r, max_r + 1, 2)]
     plt.yticks(rang_plot, weight='bold', size=10)
-
-    # Limites des axes
-    # plt.ylim(-4, 4)
     plt.ylim(min_r, max_r)
     axes.spines['polar'].set_visible(False)
 
-    # Plot des différentes valeurs de l'échelle
+    # plot the scale
     for i in rang:
-        if i == 0:  # Pour 0, particulier : pointillés en gras
+        if i == 0:  # for 0, bold lines
             style = 'dashed'
             line = 2
         else:
@@ -72,7 +70,7 @@ def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_
         _patch = patches.PathPatch(_path, fill=False, linewidth=line, linestyle=style)
         axes.add_patch(_patch)
 
-    # Nommer les axes dans l'ordre : revoir l'ordre pour regrouper les tendances ????????
+    # name axes
     for i in range(len(properties)):
         angle_rad = i / float(len(properties)) * 2 * np.pi
         angle_deg = i / float(len(properties)) * 360
@@ -82,22 +80,19 @@ def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_
         plt.text(angle_rad, 4.75, properties[i], size=22, horizontalalignment=ha, verticalalignment="center",
                  weight='bold')
 
-    # Installer la légende
+    # legend
     cb = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap1), orientation='vertical', location='left',
                       shrink=0.9, anchor=(-0.5, 0.5), aspect=40)
     cb.set_label(label='Average Speed', size=22, weight='bold')
     cb.ax.tick_params(size=10)
     cax = cb.ax
 
-    # Tracer les points de semio_val_dict
+    # points for semio_val_dict
     for k in range(len(semio_val_dict)):
-        print("semio_val_dict", len(semio_val_dict), semio_val_dict)
-        print(k)
         semio_label = list(semio_val_dict.keys())[k]
         line_ = line_list[len(semio_val_dict) - 1 - k]
         marker_ = marker_list[len(semio_val_dict) - 1 - k]
         semio_val = list(semio_val_dict.values())[k]
-        print(semio_label, line_, marker_)
         if len(semio_val) != 8:
             print("ERROR : The number of arguments of semio_val must be 8 !")
         else:
@@ -122,39 +117,37 @@ def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_
             if (len(semio_val_dict)==2) & color_diff:
                 print("On entre dans la mise en couleur")
                 if k == 1:
-                    points_M6 = points
-                    marker_M6 = marker_
-                    semio_label_M6 = semio_label
-                    _patch_M6 = _patch
-                    area_M6 = patches.Polygon(points, color=cmap1(norm(semio_val[7])), alpha=0.2)
-                    axes.add_patch(area_M6)
-                    print("ok area_M6")
+                    points_new = points
+                    marker_new = marker_
+                    semio_label_new = semio_label
+                    _patch_new = _patch
+                    area_new = patches.Polygon(points, color=cmap1(norm(semio_val[7])), alpha=0.2)
+                    axes.add_patch(area_new)
                 if k == 0:
-                    points_M0 = points
-                    marker_M0 = marker_
-                    semio_label_M0 = semio_label
-                    _patch_M0 = _patch
-                    area_M0 = patches.Polygon(points, color="white", alpha=1)
-                    axes.add_patch(area_M0)
-                    print("ok area_M0")
-            #else:
+                    points_ref = points
+                    marker_ref = marker_
+                    semio_label_ref = semio_label
+                    _patch_ref = _patch
+                    area_ref = patches.Polygon(points, color="white", alpha=1)
+                    axes.add_patch(area_ref)
+
             axes.add_patch(_patch)
-                # On trace des cercles au niveau des valeurs
+            # circles for values
             axes.scatter(points[:, 0], points[:, 1], linewidth=2, s=50, color='white', edgecolor='black', zorder=10,
                              marker=marker_, label=semio_label)
 
             cax.scatter(0.5, semio_val[7], linewidth=2, s=50, color='white', edgecolor='black', zorder=10,
                         marker=marker_)
-            # cax.hlines(-3, -1, 2, colors = 'white', linewidth = 2, linestyles = 'o')
 
+    # if overlay, you need to reorganize the layers to achieve the correct visual representation highlighting the progressions.
     if len(semio_val_dict) > 1:
         plt.legend(loc='upper right', bbox_to_anchor=(1.4, 1.25), ncol=2, title="Trials", title_fontsize="xx-large",
                    fontsize="x-large", )
         if len(semio_val_dict) == 2:
 
             # D'abord le fond
-            axes.add_patch(area_M6)
-            axes.add_patch(area_M0)
+            axes.add_patch(area_new)
+            axes.add_patch(area_ref)
 
             # Ensuite les lignes
             for i in rang:
@@ -175,16 +168,17 @@ def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_
                 _patch = patches.PathPatch(_path, fill=False, linewidth=line, linestyle=style)
                 axes.add_patch(_patch)
 
-            # Ensuite M0
-            axes.add_patch(_patch_M0)
-            axes.scatter(points_M0[:, 0], points_M0[:, 1], linewidth=2, s=50, color='white', edgecolor='black', zorder=10,
-                         marker=marker_M0)
+            # ref
+            axes.add_patch(_patch_ref)
+            axes.scatter(points_ref[:, 0], points_ref[:, 1], linewidth=2, s=50, color='white', edgecolor='black', zorder=10,
+                         marker=marker_ref)
 
-            # Ensuite M6
-            axes.add_patch(_patch_M6)
-            axes.scatter(points_M6[:, 0], points_M6[:, 1], linewidth=2, s=50, color='white', edgecolor='black',
+            # new
+            axes.add_patch(_patch_new)
+            axes.scatter(points_new[:, 0], points_new[:, 1], linewidth=2, s=50, color='white', edgecolor='black',
                          zorder=10,
-                         marker=marker_M6)
+                         marker=marker_new)
+    # save the fig
     path_out = os.path.join(output, name + ".svg")
     plt.savefig(path_out, dpi=200,
                     transparent=True, bbox_inches="tight")
