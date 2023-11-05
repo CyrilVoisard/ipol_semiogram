@@ -5,7 +5,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from scipy import stats
 
-from semio_package import hr, smoothness
+from package import hr, smoothness
 
 
 # --------------------------------------
