@@ -9,11 +9,13 @@ import json
 from package import features as ft
 
 
-def compute_semio_val(age, steps_lim, seg_lim, data_tronc, perso_feat, freq=100):
+def compute_semio_val(age, steps_lim, seg_lim, data_tronc, freq):
     # Liste des 7 paramètres, auxquels on ajoutera la vitesse moyenne
     properties = ['Springiness', 'Sturdiness', 'Smoothness',
                   'Steadiness', 'Stability', 'Symmetry',
                   'Synchronisation', 'Average Speed']
+
+    perso_feat = []
 
     # Chargement du fichier modèle en fonction de l'âge
     ages = [[0, 100], [0, 17], [18, 39], [40, 59], [60, 79], [80, 100]]
