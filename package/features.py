@@ -24,6 +24,7 @@ def avg_speed(data_lb, seg_lim, steps_lim=0, release_u_turn=False, freq=100):
     float
         Average speed (m/s)
     """
+    
     seg_lim = pd.DataFrame(seg_lim)
     distance = 20
 
@@ -100,13 +101,14 @@ def sparc_gyr(data_lb, seg_lim, steps_lim, freq=100):
     float
         SPARC gyration
     """
+    
     start = seg_lim.iloc[0, 0]
     end = seg_lim.iloc[3, 0]
 
-    # data_lb_demi_tour = data_lb
+    # data exclusion 
     data = data_lb[(data_lb.iloc[:, 0] > start / freq) & (data_lb.iloc[:, 0] < end / freq)]
 
-    # Sélection des signaux
+    # signals selection
     sig_X = data["Gyr_X"]
     sig_Y = data["Gyr_Y"]
     sig_Z = data["Gyr_Z"]
@@ -133,6 +135,7 @@ def ldlj_acc(data_lb, seg_lim, steps_lim, signal='FreeAcc', freq=100):
     float
         LDLJ acc
     """
+    
     if signal in ["FreeAcc", "Acc"]:
         data_type = "accl"
 
@@ -143,15 +146,15 @@ def ldlj_acc(data_lb, seg_lim, steps_lim, signal='FreeAcc', freq=100):
     start = seg_lim.iloc[0, 0]
     end = seg_lim.iloc[3, 0]
 
-    # On enlève le demi-tour
+    # without u-turn
     data_lb_go, data_lb_back = sig_go_back(data_lb, seg_lim, freq=freq)
 
-    # Pour l'aller
+    # go phase
     sig_X_go = data_lb_go[signal + "_X"]
     sig_Y_go = data_lb_go[signal + "_Y"]
     sig_Z_go = data_lb_go[signal + "_Z"]
 
-    # Pour l'aller
+    # back phase
     sig_X_back = data_lb_back[signal + "_X"]
     sig_Y_back = data_lb_back[signal + "_Y"]
     sig_Z_back = data_lb_back[signal + "_Z"]
@@ -489,6 +492,7 @@ def rmoutliers(vec, limit=2):
     vector
         vec 1 : new vector without outliers
     """
+    
     z = np.abs(stats.zscore(vec))
     vec1 = []
     for i in range(len(vec)):
@@ -498,12 +502,23 @@ def rmoutliers(vec, limit=2):
     return vec1
 
 
-def inside(liste, seg_lim):
+def inside(list, seg_lim):
+    """Determine if a list of events is located within the bounds of the outbound and return phases of the trial.
+    
+    Arguments:
+        list {list} -- list of events (integers)
+        seg_lim {dataframe} -- panda dataframe with the boundaries of the trial
+
+    Returns
+    -------
+    bool
+    """
+    
     seg_lim = pd.DataFrame(seg_lim)
     out = 0
     in_go = 0
     in_back = 0
-    for x in liste:
+    for x in list:
         if x < seg_lim.iloc[0, 0]:
             out = 1
         else:
