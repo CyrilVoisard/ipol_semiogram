@@ -8,7 +8,20 @@ from package import features as ft
 
 
 def ihr_avg(seg_lim, steps_lim, s, ml=False):
-    # Pour ML, le rapport est inversé !
+    """Compute the mean of the iHR for each of the detected steps during the trial.
+    
+    Arguments:
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        s {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    float
+        iHR_aAP (%)
+    """
+    
     ihr_list = []
     for j in range(1, len(steps_lim) - 2):  # on ne prend pas en compte les premier et le dernier pas
         if steps_lim["Foot"].iloc[j] - steps_lim["Foot"].iloc[j + 2] == 0:  # on vérifie que c'est le même pied
