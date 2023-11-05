@@ -55,11 +55,13 @@ def det_max(s, start, end, ml=False):
     for k in range(30):
         for kk in range(5):
             s_step = s[max(start - 15 + k, 0):end - 15 + k - 2 + kk]
-            calcul = ihr(s_step)
+            if ml:
+                calcul = 100 - ihr(s_step)
+            else:
+                calcul = ihr(s_step)
             if calcul != 0:
                 det_list.append(calcul)
-            if ml:
-                calcul = 100 - calcul
+            
     if len(det_list) != 0:
         return max(det_list)
     else:
