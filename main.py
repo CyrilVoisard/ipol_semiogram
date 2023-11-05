@@ -144,9 +144,9 @@ if __name__ == "__main__":
     # comparaison
     try: 
         parser.add_argument('-i2', metavar='ref_data_lb',
-                            help='Reference set - Time series for the lower back sensor.', default=None)
+                            help='Reference set - Time series for the lower back sensor.', required=False)
         parser.add_argument('-i3', metavar='ref_gait_events',
-                            help='Reference set - Metadata with gait events.', default=None)
+                            help='Reference set - Metadata with gait events.', required=False)
         compare = True
     except: 
         compare = False
