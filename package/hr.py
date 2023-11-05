@@ -24,12 +24,10 @@ def ihr_avg(seg_lim, steps_lim, s, ml=False):
     """
     
     ihr_list = []
-    for j in range(1, len(steps_lim) - 2):  # on ne prend pas en compte les premier et le dernier pas
-        if steps_lim["Foot"].iloc[j] - steps_lim["Foot"].iloc[j + 2] == 0:  # on vérifie que c'est le même pied
+    for j in range(1, len(steps_lim) - 2):  # not the first and the last steps
+        if steps_lim["Foot"].iloc[j] - steps_lim["Foot"].iloc[j + 2] == 0:  # check it is the same foot
             if ft.inside([steps_lim["HS"].iloc[j], steps_lim["HS"].iloc[j + 2]], seg_lim):
-                # On est conscient que la détection de pas n'est pas fiable à 100%.
-                # On va donc prendre le maximum autour de la détection des pas.
-                det = det_max(s, steps_lim["HS"].iloc[j], steps_lim["HS"].iloc[j+2], ml=ml)
+                det = det_max(s, steps_lim["HS"].iloc[j], steps_lim["HS"].iloc[j+2], ml=ml)  # neighborhood maximum 
                 if det != 0:
                     ihr_list.append(det)
 
@@ -56,7 +54,6 @@ def det_max(s, start, end, ml=False):
     det_list = []
     for k in range(30):
         for kk in range(5):
-            # On fait varier le signal à son origine
             s_step = s[max(start - 15 + k, 0):end - 15 + k - 2 + kk]
             calcul = ihr(s_step)
             if calcul != 0:
@@ -80,6 +77,7 @@ def ihr(sig):
     float
         iHR
     """
+    
     peak_list = DFT(sig)
 
     peak_pair_sum = 0
@@ -109,9 +107,8 @@ def DFT(x, fs=100):
     list
         peak_list
     """
-    # Function to calculate the 
 
-    f0 = 100 / len(x)
+    f0 = fs / len(x)
 
     peak_list = []
     n_f0 = []
