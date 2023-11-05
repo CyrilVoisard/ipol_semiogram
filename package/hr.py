@@ -116,14 +116,14 @@ def hr_ihr_moyen(seg_lim, steps_lim, s, i=1, ml=False):
     # Le i=0 signifie qu'on considère HR et non pas IHR
     hr_ihr_list = []
     for j in range(1, len(steps_lim) - 2):  # on ne prend pas en compte les premier et le dernier pas
-        if steps_lim.iloc[j, 0] - steps_lim.iloc[j + 2, 0] == 0:  # on vérifie que c'est le même pied
-            if ft.inside([steps_lim.iloc[j, 4], steps_lim.iloc[j + 2, 4]], seg_lim):
+        if steps_lim["Foot"].iloc[j] - steps_lim["Foot"].iloc[j + 2] == 0:  # on vérifie que c'est le même pied
+            if ft.inside([steps_lim["HS"].iloc[j], steps_lim["HS"].iloc[j + 2]], seg_lim):
                 # On est conscient que la détection de pas n'est pas fiable à 100%.
                 # On va donc prendre le maximum autour de la détection des pas.
                 if not ml:
-                    det = det_max(s, steps_lim.iloc[j, 4], steps_lim.iloc[j+2, 4], i=i)
+                    det = det_max(s, steps_lim["HS"].iloc[j], steps_lim["HS"].iloc[j+2], i=i)
                 else:
-                    det = det_max_ml(s, steps_lim.iloc[j, 4], steps_lim.iloc[j + 2, 4], i=i)
+                    det = det_max_ml(s, steps_lim["HS"].iloc[j], steps_lim["HS"].iloc[j + 2], i=i)
                 if det != 0:
                     hr_ihr_list.append(det)
 
