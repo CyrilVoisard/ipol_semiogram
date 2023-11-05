@@ -1,5 +1,3 @@
-# Objectif : détailler l'ensemble des 14 features conservées dans la version finale du semiogram.
-
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -9,70 +7,117 @@ from package import hr, smoothness
 
 
 # --------------------------------------
-# Average Speed : refers celerity during the walk.
+# Average speed : refers to velocity during the walk.
 
-def avg_speed(data_tronc, seg_lim, steps_lim=0, release_u_turn=False, freq=100):
+def avg_speed(data_lb, seg_lim, steps_lim=0, release_u_turn=False, freq=100):
+    """Compute the average speed of the trial
+
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        release_u_turn {bool} -- take into account the u_turn phase
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    float
+        Average speed (m/s)
+    """
     seg_lim = pd.DataFrame(seg_lim)
-    # Hypothèse sur la distance
     distance = 20
 
     start = seg_lim.iloc[0, 0]
     end = seg_lim.iloc[3, 0]
 
     if release_u_turn:
-        temps = (end - start - (seg_lim.iloc[2, 0] - seg_lim.iloc[1, 0])) / freq
+        time = (end - start - (seg_lim.iloc[2, 0] - seg_lim.iloc[1, 0])) / freq
     else:
-        temps = (end - start) / freq
+        time = (end - start) / freq
 
-    return distance / temps
+    return distance / time
 
 
 # --------------------------------------
 # Springiness : refers to gait rhythmicity. => ok
 
-def stride_time(data_tronc, seg_lim, steps_lim, freq=100):
-    # Time between consecutive initial contact (IC) of the same foot, averaged across all strides within the trial
-    # except during the U-turn
+def stride_time(data_lb, seg_lim, steps_lim, freq=100):
+    """Compute the average stride time : Time between consecutive initial contact (IC) of the same foot, averaged across all strides within the trial
+    except during the U-turn
 
-    t = get_stride_list(data_tronc, seg_lim, steps_lim, freq=freq)
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    float
+        Average stride duration (s)
+    """
+
+    t = get_stride_list(data_lb, seg_lim, steps_lim, freq=freq)
 
     return np.mean(t) / freq
 
 
-def u_turn_time(data_tronc, seg_lim, steps_lim, freq=100):
-    # Duration of the turn. Detected with the angular velocity around the cranio-caudal axis derived from
-    # the IMU positioned on the lower back.
+def u_turn_time(data_lb, seg_lim, steps_lim, freq=100):
+    """Compute the u_turn time : duration of the turn. Can be detected with the angular velocity around the cranio-caudal axis derived from
+    the IMU positioned on the lower back.
+
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    float
+        U-turn duration (s)
+    """
+    
     d = (seg_lim.iloc[2, 0] - seg_lim.iloc[1, 0]) / freq
 
     return d
 
 
 # --------------------------------------
-# Smoothness : refers to gait continuousness or non-intermittency. => non ok
+# Smoothness : refers to gait continuousness or non-intermittency.
 
-def antero_posterieur_root_mean_square(data_tronc, seg_lim, steps_lim, freq=100):
-    # Measure of dispersion of the medio-lateral acceleration data relative to zero.
+def sparc_gyr(data_lb, seg_lim, steps_lim, freq=100):
+    """Compute the gyration SPARC
 
-    # On enlève le demi-tour
-    data_tronc_go, data_tronc_back = sig_go_back(data_tronc, seg_lim, freq=freq, signal="FreeAcc_Z", norm=True)
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
 
-    signal_go = rmoutliers(data_tronc_go.values.tolist(), limite=3)
-    signal_back = rmoutliers(data_tronc_back.values.tolist(), limite=3)
-
-    rms_go = np.sqrt(np.mean(np.square(signal_go)))
-    rms_back = np.sqrt(np.mean(np.square(signal_back)))
-
-    # rms = rms_go / 2 + rms_back / 2
-    rms = min(rms_go, rms_back)
-
-    return rms
-
-
-def sparc_gyr(data_tronc, seg_lim, steps_lim, freq=100):
-    return smoothness.sparc_rot_XS(data_tronc, seg_lim, steps_lim, signal="Gyr")
+    Returns
+    -------
+    float
+        SPARC gyration
+    """
+    return smoothness.sparc_rot_XS(data_lb, seg_lim, steps_lim, signal="Gyr")
 
 
-def ldlj_acc(data_tronc, seg_lim, steps_lim, signal='FreeAcc', freq=100):
+def ldlj_acc(data_lb, seg_lim, steps_lim, signal='FreeAcc', freq=100):
+    """Compute the log dimensionless jerk computed from linear acceleration
+
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        signal {str} -- 'FreeAcc' or 'Acc'
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    float
+        LDLJ acc
+    """
     if signal in ["FreeAcc", "Acc"]:
         data_type = "accl"
 
@@ -84,17 +129,17 @@ def ldlj_acc(data_tronc, seg_lim, steps_lim, signal='FreeAcc', freq=100):
     end = seg_lim.iloc[3, 0]
 
     # On enlève le demi-tour
-    data_tronc_go, data_tronc_back = sig_go_back(data_tronc, seg_lim, freq=freq)
+    data_lb_go, data_lb_back = sig_go_back(data_lb, seg_lim, freq=freq)
 
     # Pour l'aller
-    sig_X_go = data_tronc_go[signal + "_X"]
-    sig_Y_go = data_tronc_go[signal + "_Y"]
-    sig_Z_go = data_tronc_go[signal + "_Z"]
+    sig_X_go = data_lb_go[signal + "_X"]
+    sig_Y_go = data_lb_go[signal + "_Y"]
+    sig_Z_go = data_lb_go[signal + "_Z"]
 
     # Pour l'aller
-    sig_X_back = data_tronc_back[signal + "_X"]
-    sig_Y_back = data_tronc_back[signal + "_Y"]
-    sig_Z_back = data_tronc_back[signal + "_Z"]
+    sig_X_back = data_lb_back[signal + "_X"]
+    sig_Y_back = data_lb_back[signal + "_Y"]
+    sig_Z_back = data_lb_back[signal + "_Z"]
 
     sig_n2_go = np.sqrt(pow(sig_X_go, 2) + pow(sig_Y_go, 2) + pow(sig_Z_go, 2))
     sig_n2_back = np.sqrt(pow(sig_X_back, 2) + pow(sig_Y_back, 2) + pow(sig_Z_back, 2))
@@ -104,64 +149,61 @@ def ldlj_acc(data_tronc, seg_lim, steps_lim, signal='FreeAcc', freq=100):
 
     return (ldl_acc_go + ldl_acc_back) / 2
 
-
-def ldlj_gyr(data_tronc, seg_lim, steps_lim, signal="Gyr", phase="full", freq=100):
-    if signal in ["Gyr"]:
-        data_type = "speed"
-    else:
-        raise ValueError('\n'.join(("The argument signal must be 'Gyr', otherwise use ldlja_lin_XS.")))
-
-    start = seg_lim.iloc[0, 0]
-    end = seg_lim.iloc[3, 0]
-
-    # data_tronc_demi_tour = data_tronc
-    if phase == "u-turn":
-        data = data_tronc[
-            (data_tronc.iloc[:, 0] > seg_lim.iloc[1, 0] / freq) & (data_tronc.iloc[:, 0] < seg_lim.iloc[2, 0] / freq)]
-    else:
-        data = data_tronc[(data_tronc.iloc[:, 0] > start / freq) & (data_tronc.iloc[:, 0] < end / freq)]
-
-    # Sélection des signaux
-    sig_X_demi_tour = data[signal + "_X"]
-    sig_Y_demi_tour = data[signal + "_Y"]
-    sig_Z_demi_tour = data[signal + "_Z"]
-
-    sig_n2_demi_tour = np.sqrt(pow(sig_X_demi_tour, 2) + pow(sig_Y_demi_tour, 2) + pow(sig_Z_demi_tour, 2))
-
-    ldl_vit_demi_tour = smoothness.log_dimensionless_jerk2(sig_n2_demi_tour, fs=freq, data_type=data_type)
-
-    return ldl_vit_demi_tour
-
-
 # --------------------------------------
-# Steadiness : refers to gait regularity. => ok
+# Steadiness : refers to gait regularity.
 
-def variation_coeff_stride_time(data_tronc, seg_lim, steps_lim, freq=100):
-    # Standard deviation of the vector of stride times divided by its average.
-    t = get_stride_list(data_tronc, seg_lim, steps_lim, freq=freq)
+def variation_coeff_stride_time(data_lb, seg_lim, steps_lim, freq=100):
+    """Compute the variation coefficient of stride time: standard deviation of the vector of stride times divided by its average.
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    float
+        CVstrT (%)
+    """
+    
+    t = get_stride_list(data_lb, seg_lim, steps_lim, freq=freq)
 
     return 100 * np.std(t) / np.mean(t)
 
 
-def variation_coeff_double_stance_time(data_tronc, seg_lim, steps_lim, freq=100):
-    # Standard deviation of the vector of double stance times divided by its average.
-    dst_t = get_double_stance_time_list(data_tronc, seg_lim, steps_lim, freq=freq)
+def variation_coeff_double_stance_time(data_lb, seg_lim, steps_lim, freq=100):
+    """Compute the variation coefficient of double stance time: Standard deviation of the vector of double stance times divided by its average.
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    float
+        CVdstT (%)
+    """
+    
+    dst_t = get_double_stance_time_list(data_lb, seg_lim, steps_lim, freq=freq)
+    
     return 100 * np.std(dst_t) / np.mean(dst_t)
 
 
-def p1_acc(data_tronc, seg_lim, steps_lim, freq=100):
+def p1_acc(data_lb, seg_lim, steps_lim, freq=100):
+    
     # Cranio-caudal step autocorrelation coefficient = first peak of the cranio-caudal correlation coefficient of
     # the lower back.
-    p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_tronc, seg_lim, steps_lim, freq=freq)
+    p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=freq)
     p1 = max(p1_go, p1_back)
     # p1 = (p1_go + p1_back) / 2
     return p1
 
 
-def p2_acc(data_tronc, seg_lim, steps_lim, freq=100):
+def p2_acc(data_lb, seg_lim, steps_lim, freq=100):
     # Cranio-caudal step autocorrelation coefficient = first peak of the cranio-caudal correlation coefficient of
     # the lower back.
-    p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_tronc, seg_lim, steps_lim, freq=freq)
+    p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=freq)
     p2 = max(p2_go, p2_back)
     # p2 = (p2_go + p2_back) / 2
     return p2
@@ -170,7 +212,7 @@ def p2_acc(data_tronc, seg_lim, steps_lim, freq=100):
 # --------------------------------------
 # Sturdiness : refers to gait amplitude. => ok
 
-def step_length(data_tronc, seg_lim, steps_lim, freq=100):
+def step_length(data_lb, seg_lim, steps_lim, freq=100):
     # Total length (20 m) divided by the total number of steps after exclusion of the U-turn.
     n_tot = 0
     for i in range(len(steps_lim)):  # on ne prend pas en compte les premiers et le dernier pas
@@ -185,14 +227,14 @@ def step_length(data_tronc, seg_lim, steps_lim, freq=100):
 # --------------------------------------
 # Stability : refers to gait balance. => ok
 
-def medio_lateral_root_mean_square(data_tronc, seg_lim, steps_lim, freq=100):
+def medio_lateral_root_mean_square(data_lb, seg_lim, steps_lim, freq=100):
     # Measure of dispersion of the medio-lateral acceleration data relative to zero.
 
     # On enlève le demi-tour
-    data_tronc_go, data_tronc_back = sig_go_back(data_tronc, seg_lim, freq=freq, signal="FreeAcc_Y", norm=True)
+    data_lb_go, data_lb_back = sig_go_back(data_lb, seg_lim, freq=freq, signal="FreeAcc_Y", norm=True)
 
-    signal_go = rmoutliers(data_tronc_go.values.tolist(), limite=3)
-    signal_back = rmoutliers(data_tronc_back.values.tolist(), limite=3)
+    signal_go = rmoutliers(data_lb_go.values.tolist(), limite=3)
+    signal_back = rmoutliers(data_lb_back.values.tolist(), limite=3)
 
     rms_go = np.sqrt(np.mean(np.square(signal_go)))
     rms_back = np.sqrt(np.mean(np.square(signal_back)))
@@ -209,11 +251,11 @@ def medio_lateral_root_mean_square(data_tronc, seg_lim, steps_lim, freq=100):
 # To sum up, a fast Fourier transform was performed to draw the Fourier series of the signal. The sum of the amplitudes
 # of the 10 first even harmonics is divided by the sum of the amplitudes of the 10 first odd harmonics.
 
-def antero_posterior_HR(data_tronc, seg_lim, steps_lim, freq=100):
+def antero_posterior_HR(data_lb, seg_lim, steps_lim, freq=100):
     # Ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the antero-posterior
     # acceleration signal from the trunk.
 
-    s = data_tronc["FreeAcc_Z"]  # acceleration selon z
+    s = data_lb["FreeAcc_Z"]  # acceleration selon z
     steps_lim = steps_lim.sort_values(by="HS")
 
     hr_s, st_hr_s = hr.hr_ihr_moyen(seg_lim, steps_lim, s, i=0, ml=False)
@@ -223,11 +265,11 @@ def antero_posterior_HR(data_tronc, seg_lim, steps_lim, freq=100):
     return hr_s
 
 
-def antero_posterior_iHR(data_tronc, seg_lim, steps_lim, freq=100):
+def antero_posterior_iHR(data_lb, seg_lim, steps_lim, freq=100):
     # Ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the antero-posterior
     # acceleration signal from the trunk.
 
-    s = data_tronc["FreeAcc_Z"]  # acceleration selon z
+    s = data_lb["FreeAcc_Z"]  # acceleration selon z
     steps_lim = steps_lim.sort_values(by="HS")
 
     ihr_s, st_ihr_s = hr.hr_ihr_moyen(seg_lim, steps_lim, s, i=1, ml=False)
@@ -237,10 +279,10 @@ def antero_posterior_iHR(data_tronc, seg_lim, steps_lim, freq=100):
     return ihr_s
 
 
-def medio_lateral_HR(data_tronc, seg_lim, steps_lim, freq=100):
+def medio_lateral_HR(data_lb, seg_lim, steps_lim, freq=100):
     # Ratio of the first 10 unpaired harmonics to the first 10 paired harmonics of the medio-lateral
     # acceleration signal from the trunk.
-    s = data_tronc["FreeAcc_Y"]  # acceleration selon y
+    s = data_lb["FreeAcc_Y"]  # acceleration selon y
     steps_lim = steps_lim.sort_values(by="HS")
 
     hr_s, st_hr_s = hr.hr_ihr_moyen(seg_lim, steps_lim, s, i=0, ml=True)
@@ -250,10 +292,10 @@ def medio_lateral_HR(data_tronc, seg_lim, steps_lim, freq=100):
     return hr_s
 
 
-def medio_lateral_iHR(data_tronc, seg_lim, steps_lim, freq=100):
+def medio_lateral_iHR(data_lb, seg_lim, steps_lim, freq=100):
     # Ratio of the first 10 unpaired harmonics to the first 10 paired harmonics of the medio-lateral
     # acceleration signal from the trunk.
-    s = data_tronc["FreeAcc_Y"]  # acceleration selon y
+    s = data_lb["FreeAcc_Y"]  # acceleration selon y
     steps_lim = steps_lim.sort_values(by="HS")
 
     ihr_s, st_ihr_s = hr.hr_ihr_moyen(seg_lim, steps_lim, s, i=1, ml=True)
@@ -263,10 +305,10 @@ def medio_lateral_iHR(data_tronc, seg_lim, steps_lim, freq=100):
     return ihr_s
 
 
-def cranio_caudal_HR(data_tronc, seg_lim, steps_lim, freq=100):
+def cranio_caudal_HR(data_lb, seg_lim, steps_lim, freq=100):
     # Ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the cranio-caudal
     # acceleration signal from the trunk.
-    s = data_tronc["FreeAcc_X"]  # acceleration selon x
+    s = data_lb["FreeAcc_X"]  # acceleration selon x
     steps_lim = steps_lim.sort_values(by="HS")
 
     hr_s, st_hr_s = hr.hr_ihr_moyen(seg_lim, steps_lim, s, i=0, ml=False)
@@ -276,10 +318,10 @@ def cranio_caudal_HR(data_tronc, seg_lim, steps_lim, freq=100):
     return hr_s
 
 
-def cranio_caudal_iHR(data_tronc, seg_lim, steps_lim, freq=100) -> object:
+def cranio_caudal_iHR(data_lb, seg_lim, steps_lim, freq=100) -> object:
     # Ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the cranio-caudal
     # acceleration signal from the trunk.
-    s = data_tronc["FreeAcc_X"]  # acceleration selon x
+    s = data_lb["FreeAcc_X"]  # acceleration selon x
     steps_lim = steps_lim.sort_values(by="HS")
 
     ihr_s, st_ihr_s = hr.hr_ihr_moyen(seg_lim, steps_lim, s, i=1, ml=False)
@@ -289,18 +331,18 @@ def cranio_caudal_iHR(data_tronc, seg_lim, steps_lim, freq=100) -> object:
     return ihr_s
 
 
-def p1_p2_acc(data_tronc, seg_lim, steps_lim, freq=100):
+def p1_p2_acc(data_lb, seg_lim, steps_lim, freq=100):
     # the ratio of the first (P1) to the second (P2) peak of the cranio-caudal correlation
     # coefficient of the lower back (P1P2aCC)
 
-    p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_tronc, seg_lim, steps_lim, freq=freq)
+    p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=freq)
 
     rapp = find_nearest(np.array([p1_go / p2_go, p1_back / p2_back]), 1)
 
     return (1 - abs(rapp - 1))
 
 
-def mean_swing_times_ratio(data_tronc, seg_lim, steps_lim, freq=100):
+def mean_swing_times_ratio(data_lb, seg_lim, steps_lim, freq=100):
     # Ratio of the maximum (right or left) of averaged swing time divided by the minimum (right or left) of
     # averaged swing time.
 
@@ -337,10 +379,10 @@ def mean_swing_times_ratio(data_tronc, seg_lim, steps_lim, freq=100):
 # --------------------------------------
 # Synchronization : refers to inter-limb coordination during gait. => ok
 
-def double_stance_time(data_tronc, seg_lim, steps_lim, freq=100):
+def double_stance_time(data_lb, seg_lim, steps_lim, freq=100):
     # Time between IC of one foot and the FC of the contralateral foot divided by the total time of the cycle time.
 
-    dst_t = get_double_stance_time_list(data_tronc, seg_lim, steps_lim, freq=freq)
+    dst_t = get_double_stance_time_list(data_lb, seg_lim, steps_lim, freq=freq)
 
     if len(dst_t) == 0:
         print("erreur_dst", steps_lim)
@@ -402,29 +444,29 @@ def find_nearest(array, value):
     return array[idx]
 
 
-def sig_go_back(data_tronc, seg_lim, freq=100, signal="aucun", norm=False):
-    data_tronc_go = data_tronc[(seg_lim.iloc[0, 0] / freq < data_tronc["PacketCounter"])
-                               & (data_tronc["PacketCounter"] < seg_lim.iloc[1, 0] / freq)]
-    data_tronc_back = data_tronc[(seg_lim.iloc[3, 0] / freq > data_tronc["PacketCounter"])
-                                 & (data_tronc["PacketCounter"] > seg_lim.iloc[2, 0] / freq)]
+def sig_go_back(data_lb, seg_lim, freq=100, signal="aucun", norm=False):
+    data_lb_go = data_lb[(seg_lim.iloc[0, 0] / freq < data_lb["PacketCounter"])
+                               & (data_lb["PacketCounter"] < seg_lim.iloc[1, 0] / freq)]
+    data_lb_back = data_lb[(seg_lim.iloc[3, 0] / freq > data_lb["PacketCounter"])
+                                 & (data_lb["PacketCounter"] > seg_lim.iloc[2, 0] / freq)]
     if signal == "aucun":
-        return data_tronc_go, data_tronc_back
+        return data_lb_go, data_lb_back
     else:
         try:
-            data_tronc_go = data_tronc_go[signal]
-            data_tronc_back = data_tronc_back[signal]
+            data_lb_go = data_lb_go[signal]
+            data_lb_back = data_lb_back[signal]
             if norm:
-                data_tronc_go = data_tronc_go - np.mean(data_tronc_go)
-                data_tronc_go = data_tronc_back - np.mean(data_tronc_back)
-            return data_tronc_go, data_tronc_back
+                data_lb_go = data_lb_go - np.mean(data_lb_go)
+                data_lb_go = data_lb_back - np.mean(data_lb_back)
+            return data_lb_go, data_lb_back
         except:
             print("Pas possible de trouver le signal : ", signal)
-            return data_tronc_go, data_tronc_back
+            return data_lb_go, data_lb_back
 
 
 # ---------------------------- Fonctions support pour les features ----------------------------
 
-def get_stride_list(data_tronc, seg_lim, steps_lim, freq=100):
+def get_stride_list(data_lb, seg_lim, steps_lim, freq=100):
     # Get each time between consecutive initial contact (IC) of the same foot, averaged across all strides within
     # the trial except during the U-turn
     t = []
@@ -443,7 +485,7 @@ def get_stride_list(data_tronc, seg_lim, steps_lim, freq=100):
     return t
 
 
-def get_double_stance_time_list(data_tronc, seg_lim, steps_lim, freq=100):
+def get_double_stance_time_list(data_lb, seg_lim, steps_lim, freq=100):
     # Get for each cycle the time between IC of one foot and the FC of the contralateral foot divided by the total
     # time of the cycle time.
 
@@ -466,33 +508,33 @@ def get_double_stance_time_list(data_tronc, seg_lim, steps_lim, freq=100):
     return dst_t
 
 
-def get_p1_p2_autocorr(data_tronc, seg_lim, steps_lim, freq=100):
+def get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=100):
     # Get cranio-caudal step (P1) and stride (P2) autocorrelation coefficient = first and seconde peak
     # of the cranio-caudal correlation coefficient of the lower back.
 
     # On enlève le demi-tour, on sépare l'aller et le retour et on sélectionne la colonne d'intérêt
-    sig_go, sig_back = sig_go_back(data_tronc, seg_lim, freq=freq, signal="FreeAcc_X", norm=False)
+    sig_go, sig_back = sig_go_back(data_lb, seg_lim, freq=freq, signal="FreeAcc_X", norm=False)
     go_coeff = autocorr(sig_go)
 
-    p1_go, p2_go = peaks_3(go_coeff, data_tronc, seg_lim, steps_lim, freq)
+    p1_go, p2_go = peaks_3(go_coeff, data_lb, seg_lim, steps_lim, freq)
 
     back_coeff = autocorr(sig_back)
-    p1_back, p2_back = peaks_3(back_coeff, data_tronc, seg_lim, steps_lim, freq)
+    p1_back, p2_back = peaks_3(back_coeff, data_lb, seg_lim, steps_lim, freq)
 
     # print("P1P2", p1_go, p1_back, p2_go, p2_back)
     return p1_go, p1_back, p2_go, p2_back
 
 
 # ----------------------------Spéciales P1/P2 et autocorrélation ----------------------------
-def peaks_3(vector, data_tronc, seg_lim, steps_lim, freq):
-    p1_m1, p2_m1 = peaks_1(vector, data_tronc, seg_lim, steps_lim, freq)
-    p1_m2, p2_m2 = peaks_2(vector, data_tronc, seg_lim, steps_lim, freq)
+def peaks_3(vector, data_lb, seg_lim, steps_lim, freq):
+    p1_m1, p2_m1 = peaks_1(vector, data_lb, seg_lim, steps_lim, freq)
+    p1_m2, p2_m2 = peaks_2(vector, data_lb, seg_lim, steps_lim, freq)
 
     return max(p1_m1, p1_m2), max(p2_m1, p2_m2)
 
 
-def peaks_2(vector, data_tronc, seg_lim, steps_lim, freq):
-    strT = int(stride_time(data_tronc, seg_lim, steps_lim) * freq)
+def peaks_2(vector, data_lb, seg_lim, steps_lim, freq):
+    strT = int(stride_time(data_lb, seg_lim, steps_lim) * freq)
 
     start_p1 = int(strT * 0.35)
     end_p1 = int(strT * 0.65)
@@ -509,8 +551,8 @@ def peaks_2(vector, data_tronc, seg_lim, steps_lim, freq):
     return p1, p2
 
 
-def peaks_1(vector, data_tronc, seg_lim, steps_lim, freq):
-    strT = int(stride_time(data_tronc, seg_lim, steps_lim) * freq)
+def peaks_1(vector, data_lb, seg_lim, steps_lim, freq):
+    strT = int(stride_time(data_lb, seg_lim, steps_lim) * freq)
 
     indexes_pic_go = indexes(vector[0:len(vector)//2], min_dist=strT * 0.35)
 
