@@ -76,10 +76,10 @@ def print_semio_criteria(criteria_dict):
                     }
     info_msg = """
     ------------------------------+------------------------------
-    {Average Speed:<30}| {Steadiness:<30}
-    {Springiness:<30}| {Stability:<30}
-    {Sturdiness:<30}| {Symmetry:<30}
-    {Smoothness:<30}| {Synchronisation:<30}
+    {Average Speed:<50}| {Steadiness:<50}
+    {Springiness:<50}| {Stability:<50}
+    {Sturdiness:<50}| {Symmetry:<50}
+    {Smoothness:<50}| {Synchronisation:<50}
     """
 
     # Dump information
