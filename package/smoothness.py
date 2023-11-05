@@ -1,19 +1,15 @@
 import numpy as np
 
 
-def sparc_rot_XS(data_lb, seg_lim, steps_lim, signal="Gyr", phase="full"):
+def sparc_rot_XS(data_lb, seg_lim, steps_lim, signal="Gyr"):
 
     start = seg_lim.iloc[0, 0]
     end = seg_lim.iloc[3, 0]
 
-    # data_lb_demi_tour = data_lb
-    if phase == "u-turn":
-        data = data_lb[
-            (data_lb.iloc[:, 0] > seg_lim.iloc[1, 0] / 100) & (data_lb.iloc[:, 0] < seg_lim.iloc[2, 0] / 100)]
-    else:
-        data = data_lb[(data_lb.iloc[:, 0] > start / 100) & (data_lb.iloc[:, 0] < end / 100)]
+    # no use of start and end of the signal
+    data = data_lb[(data_lb.iloc[:, 0] > start / 100) & (data_lb.iloc[:, 0] < end / 100)]
 
-    # Sélection des signaux
+    # signals selection
     sig_X_demi_tour = data[signal + "_X"]
     sig_Y_demi_tour = data[signal + "_Y"]
     sig_Z_demi_tour = data[signal + "_Z"]
@@ -25,7 +21,7 @@ def sparc_rot_XS(data_lb, seg_lim, steps_lim, signal="Gyr", phase="full"):
     return sal_demi_tour
 
 
-# Here after : Copyright (c) 2015, Sivakumar Balasubramanian <siva82kb@gmail.com>
+# Here after Copyright (c) 2015, Sivakumar Balasubramanian <siva82kb@gmail.com>
 
 def sparc(movement, fs, padlevel=4, fc=10.0, amp_th=0.05):
     """
