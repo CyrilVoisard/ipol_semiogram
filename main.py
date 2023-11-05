@@ -172,7 +172,7 @@ if __name__ == "__main__":
         ref_steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3), seg_lim)
         compare = True
     except: 
-        compare = False
+        compare = True
     print(compare)
     
     # compute semio values (dictionnaries)
