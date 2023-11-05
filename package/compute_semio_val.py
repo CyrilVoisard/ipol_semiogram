@@ -45,6 +45,7 @@ def compute_semio_val(age, steps_lim, seg_lim, data_tronc, freq):
         sd = float(sd)
         f = int(f)
         val = spr_feat[j]
+        print("val", val)
         perso_feat.append(val)
         perso_feat.append(f * (val - m) / sd)
         spr_z_scores.append(f * (val - m) / sd)
