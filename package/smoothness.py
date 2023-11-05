@@ -1,17 +1,17 @@
 import numpy as np
 
 
-def sparc_rot_XS(data_tronc, seg_lim, steps_lim, signal="Gyr", phase="full"):
+def sparc_rot_XS(data_lb, seg_lim, steps_lim, signal="Gyr", phase="full"):
 
     start = seg_lim.iloc[0, 0]
     end = seg_lim.iloc[3, 0]
 
-    # data_tronc_demi_tour = data_tronc
+    # data_lb_demi_tour = data_lb
     if phase == "u-turn":
-        data = data_tronc[
-            (data_tronc.iloc[:, 0] > seg_lim.iloc[1, 0] / 100) & (data_tronc.iloc[:, 0] < seg_lim.iloc[2, 0] / 100)]
+        data = data_lb[
+            (data_lb.iloc[:, 0] > seg_lim.iloc[1, 0] / 100) & (data_lb.iloc[:, 0] < seg_lim.iloc[2, 0] / 100)]
     else:
-        data = data_tronc[(data_tronc.iloc[:, 0] > start / 100) & (data_tronc.iloc[:, 0] < end / 100)]
+        data = data_lb[(data_lb.iloc[:, 0] > start / 100) & (data_lb.iloc[:, 0] < end / 100)]
 
     # Sélection des signaux
     sig_X_demi_tour = data[signal + "_X"]
@@ -22,41 +22,10 @@ def sparc_rot_XS(data_tronc, seg_lim, steps_lim, signal="Gyr", phase="full"):
 
     sal_demi_tour, _, _ = sparc(sig_n2_demi_tour, fs=100)
 
-    # print("Sal_demi_tour", sal_demi_tour)
-
     return sal_demi_tour
 
 
-def sparc_lin_XS(data_tronc, seg_lim, steps_lim, signal="FreeAcc"):
-    start = seg_lim.iloc[0, 0]
-    end = seg_lim.iloc[3, 0]
-
-    data_tronc_go = data_tronc[
-        (start / 100 < data_tronc.iloc[:, 0]) & (data_tronc.iloc[:, 0] < seg_lim.iloc[1, 0] / 100)]
-    data_tronc_back = data_tronc[
-        (end / 100 > data_tronc.iloc[:, 0]) & (data_tronc.iloc[:, 0] > seg_lim.iloc[2, 0] / 100)]
-
-    # Pour l'aller
-    sig_X_go = data_tronc_go[signal + "_X"]
-    sig_Y_go = data_tronc_go[signal + "_Y"]
-    sig_Z_go = data_tronc_go[signal + "_Z"]
-
-    # Pour l'aller
-    sig_X_back = data_tronc_back[signal + "_X"]
-    sig_Y_back = data_tronc_back[signal + "_Y"]
-    sig_Z_back = data_tronc_back[signal + "_Z"]
-
-    sig_n2_go = np.sqrt(pow(sig_X_go, 2) + pow(sig_Y_go, 2) + pow(sig_Z_go, 2))
-    sig_n2_back = np.sqrt(pow(sig_X_back, 2) + pow(sig_Y_back, 2) + pow(sig_Z_back, 2))
-
-    sal_go, _, _ = sparc(sig_n2_go, fs=100)
-    sal_back, _, _ = sparc(sig_n2_back, fs=100)
-
-    # print("Sal_go", sal_go)
-    # print("Sal_back", sal_back)
-
-    return (sal_go + sal_back) / 2
-
+# Here after : Copyright (c) 2015, Sivakumar Balasubramanian <siva82kb@gmail.com>
 
 def sparc(movement, fs, padlevel=4, fc=10.0, amp_th=0.05):
     """
