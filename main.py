@@ -126,8 +126,8 @@ if __name__ == "__main__":
     # print semiogram values
     #print_semio_parameters(parameters)
 
-    criteria_dict = res = dict(zip(criteria_names, criteria))
-    print_semio_criteria(criteria)
+    criteria_dict = dict(zip(criteria_names, criteria))
+    print_semio_criteria(criteria_dict)
 
     # semiogram design
     radar_design.new_radar_superpose({"unique": criteria}, None,  min_r=int(args.min_z), max_r=int(args.max_z), output=data_WD)
