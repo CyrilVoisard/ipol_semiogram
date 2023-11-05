@@ -13,13 +13,14 @@ def ihr_avg(seg_lim, steps_lim, s, ml=False):
     Arguments:
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        s {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
-        freq {int} -- acquisition frequency
+        s {vector} -- time series from the lower back sensor depending on the iHR
+        ml {bool} -- the ratio is inverted if it is about the mediolateral signal
 
     Returns
     -------
-    float
-        iHR_aAP (%)
+    double
+        average iHR (float)
+        standard deviation iHR (float)
     """
     
     ihr_list = []
@@ -38,7 +39,20 @@ def ihr_avg(seg_lim, steps_lim, s, ml=False):
 
 
 def det_max(s, start, end, ml=False):
-    # Pour déterminer le maximum du HR au voisinage des points de détection automatique
+    """Determine the maximum iHR in the neighborhood of the detected stride.
+    
+    Arguments:
+        s {vector} -- time series from the lower back sensor depending on the iHR
+        start {int} -- sample starting the stride
+        end {int} -- sample ending the stride
+        ml {bool} -- the ratio is inverted if it is about the mediolateral signal
+
+    Returns
+    -------
+    float
+        maximum iHR
+    """
+    
     det_list = []
     for k in range(30):
         for kk in range(5):
