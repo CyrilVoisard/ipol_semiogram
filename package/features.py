@@ -7,7 +7,7 @@ from package import hr, smoothness
 
 
 # --------------------------------------
-# Average speed : refers to velocity during the walk.
+# Average speed: refers to velocity during the walk.
 
 def avg_speed(data_lb, seg_lim, steps_lim=0, release_u_turn=False, freq=100):
     """Compute the average speed of the trial
@@ -39,7 +39,7 @@ def avg_speed(data_lb, seg_lim, steps_lim=0, release_u_turn=False, freq=100):
 
 
 # --------------------------------------
-# Springiness : refers to gait rhythmicity. => ok
+# Springiness: refers to gait rhythmicity. => ok
 
 def stride_time(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the average stride time : Time between consecutive initial contact (IC) of the same foot, averaged across all strides within the trial
@@ -84,7 +84,7 @@ def u_turn_time(data_lb, seg_lim, steps_lim, freq=100):
 
 
 # --------------------------------------
-# Smoothness : refers to gait continuousness or non-intermittency.
+# Smoothness: refers to gait continuousness or non-intermittency.
 
 def sparc_gyr(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the gyration SPARC
@@ -150,7 +150,7 @@ def ldlj_acc(data_lb, seg_lim, steps_lim, signal='FreeAcc', freq=100):
     return (ldl_acc_go + ldl_acc_back) / 2
 
 # --------------------------------------
-# Steadiness : refers to gait regularity.
+# Steadiness: refers to gait regularity.
 
 def variation_coeff_stride_time(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the variation coefficient of stride time: standard deviation of the vector of stride times divided by its average.
@@ -191,46 +191,88 @@ def variation_coeff_double_stance_time(data_lb, seg_lim, steps_lim, freq=100):
 
 
 def p1_acc(data_lb, seg_lim, steps_lim, freq=100):
+    """Compute the cranio-caudal step autocorrelation coefficient: first peak of the cranio-caudal correlation coefficient of the lower back.
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    float
+        P1_acc
+    """
     
-    # Cranio-caudal step autocorrelation coefficient = first peak of the cranio-caudal correlation coefficient of
-    # the lower back.
     p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=freq)
     p1 = max(p1_go, p1_back)
-    # p1 = (p1_go + p1_back) / 2
+    
     return p1
 
 
 def p2_acc(data_lb, seg_lim, steps_lim, freq=100):
-    # Cranio-caudal step autocorrelation coefficient = first peak of the cranio-caudal correlation coefficient of
-    # the lower back.
+    """Compute the cranio-caudal stride autocorrelation coefficient: second peak of the cranio-caudal correlation coefficient of the lower back.
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    float
+        P2_acc
+    """
+    
     p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=freq)
     p2 = max(p2_go, p2_back)
-    # p2 = (p2_go + p2_back) / 2
+    
     return p2
 
 
 # --------------------------------------
-# Sturdiness : refers to gait amplitude. => ok
+# Sturdiness: refers to gait amplitude.
 
 def step_length(data_lb, seg_lim, steps_lim, freq=100):
-    # Total length (20 m) divided by the total number of steps after exclusion of the U-turn.
+    """Compute the average step length: total length (20 m) divided by the total number of steps after exclusion of the U-turn.
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    float
+        SteL (m)
+    """
+
     n_tot = 0
-    for i in range(len(steps_lim)):  # on ne prend pas en compte les premiers et le dernier pas
-        # if inside([steps_lim["HS"][i]], seg_lim) | inside([steps_lim["TO"][i]], seg_lim):
-        if inside([steps_lim["HS"][i], steps_lim["TO"][i]], seg_lim):
-            # On ne prend pas en compte les pas du demi-tour
+    for i in range(len(steps_lim)):  # without the first and the last steps
+        if inside([steps_lim["HS"][i], steps_lim["TO"][i]], seg_lim): # without u-turn
             n_tot = n_tot + 1
 
     return 20 / n_tot
 
 
 # --------------------------------------
-# Stability : refers to gait balance. => ok
+# Stability: refers to gait balance. => ok
 
 def medio_lateral_root_mean_square(data_lb, seg_lim, steps_lim, freq=100):
-    # Measure of dispersion of the medio-lateral acceleration data relative to zero.
+    """Compute the dispersion of the medio-lateral acceleration data relative to zero.
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
 
-    # On enlève le demi-tour
+    Returns
+    -------
+    float
+        RMSml (m/s2)
+    """
+
+    # without u-turn
     data_lb_go, data_lb_back = sig_go_back(data_lb, seg_lim, freq=freq, signal="FreeAcc_Y", norm=True)
 
     signal_go = rmoutliers(data_lb_go.values.tolist(), limite=3)
@@ -239,7 +281,6 @@ def medio_lateral_root_mean_square(data_lb, seg_lim, steps_lim, freq=100):
     rms_go = np.sqrt(np.mean(np.square(signal_go)))
     rms_back = np.sqrt(np.mean(np.square(signal_back)))
 
-    # rms = rms_go / 2 + rms_back / 2
     rms = min(rms_go, rms_back)
 
     return rms
@@ -248,11 +289,9 @@ def medio_lateral_root_mean_square(data_lb, seg_lim, steps_lim, freq=100):
 # --------------------------------------
 # Symmetry : refers to inter-limb coordination during gait.
 
-# To sum up, a fast Fourier transform was performed to draw the Fourier series of the signal. The sum of the amplitudes
-# of the 10 first even harmonics is divided by the sum of the amplitudes of the 10 first odd harmonics.
 
 def antero_posterior_HR(data_lb, seg_lim, steps_lim, freq=100):
-    # Ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the antero-posterior
+    # Power ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the antero-posterior
     # acceleration signal from the trunk.
 
     s = data_lb["FreeAcc_Z"]  # acceleration selon z
