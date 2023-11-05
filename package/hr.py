@@ -49,7 +49,7 @@ def det_max(s, start, end):
         return 0
 
 
-def det_max_ml(s, start, end, i):
+def det_max_ml(s, start, end):
     # Pour déterminer le maximum du HR au voisinage des points de détection automatique
     det_list = []
     for k in range(30):
