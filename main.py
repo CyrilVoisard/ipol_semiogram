@@ -69,7 +69,7 @@ def print_semio_parameters(parameters_dict):
     info_msg = """
     Values| Z-Scores
     -------------------------------------------------+-------------------------------------------------
-    {V:<30}| {sd_:<30}
+    {V:<30}| {sd_V:<30}
     {StrT:<30}| {sd_StrT:<30}
     {UTurn:<30}| {sd_UTurn:<30}
     {SteL:<30}| {sd_SteL:<30}
