@@ -552,6 +552,6 @@ def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_
                          zorder=10,
                          marker=marker_M6)
     path_out = os.path.join(output, "semio.svg")
-    plt.savefig(path_out, dpi=300,
+    plt.savefig(path_out, dpi=200,
                     transparent=True, bbox_inches="tight")
 
