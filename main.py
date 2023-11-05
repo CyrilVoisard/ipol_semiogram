@@ -223,7 +223,7 @@ if __name__ == "__main__":
                         help='Maximum for Z-score.')
     args = parser.parse_args()
 
-    freq = args.freq
+    freq = int(args.freq)
     #age = args.age
     age = None 
     
