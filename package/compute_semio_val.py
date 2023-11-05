@@ -10,14 +10,12 @@ from package import features as ft
 
 
 def compute_semio_val(age, steps_lim, seg_lim, data_tronc, freq):
-    # Liste des 7 paramètres, auxquels on ajoutera la vitesse moyenne
-    properties = ['Springiness', 'Sturdiness', 'Smoothness',
-                  'Steadiness', 'Stability', 'Symmetry',
-                  'Synchronisation', 'Average Speed']
+    # criteria list
+    criteria_names = ['Springiness', 'Sturdiness', 'Smoothness', 'Steadiness', 'Stability', 'Symmetry', 'Synchronisation', 'Average Speed']
+    
+    parameters = []
 
-    perso_feat = []
-
-    # Chargement du fichier modèle en fonction de l'âge
+    # choose the model with the age in input
     ages = [[0, 100], [0, 17], [18, 39], [40, 59], [60, 79], [80, 100]]
     if age is None:
         ref = 0
@@ -32,9 +30,8 @@ def compute_semio_val(age, steps_lim, seg_lim, data_tronc, freq):
     path = osp.join('models', r) + '.json'
     with open(path) as json_data:
         d = np.array(json.load(json_data))
-        # print(d)
 
-    # Springiness : RAS
+    # springiness
     spr_feat = [ft.stride_time(data_tronc, seg_lim, steps_lim, freq=freq),
                 ft.u_turn_time(data_tronc, seg_lim, steps_lim, freq=freq)]
     spr_ref = [d[d[:, 0] == 'Spr_StrT'], d[d[:, 0] == 'Spr_UtrT']]
@@ -45,12 +42,12 @@ def compute_semio_val(age, steps_lim, seg_lim, data_tronc, freq):
         sd = float(sd)
         f = int(f)
         val = spr_feat[j]
-        perso_feat.append(val)
-        perso_feat.append(f * (val - m) / sd)
+        parameters.append(val)
+        parameters.append(f * (val - m) / sd)
         spr_z_scores.append(f * (val - m) / sd)
     spr = np.average(spr_z_scores)
 
-    # Sturdiness : RAS.
+    # sturdiness
     stu_feat = [ft.step_length(data_tronc, seg_lim, steps_lim, freq=freq)]
     stu_ref = [d[d[:, 0] == 'Stu_L']]
     stu_z_scores = []
@@ -60,17 +57,15 @@ def compute_semio_val(age, steps_lim, seg_lim, data_tronc, freq):
         sd = float(sd)
         f = int(f)
         val = stu_feat[j]
-        perso_feat.append(val)
-        perso_feat.append(f * (val - m) / sd)
+        parameters.append(val)
+        parameters.append(f * (val - m) / sd)
         stu_z_scores.append(f * (val - m) / sd)
     stu = np.average(stu_z_scores)
 
-    # Smoothness : RAS
+    # smoothness
     smo_feat = [ft.sparc_gyr(data_tronc, seg_lim, steps_lim, freq=freq),
                 ft.ldlj_acc(data_tronc, seg_lim, steps_lim, freq=freq)]
-
-# [ft.antero_posterieur_root_mean_square(data_tronc, seg_lim, steps_lim, freq=freq),
-    smo_ref = [d[d[:, 0] == 'Smo_SPARC'], d[d[:, 0] == 'Smo_LDLAcc']] #d[d[:, 0] == 'Smo_RMS_aAP_LB'],
+    smo_ref = [d[d[:, 0] == 'Smo_SPARC'], d[d[:, 0] == 'Smo_LDLAcc']]
     smo_z_scores = []
     for j in range(len(smo_feat)):
         feat, m, sd, f = smo_ref[j].tolist()[0]
@@ -78,12 +73,12 @@ def compute_semio_val(age, steps_lim, seg_lim, data_tronc, freq):
         sd = float(sd)
         f = int(f)
         val = smo_feat[j]
-        perso_feat.append(val)
-        perso_feat.append(f * (val - m) / sd)
+        parameters.append(val)
+        parameters.append(f * (val - m) / sd)
         smo_z_scores.append(f * (val - m) / sd)
     smo = np.average(smo_z_scores)
 
-    # Steadiness : RAS
+    # steadiness
     ste_feat = [ft.variation_coeff_stride_time(data_tronc, seg_lim, steps_lim, freq=freq),
                 ft.variation_coeff_double_stance_time(data_tronc, seg_lim, steps_lim, freq=freq),
                 ft.p1_acc(data_tronc, seg_lim, steps_lim, freq=freq),
@@ -97,16 +92,12 @@ def compute_semio_val(age, steps_lim, seg_lim, data_tronc, freq):
         sd = float(sd)
         f = int(f)
         val = ste_feat[j]
-        perso_feat.append(val)
-        perso_feat.append(f * (val - m) / sd)
-        # print("val=", val)
-        # print("m=", m)
-        # print("sd=", sd)
-        # print("f=", f)
+        parameters.append(val)
+        parameters.append(f * (val - m) / sd)
         ste_z_scores.append(f * (val - m) / sd)
     ste = np.average(ste_z_scores)
 
-    # Stability : RAS.
+    # stability
     sta_feat = [ft.medio_lateral_root_mean_square(data_tronc, seg_lim, steps_lim, freq=freq)]
     sta_ref = [d[d[:, 0] == 'Sta_RMS_aML_LB']]
     sta_z_scores = []
@@ -116,12 +107,12 @@ def compute_semio_val(age, steps_lim, seg_lim, data_tronc, freq):
         sd = float(sd)
         f = int(f)
         val = sta_feat[j]
-        perso_feat.append(val)
-        perso_feat.append(f * (val - m) / sd)
+        parameters.append(val)
+        parameters.append(f * (val - m) / sd)
         sta_z_scores.append(f * (val - m) / sd)
     sta = np.average(sta_z_scores)
 
-    # Symmetry :RAS.
+    # symmetry
     sym_feat = [ft.p1_p2_acc(data_tronc, seg_lim, steps_lim, freq=freq),
                 ft.mean_swing_times_ratio(data_tronc, seg_lim, steps_lim, freq=freq),
                 ft.antero_posterior_iHR(data_tronc, seg_lim, steps_lim, freq=freq),
@@ -136,12 +127,12 @@ def compute_semio_val(age, steps_lim, seg_lim, data_tronc, freq):
         sd = float(sd)
         f = int(f)
         val = sym_feat[j]
-        perso_feat.append(val)
-        perso_feat.append(f * (val - m) / sd)
+        parameters.append(val)
+        parameters.append(f * (val - m) / sd)
         sym_z_scores.append(f * (val - m) / sd)
     sym = np.average(sym_z_scores)
 
-    # Synchronisation : RAS.
+    # synchronisation
     syn_feat = [ft.double_stance_time(data_tronc, seg_lim, steps_lim, freq=freq)]
     syn_ref = [d[d[:, 0] == 'Syn_dsT']]
     syn_z_scores = []
@@ -151,12 +142,12 @@ def compute_semio_val(age, steps_lim, seg_lim, data_tronc, freq):
         sd = float(sd)
         f = int(f)
         val = syn_feat[j]
-        perso_feat.append(val)
-        perso_feat.append(f * (val - m) / sd)
+        parameters.append(val)
+        parameters.append(f * (val - m) / sd)
         syn_z_scores.append(f * (val - m) / sd)
     syn = np.average(syn_z_scores)
 
-    # Average speed : RAS.
+    # average speed
     avg_feat = [ft.avg_speed(data_tronc, seg_lim, steps_lim, release_u_turn=True, freq=freq)]
     avg_ref = [d[d[:, 0] == 'AvgSpeed']]
     avg_z_scores = []
@@ -166,24 +157,12 @@ def compute_semio_val(age, steps_lim, seg_lim, data_tronc, freq):
         sd = float(sd)
         f = int(f)
         val = avg_feat[j]
-        perso_feat.append(val)
-        perso_feat.append(f * (val - m) / sd)
+        parameters.append(val)
+        parameters.append(f * (val - m) / sd)
         avg_z_scores.append(f * (val - m) / sd)
     avg = np.average(avg_z_scores)
 
-    # Valeurs finales
+    # final values
     semio_val = [spr, stu, smo, ste, sta, sym, syn, avg]
-    # print("semio_val=", semio_val)
 
-    return properties, semio_val, perso_feat
-
-
-def aggregate(semio_val_par_date):
-    if len(semio_val_par_date) > 0:
-        semio_val_par_date_array = np.array(semio_val_par_date)
-        result = []
-        for f in range(len(semio_val_par_date[0])):
-            result.append([np.mean(semio_val_par_date_array[:, f]), np.std(semio_val_par_date_array[:, f])])
-        return result
-    else:
-        return None
+    return criteria_names, semio_val, parameters
