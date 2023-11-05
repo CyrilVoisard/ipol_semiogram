@@ -308,7 +308,7 @@ def mean_swing_times_ratio(data_tronc, seg_lim, steps_lim, freq=100):
     sw_center = [0, 0]
     for foot in [0, 1]:
         steps_lim_f = steps_lim[steps_lim["Foot"] == foot]
-        if steps_lim_f.iloc[0, 4] > steps_lim_f.iloc[0, 3]:
+        if steps_lim_f["HS"].iloc[0] > steps_lim_f["TO"].iloc[0]:
             sw_center[foot] = 1
 
     msw = [[], []]
