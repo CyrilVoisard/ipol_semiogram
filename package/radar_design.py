@@ -552,14 +552,3 @@ def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_
                          zorder=10,
                          marker=marker_M6)
 
-    # On enregistre la nouvelle figure
-    if type_ != None:
-        titre = ref + "_" + type_ + "_semiogram"
-    else:
-        titre = ref + "_semiogram"
-    print(type_, titre)
-    path_out = os.path.join(output, titre + '.png')
-    plt.savefig(path_out, bbox_inches="tight")
-    plt.close()
-    print("RAS image superposée")
-
