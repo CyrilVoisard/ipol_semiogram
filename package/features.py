@@ -542,7 +542,7 @@ def sig_go_back(data_lb, seg_lim, freq=100, signal="aucun", norm=False):
             return data_lb_go, data_lb_back
 
 
-# ---------------------------- Fonctions support pour les features ----------------------------
+# ---------------------------- Support functions for general features ----------------------------
 
 def get_stride_list(data_lb, seg_lim, steps_lim, freq=100):
     # Get each time between consecutive initial contact (IC) of the same foot, averaged across all strides within
@@ -586,6 +586,8 @@ def get_double_stance_time_list(data_lb, seg_lim, steps_lim, freq=100):
     return dst_t
 
 
+
+# ---------------------------- autocorrelation function ----------------------------
 def get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=100):
     # Get cranio-caudal step (P1) and stride (P2) autocorrelation coefficient = first and seconde peak
     # of the cranio-caudal correlation coefficient of the lower back.
@@ -601,9 +603,8 @@ def get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=100):
 
     # print("P1P2", p1_go, p1_back, p2_go, p2_back)
     return p1_go, p1_back, p2_go, p2_back
+    
 
-
-# ----------------------------Spéciales P1/P2 et autocorrélation ----------------------------
 def peaks_3(vector, data_lb, seg_lim, steps_lim, freq):
     p1_m1, p2_m1 = peaks_1(vector, data_lb, seg_lim, steps_lim, freq)
     p1_m2, p2_m2 = peaks_2(vector, data_lb, seg_lim, steps_lim, freq)
@@ -649,15 +650,15 @@ def peaks_1(vector, data_lb, seg_lim, steps_lim, freq):
 def indexes(y, thres=0.3, min_dist=1, thres_abs=False):
     """Peak detection routine.
 
-    Finds the numeric index of the peaks in *y* by taking its first order difference. By using
+    Finds the numeric index of the peaks in *y* by taking its first-order difference. By using
     *thres* and *min_dist* parameters, it is possible to reduce the number of
     detected peaks. *y* must be signed.
 
-    Parameters
+    Arguments
     ----------
     y : ndarray (signed)
         1D amplitude data to search for peaks.
-    thres : float between [0., 1.]
+    thres: float between [0., 1.]
         Normalized threshold. Only the peaks with amplitude higher than the
         threshold will be detected.
     min_dist : int
@@ -681,7 +682,7 @@ def indexes(y, thres=0.3, min_dist=1, thres_abs=False):
 
     min_dist = int(min_dist)
 
-    # compute first order difference
+    # compute first-order difference
     dy = np.diff(y)
     # print("dy", dy)
 
@@ -695,7 +696,7 @@ def indexes(y, thres=0.3, min_dist=1, thres_abs=False):
         return np.array([])
 
     if len(zeros):
-        # compute first order difference of zero indexes
+        # compute first-order difference of zero indexes
         zeros_diff = np.diff(zeros)
         # check when zeros are not chained together
         zeros_diff_not_one, = np.add(np.where(zeros_diff != 1), 1)
@@ -715,12 +716,12 @@ def indexes(y, thres=0.3, min_dist=1, thres_abs=False):
         # for each chain of zero indexes
         for plateau in zero_plateaus:
             median = np.median(plateau)
-            # set leftmost values to leftmost non zero values
+            # set leftmost values to leftmost non-zero values
             dy[plateau[plateau < median]] = dy[plateau[0] - 1]
-            # set rightmost and middle values to rightmost non zero values
+            # set rightmost and middle values to rightmost non-zero values
             dy[plateau[plateau >= median]] = dy[plateau[-1] + 1]
 
-    # find the peaks by using the first order difference
+    # find the peaks by using the first-order difference
     peaks = np.where(
         (np.hstack([dy, 0.0]) < 0.0)
         & (np.hstack([0.0, dy]) > 0.0)
