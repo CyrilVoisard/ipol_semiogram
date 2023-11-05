@@ -169,9 +169,15 @@ if __name__ == "__main__":
     data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0))
     seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
     steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
+    if compare:
+        ref_data_lb = import_data.import_XSens(os.path.join(data_WD, args.i2))
+        ref_seg_lim = import_data.get_seg(os.path.join(data_WD, args.i3))
+        ref_steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3), seg_lim)
     
     # compute semio values (dictionnaries)
     criteria_names, criteria, parameters = compute_semio_val.compute_semio_val(age, steps_lim, seg_lim, data_lb, freq)
+    if compare:
+        ref_criteria_names, ref_criteria, ref_parameters = compute_semio_val.compute_semio_val(age, ref_steps_lim, ref_seg_lim, ref_data_lb, freq)
 
     # print semiogram values
     parameters_names = ["StrT", "sd_StrT", "UTurn", "sd_UTurn", "SteL", "sd_SteL",
@@ -186,6 +192,9 @@ if __name__ == "__main__":
     print_semio_criteria(criteria_dict)
 
     # semiogram design
-    radar_design.new_radar_superpose({"unique": criteria}, None,  min_r=int(args.min_z), max_r=int(args.max_z), output=data_WD)
+    radar_design.new_radar_superpose({"unique": criteria}, None,  min_r=int(args.min_z), max_r=int(args.max_z), output=data_WD, name="semio")
+    if compare : 
+        radar_design.new_radar_superpose({"unique": ref_criteria}, None,  min_r=int(args.min_z), max_r=int(args.max_z), output=data_WD, name="semio_ref")
+        radar_design.new_radar_superpose({"ref": ref_criteria, "new": criteria}, None,  min_r=int(args.min_z), max_r=int(args.max_z), output=data_WD, name="semio_sup")
     print("ok charge")
     sys.exit(0)
