@@ -431,6 +431,7 @@ def get_stride_list(data_tronc, seg_lim, steps_lim, freq=100):
     t = []
 
     steps_lim = steps_lim.sort_values(by="HS")
+    print("steps_lim", steps_lim)
     for i in range(1, len(steps_lim) - 4): # On ne prend pas en compte les 2 derniers pas qui peuvent être freinés
         t_tot = steps_lim["HS"][i + 2] - steps_lim["HS"][i]
         if ((steps_lim["Foot"][i] + steps_lim["Foot"][i + 1] == 1)
