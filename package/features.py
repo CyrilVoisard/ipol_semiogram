@@ -329,7 +329,7 @@ def antero_posterior_iHR(data_lb, seg_lim, steps_lim, freq=100):
     s = data_lb["FreeAcc_Z"]  # anteroposterior acceleration
     steps_lim = steps_lim.sort_values(by="HS")
 
-    ihr_s, st_ihr_s = hr.hr_ihr_moyen(seg_lim, steps_lim, s, i=1, ml=False)
+    ihr_s, st_ihr_s = hr.ihr_avg(seg_lim, steps_lim, s, ml=False)
 
     return ihr_s
 
@@ -353,7 +353,7 @@ def medio_lateral_iHR(data_lb, seg_lim, steps_lim, freq=100):
     s = data_lb["FreeAcc_Y"]  # mediolateral acceleration
     steps_lim = steps_lim.sort_values(by="HS")
 
-    ihr_s, st_ihr_s = hr.hr_ihr_moyen(seg_lim, steps_lim, s, i=1, ml=True)
+    ihr_s, st_ihr_s = hr.ihr_avg(seg_lim, steps_lim, s, ml=True)
 
 
     return ihr_s
@@ -378,7 +378,7 @@ def cranio_caudal_iHR(data_lb, seg_lim, steps_lim, freq=100) -> object:
     s = data_lb["FreeAcc_X"]  # craniocaudal acceleration
     steps_lim = steps_lim.sort_values(by="HS")
 
-    ihr_s, st_ihr_s = hr.hr_ihr_moyen(seg_lim, steps_lim, s, i=1, ml=False)
+    ihr_s, st_ihr_s = hr.ihr_avg(seg_lim, steps_lim, s, ml=False)
 
     return ihr_s
 
