@@ -469,7 +469,7 @@ def double_stance_time(data_lb, seg_lim, steps_lim, freq=100):
     Returns
     -------
     float
-        swTr
+        dstT (%)
     """
     
     dst_t = get_double_stance_time_list(data_lb, seg_lim, steps_lim, freq=freq)
@@ -548,16 +548,28 @@ def inside(list, seg_lim):
 
 
 def find_nearest(array, value):
+    """Find the nearest value of a given value in an array.
+    
+    Arguments:
+        array {numpy array}
+        value {float}
+
+    Returns
+    -------
+    float
+    """
+    
     idx = (np.abs(array - value)).argmin()
+    
     return array[idx]
 
 
-def sig_go_back(data_lb, seg_lim, freq=100, signal="aucun", norm=False):
+def sig_go_back(data_lb, seg_lim, freq=100, signal="none", norm=False):
     data_lb_go = data_lb[(seg_lim.iloc[0, 0] / freq < data_lb["PacketCounter"])
                                & (data_lb["PacketCounter"] < seg_lim.iloc[1, 0] / freq)]
     data_lb_back = data_lb[(seg_lim.iloc[3, 0] / freq > data_lb["PacketCounter"])
                                  & (data_lb["PacketCounter"] > seg_lim.iloc[2, 0] / freq)]
-    if signal == "aucun":
+    if signal == "none":
         return data_lb_go, data_lb_back
     else:
         try:
@@ -575,12 +587,25 @@ def sig_go_back(data_lb, seg_lim, freq=100, signal="aucun", norm=False):
 # ---------------------------- Support functions for general features ----------------------------
 
 def get_stride_list(data_lb, seg_lim, steps_lim, freq=100):
-    # Get each time between consecutive initial contact (IC) of the same foot, averaged across all strides within
-    # the trial except during the U-turn
+    """Compute the list of stride times: time between consecutive initial contact (IC) of the same foot, averaged across all strides 
+    within the trial except during the U-turn.
+    
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    list
+        Contains stride duration (s) without outliers
+    """
+    
     t = []
 
     steps_lim = steps_lim.sort_values(by="HS")
-    for i in range(1, len(steps_lim) - 4): # On ne prend pas en compte les 2 derniers pas qui peuvent être freinés
+    for i in range(1, len(steps_lim) - 4):
         t_tot = steps_lim["HS"].iloc[i + 2] - steps_lim["HS"].iloc[i]
         if ((steps_lim["Foot"].iloc[i] + steps_lim["Foot"].iloc[i + 1] == 1)
                 & (steps_lim["Foot"].iloc[i + 1] + steps_lim["Foot"].iloc[i + 2] == 1)):
@@ -588,14 +613,26 @@ def get_stride_list(data_lb, seg_lim, steps_lim, freq=100):
             if inside([steps_lim["HS"].iloc[i], steps_lim["HS"].iloc[i + 2]], seg_lim):
                 t.append(t_tot)
 
-    t = rmoutliers(t)
+    t = rmoutliers(t)  # remove outliers
 
     return t
 
 
 def get_double_stance_time_list(data_lb, seg_lim, steps_lim, freq=100):
-    # Get for each cycle the time between IC of one foot and the FC of the contralateral foot divided by the total
-    # time of the cycle time.
+    """Compute the list of double stance time ratio: time between IC of one foot and the FC of the contralateral foot divided by the 
+    total time of the gait cycle.
+    
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    list -- dst_t
+        list of double stance time ratio (%) without outliers 
+    """
 
     dst_t = []
 
@@ -611,7 +648,7 @@ def get_double_stance_time_list(data_lb, seg_lim, steps_lim, freq=100):
             if inside([steps_lim["HS"].iloc[i], steps_lim["HS"].iloc[i + 2]], seg_lim):
                 dst_t.append(st)
 
-    dst_t = rmoutliers(dst_t)
+    dst_t = rmoutliers(dst_t)  # remove outliers
 
     return dst_t
 
@@ -631,7 +668,6 @@ def get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=100):
     back_coeff = autocorr(sig_back)
     p1_back, p2_back = peaks_3(back_coeff, data_lb, seg_lim, steps_lim, freq)
 
-    # print("P1P2", p1_go, p1_back, p2_go, p2_back)
     return p1_go, p1_back, p2_go, p2_back
     
 
@@ -714,7 +750,6 @@ def indexes(y, thres=0.3, min_dist=1, thres_abs=False):
 
     # compute first-order difference
     dy = np.diff(y)
-    # print("dy", dy)
 
     # propagate left and right values successively to fill all plateau pixels (0-value)
     # print("where", np.where(dy == 0))
@@ -780,7 +815,7 @@ def autocorr(f):
     fvi = np.fft.fft(f, n=2 * N)
     acf = np.real(np.fft.ifft(fvi * np.conjugate(fvi))[:N])
     d = N - np.arange(N)
-    acf = acf / d # pour avoir un indicateur non biaisé
+    acf = acf / d  # non biased estimation
     acf = acf / acf[0]
     return acf
 
