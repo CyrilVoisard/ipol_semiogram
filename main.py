@@ -63,6 +63,8 @@ def print_semio_criteria(criteria_dict):
         Parameters of the trial.
     """
 
+    print("criteria_dict", criteria_dict)
+
     display_dict = {'Average Speed': "Average Speed: {Average Speed}".format(**criteria_dict),
                     'Springiness': "Springiness: {Springiness}".format(**criteria_dict),
                     'Sturdiness': "Sturdiness: {Sturdiness}".format(**criteria_dict),
