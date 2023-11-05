@@ -1,11 +1,9 @@
-# Objectif : détailler l'ensemble des 14 features conservées dans la version finale du semiogram.
 
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import cumtrapz
 from scipy import stats
 
-# os.chdir('/Users/cyril/Library/Mobile Documents/com~apple~CloudDocs/Borelli/4 - Classes et fonctions')
 from package import features as ft
 
 
