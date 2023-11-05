@@ -21,26 +21,6 @@ data_WD = os.getcwd()
 # Change the CWD to ROOT
 os.chdir(ROOT)
 
-def load_metadata(subject, trial):
-    """Return the metadata dict for the given subject-trial.
-
-    Arguments:
-        subject {int} -- Subject number
-        trial {int} -- Trial number
-
-    Returns
-    -------
-    dict
-        Metadata
-    """
-
-    code = str(subject) + "-" + str(trial)
-    fname = os.path.join(FOLDER, code)
-    with open(fname + ".json") as metadata_file:
-        metadata_dict = json.load(metadata_file)
-    return metadata_dict
-
-
 def print_semio_parameters(parameters_dict):
     """Dump the parameters computed from the trial in a text file (trial_info.txt)
 
@@ -74,129 +54,39 @@ def print_semio_parameters(parameters_dict):
         #for name, value in metadata_dict.items():
          #   f.write(f"{name} = {value}\n")
 
-
-
-def load_signal(subject, trial):
-    """Return the signal associated with the subject-trial pair.
+def print_semio_criteria(criteria_dict):
+    """Dump the parameters computed from the trial in a text file (trial_info.txt)
 
     Parameters
     ----------
-    subject : int
-        Subject number
-    trial : int
-        Trial number
-
-    Returns
-    -------
-    numpy array
-        Signal
-
+    parameters_dict : dict
+        Parameters of the trial.
     """
-    code = str(subject) + "-" + str(trial)
-    fname = os.path.join(FOLDER, code)
-    signal_lb = import_XSens(fname+"_lb.txt")
-    signal_lf = import_XSens(fname+"_lf.txt")
-    signal_rf = import_XSens(fname+"_rf.txt")
-    
-    t_max = min(len(signal_lb), len(signal_rf), len(signal_lf))
-    signal_lb = signal_lb[0:t_max]
-    signal_lf = signal_lf[0:t_max]
-    signal_rf = signal_rf[0:t_max]
 
-    # Pour TOX, calcul plus complexe
-    gyr_x = signal_lb['Gyr_X']
-    angle_x_full = np.cumsum(gyr_x)/100
-    a = np.median(angle_x_full[0:len(angle_x_full) // 2])  # Tout début du signal
-    z = np.median(angle_x_full[len(angle_x_full) // 2:len(angle_x_full)])  # Fin du signal, en enlevant la toute fin qui posait
-    angle_x_full = np.sign(z)*(angle_x_full - a)*180/abs(z)
-    
-    sig = {'Time': signal_lb["PacketCounter"], 'TOX': angle_x_full, 'TAX': signal_lb["Acc_X"], 'TAY': signal_lb["Acc_Y"], 
-           'RAV': np.sqrt(signal_rf["FreeAcc_X"]**2 + signal_rf["FreeAcc_Y"]**2 + signal_rf["FreeAcc_Z"]**2), 
-           'RAZ': signal_rf["FreeAcc_Z"], 'RRY': signal_rf["Gyr_Y"], 
-           'LAV': np.sqrt(signal_lf["FreeAcc_X"]**2 + signal_lf["FreeAcc_Y"]**2 + signal_lf["FreeAcc_Z"]**2), 
-           'LAZ': signal_lf["FreeAcc_Z"], 'LRY': signal_lf["Gyr_Y"]}
-    
-    signal = pd.DataFrame(sig)
-    
-    return signal
+    display_dict = {'Average Speed': "Average Speed: {Average Speed}".format(**criteria_dict),
+                    'Springiness': "Springiness: {Springiness}".format(**criteria_dict),
+                    'Sturdiness': "Sturdiness: {Sturdiness}".format(**criteria_dict),
+                    'Smoothness': "Smoothness: {Smoothness}".format(**criteria_dict),
+                    'Steadiness': "Steadiness: {Steadiness}".format(**criteria_dict),
+                    'Stability': "Stability: {Stability}".format(**criteria_dict),
+                    'Symmetry': "Symmetry: {Symmetry}".format(**criteria_dict),
+                    'Synchronisation': "Synchronisation: {Synchronisation}".format(**criteria_dict)
+                    }
+    info_msg = """
+    ------------------------------+------------------------------
+    {Average Speed:<30}| {Steadiness:<30}
+    {Springiness:<30}| {Stability:<30}
+    {Sturdiness:<30}| {Symmetry:<30}
+    {Smoothness:<30}| {Synchronisation:<30}
+    """
 
+    # Dump information
+    os.chdir(data_WD) # Get back to the normal WD
 
-def dump_plot(signal, metadata_dict, to_plot=['TOX', 'TAX', 'TAY', 'RAV', 'RAZ', 'RRY', 'LAV', 'LAZ', 'LRY']):
-
-    n_samples, _ = signal.shape
-    tt = np.arange(n_samples) / 100
-
-    # get limits
-    acc_tronc = np.take(signal, indices=[COLUMN_NAMES[dim_name]
-                                   for dim_name in to_plot if dim_name[0:2] == "TA"], axis=1)
-    if acc_tronc.size > 0:
-        acc_tronc_ylim = [acc_tronc.min()-0.1, acc_tronc.max()+0.1]
-    
-    acc = np.take(signal, indices=[COLUMN_NAMES[dim_name]
-                                   for dim_name in to_plot if dim_name[1] == "A"], axis=1)
-    if acc.size > 0:
-        acc_ylim = [acc.min()-0.1, acc.max()+0.1]
-        
-    rot = np.take(signal, indices=[COLUMN_NAMES[dim_name]
-                                   for dim_name in to_plot if dim_name[1] == "R"], axis=1)
-    if rot.size > 0:
-        rot_ylim = [rot.min()-20, rot.max()+20]
-
-    for dim_name in to_plot:
-        #print(dim_name, COLUMN_NAMES[dim_name])
-        fig, ax = plt.subplots(figsize=(10, 4))
-        # xlim
-        ax.set_xlim(0, n_samples/100)
-        # plot
-        dim = COLUMN_NAMES[dim_name]
-        ax.plot(tt, signal.iloc[:, dim])
-        # ylim
-        #if dim_name[0] in ["R", "L"]:
-         #   if dim_name[1] == "A":
-          #      ax.set_ylim(acc_ylim)
-           # elif dim_name[1] == "R":
-            #    ax.set_ylim(rot_ylim)
-        #elif dim_name[0:2]== "TA":
-         #   ax.set_ylim(acc_tronc_ylim)
-        
-        # number of yticks
-        plt.locator_params(axis='y', nbins=6)
-        # ylabel
-        ylabel = "m/s²" if dim_name[1] == "A" else "deg/s"
-        ax.set_ylabel(ylabel, fontdict={"size": 15})
-        for z in ax.get_yticklabels() + ax.get_xticklabels():
-            z.set_fontsize(12)
-        
-        ymin, ymax = ax.get_ylim()
-        
-        # seg annotations
-        u_start, u_end = metadata_dict["UTurnBoundaries"]
-        ax.vlines([u_start/100, u_end/100], ymin, ymax, color='red', linestyles="--", lw=1, label = 'U-turn Boundaries')
-        ax.fill_between([u_start/100, u_end/100], ymin, ymax,
-                        facecolor="red", alpha=0.2, label = "U-Turn Phase")
-        # step annotations
-        if dim_name[0] in ["R", "L"]:
-            if dim_name[0] == "R":
-                steps = metadata_dict["RightFootEvents"]
-            elif dim_name[0] == "L":
-                steps = metadata_dict["LeftFootEvents"]
-                
-            label_added =False
-            for start, end in steps:
-                if (end < u_start) | (start > u_end):
-                    if not label_added:
-                        ax.vlines([start/100, end/100], ymin, ymax, linestyles="--", lw=1, label = "Gait Events")
-                        r = ax.fill_between([start/100, end/100], ymin, ymax,
-                                        facecolor="green", alpha=0.3, label = "Swing Phases")
-                        label_added =True
-                    else:
-                        ax.vlines([start/100, end/100], ymin, ymax, linestyles="--", lw=1)
-                        r = ax.fill_between([start/100, end/100], ymin, ymax,
-                                        facecolor="green", alpha=0.3)
-        fig.tight_layout()
-        fig.legend(bbox_to_anchor=(1, 0.72, 0, 0.5))
-        plt.savefig(dim_name + ".svg", dpi=300,
-                    transparent=True, bbox_inches='tight')
+    with open("trial_criteria.txt", "wt") as f:
+        print(info_msg.format(**display_dict), file=f)
+        #for name, value in metadata_dict.items():
+         #   f.write(f"{name} = {value}\n")
 
 
 if __name__ == "__main__":
@@ -234,7 +124,8 @@ if __name__ == "__main__":
     # print semiogram values
     #print_semio_parameters(parameters)
 
-    #print_semio_criteria(criteria)
+    criteria_dict = res = dict(zip(criteria_names, criteria))
+    print_semio_criteria(criteria)
 
     # semiogram design
     radar_design.new_radar_superpose({"unique": criteria}, None,  min_r=int(args.min_z), max_r=int(args.max_z), output=data_WD)
