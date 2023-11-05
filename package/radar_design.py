@@ -496,6 +496,7 @@ def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_
                     _patch_M6 = _patch
                     area_M6 = patches.Polygon(points, color=cmap1(norm(semio_val[7])), alpha=0.2)
                     axes.add_patch(area_M6)
+                    print("ok area_M6)
                 if k == 0:
                     points_M0 = points
                     marker_M0 = marker_
@@ -503,6 +504,7 @@ def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_
                     _patch_M0 = _patch
                     area_M0 = patches.Polygon(points, color="white", alpha=1)
                     axes.add_patch(area_M0)
+                    print("ok area_M0)
             #else:
             axes.add_patch(_patch)
                 # On trace des cercles au niveau des valeurs
