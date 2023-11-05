@@ -231,6 +231,7 @@ if __name__ == "__main__":
     data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0))
     seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
     steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
+    print("initial", steps_lim)
     
     # compute semio values (dictionnaries)
     criteria_names, criteria, parameters = compute_semio_val.compute_semio_val(age, steps_lim, seg_lim, data_lb, freq)
