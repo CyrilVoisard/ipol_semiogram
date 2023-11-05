@@ -107,9 +107,9 @@ def sparc_gyr(data_lb, seg_lim, steps_lim, freq=100):
     data = data_lb[(data_lb.iloc[:, 0] > start / freq) & (data_lb.iloc[:, 0] < end / freq)]
 
     # Sélection des signaux
-    sig_X = data[signal + "_X"]
-    sig_Y = data[signal + "_Y"]
-    sig_Z = data[signal + "_Z"]
+    sig_X = data["Gyr_X"]
+    sig_Y = data["Gyr_Y"]
+    sig_Z = data["Gyr_Z"]
 
     sig_n2= np.sqrt(pow(sig_X, 2) + pow(sig_Y, 2) + pow(sig_Z, 2))
 
