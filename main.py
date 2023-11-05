@@ -147,7 +147,7 @@ if __name__ == "__main__":
                             help='Reference set - Time series for the lower back sensor.', required=False)
         parser.add_argument('-i3', metavar='ref_gait_events',
                             help='Reference set - Metadata with gait events.', required=False)
-        compare = True
+        compare = False
     except: 
         compare = False
         
