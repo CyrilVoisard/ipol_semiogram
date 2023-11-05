@@ -455,8 +455,8 @@ def get_double_stance_time_list(data_tronc, seg_lim, steps_lim, freq=100):
         st2 = (steps_lim["TO"][i + 1] - steps_lim["HS"][i])
         t_tot = steps_lim["HS"][i + 2] - steps_lim["HS"][i]
         st = (st1 + st2) / t_tot
-        if ((steps_lim["Foot"][i] + steps_lim["Foot"][i + 1, 0] == 1) &
-            (steps_lim["Foot"][i + 1] + steps_lim["Foot"][i + 2, 0] == 1)) & (st1 > 0) & (st2 > 0):
+        if ((steps_lim["Foot"][i] + steps_lim["Foot"][i + 1] == 1) &
+            (steps_lim["Foot"][i + 1] + steps_lim["Foot"][i + 2] == 1)) & (st1 > 0) & (st2 > 0):
 
             if inside([steps_lim["HS"][i], steps_lim["HS"][i + 2]], seg_lim):
                 dst_t.append(st)
