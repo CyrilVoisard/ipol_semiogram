@@ -10,8 +10,8 @@ from package import hr, smoothness
 # Average speed: refers to velocity during the walk.
 
 def avg_speed(data_lb, seg_lim, steps_lim=0, release_u_turn=False, freq=100):
-    """Compute the average speed of the trial
-
+    """Compute the average speed of the trial.
+    
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
@@ -42,9 +42,9 @@ def avg_speed(data_lb, seg_lim, steps_lim=0, release_u_turn=False, freq=100):
 # Springiness: refers to gait rhythmicity. => ok
 
 def stride_time(data_lb, seg_lim, steps_lim, freq=100):
-    """Compute the average stride time : Time between consecutive initial contact (IC) of the same foot, averaged across all strides within the trial
-    except during the U-turn
-
+    """Compute the average stride time : Time between consecutive initial contact (IC) of the same foot, averaged across all strides 
+    within the trial except during the U-turn.
+    
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
@@ -154,6 +154,7 @@ def ldlj_acc(data_lb, seg_lim, steps_lim, signal='FreeAcc', freq=100):
 
 def variation_coeff_stride_time(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the variation coefficient of stride time: standard deviation of the vector of stride times divided by its average.
+    
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
@@ -173,6 +174,7 @@ def variation_coeff_stride_time(data_lb, seg_lim, steps_lim, freq=100):
 
 def variation_coeff_double_stance_time(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the variation coefficient of double stance time: Standard deviation of the vector of double stance times divided by its average.
+    
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
@@ -192,6 +194,7 @@ def variation_coeff_double_stance_time(data_lb, seg_lim, steps_lim, freq=100):
 
 def p1_acc(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the cranio-caudal step autocorrelation coefficient: first peak of the cranio-caudal correlation coefficient of the lower back.
+    
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
@@ -201,7 +204,7 @@ def p1_acc(data_lb, seg_lim, steps_lim, freq=100):
     Returns
     -------
     float
-        P1_acc
+        P1_aCC
     """
     
     p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=freq)
@@ -212,6 +215,7 @@ def p1_acc(data_lb, seg_lim, steps_lim, freq=100):
 
 def p2_acc(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the cranio-caudal stride autocorrelation coefficient: second peak of the cranio-caudal correlation coefficient of the lower back.
+    
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
@@ -221,7 +225,7 @@ def p2_acc(data_lb, seg_lim, steps_lim, freq=100):
     Returns
     -------
     float
-        P2_acc
+        P2_aCC
     """
     
     p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=freq)
@@ -235,6 +239,7 @@ def p2_acc(data_lb, seg_lim, steps_lim, freq=100):
 
 def step_length(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the average step length: total length (20 m) divided by the total number of steps after exclusion of the U-turn.
+    
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
@@ -256,10 +261,11 @@ def step_length(data_lb, seg_lim, steps_lim, freq=100):
 
 
 # --------------------------------------
-# Stability: refers to gait balance. => ok
+# Stability: refers to gait balance.
 
 def medio_lateral_root_mean_square(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the dispersion of the medio-lateral acceleration data relative to zero.
+    
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
@@ -275,8 +281,8 @@ def medio_lateral_root_mean_square(data_lb, seg_lim, steps_lim, freq=100):
     # without u-turn
     data_lb_go, data_lb_back = sig_go_back(data_lb, seg_lim, freq=freq, signal="FreeAcc_Y", norm=True)
 
-    signal_go = rmoutliers(data_lb_go.values.tolist(), limite=3)
-    signal_back = rmoutliers(data_lb_back.values.tolist(), limite=3)
+    signal_go = rmoutliers(data_lb_go.values.tolist(), limit=3)
+    signal_back = rmoutliers(data_lb_back.values.tolist(), limit=3)
 
     rms_go = np.sqrt(np.mean(np.square(signal_go)))
     rms_back = np.sqrt(np.mean(np.square(signal_back)))
@@ -290,10 +296,22 @@ def medio_lateral_root_mean_square(data_lb, seg_lim, steps_lim, freq=100):
 # Symmetry: refers to inter-limb coordination during gait.
 
 def antero_posterior_iHR(data_lb, seg_lim, steps_lim, freq=100):
-    # Power of the first 10 paired harmonics to the first 10 unpaired harmonics of the anteroposterior
-    # acceleration signal from the trunk.
+    """Compute the power ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the anteroposterior
+    acceleration signal from the trunk.
+    
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
 
-    s = data_lb["FreeAcc_Z"] 
+    Returns
+    -------
+    float
+        iHR_aAP (%)
+    """
+
+    s = data_lb["FreeAcc_Z"]  # anteroposterior acceleration
     steps_lim = steps_lim.sort_values(by="HS")
 
     ihr_s, st_ihr_s = hr.hr_ihr_moyen(seg_lim, steps_lim, s, i=1, ml=False)
@@ -302,34 +320,68 @@ def antero_posterior_iHR(data_lb, seg_lim, steps_lim, freq=100):
 
 
 def medio_lateral_iHR(data_lb, seg_lim, steps_lim, freq=100):
-    # Ratio of the first 10 unpaired harmonics to the first 10 paired harmonics of the medio-lateral
-    # acceleration signal from the trunk.
-    s = data_lb["FreeAcc_Y"]  # acceleration selon y
+    """Compute the power ratio of the first 10 unpaired harmonics to the first 10 paired harmonics of the mediolateral
+    acceleration signal from the trunk.
+    
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    float
+        iHR_aML (%)
+    """
+    
+    s = data_lb["FreeAcc_Y"]  # mediolateral acceleration
     steps_lim = steps_lim.sort_values(by="HS")
 
     ihr_s, st_ihr_s = hr.hr_ihr_moyen(seg_lim, steps_lim, s, i=1, ml=True)
 
-    # print("ML_IHR_single", ihr_s)
 
     return ihr_s
 
 
 def cranio_caudal_iHR(data_lb, seg_lim, steps_lim, freq=100) -> object:
-    # Ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the cranio-caudal
-    # acceleration signal from the trunk.
-    s = data_lb["FreeAcc_X"]  # acceleration selon x
+    """Compute the power ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the craniocaudal
+    acceleration signal from the trunk.
+    
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    float
+        iHR_aAP (%)
+    """
+    
+    s = data_lb["FreeAcc_X"]  # craniocaudal acceleration
     steps_lim = steps_lim.sort_values(by="HS")
 
     ihr_s, st_ihr_s = hr.hr_ihr_moyen(seg_lim, steps_lim, s, i=1, ml=False)
-
-    # print("CC_IHR_single", ihr_s, st_ihr_s)
 
     return ihr_s
 
 
 def p1_p2_acc(data_lb, seg_lim, steps_lim, freq=100):
-    # the ratio of the first (P1) to the second (P2) peak of the cranio-caudal correlation
-    # coefficient of the lower back (P1P2aCC)
+    """Compute the ratio of the first (P1) to the second (P2) peak of the craniocaudal correlation coefficient of the lower back (P1P2aCC)
+    
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    float
+        P1P2_aCC
+    """
 
     p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=freq)
 
@@ -339,9 +391,21 @@ def p1_p2_acc(data_lb, seg_lim, steps_lim, freq=100):
 
 
 def mean_swing_times_ratio(data_lb, seg_lim, steps_lim, freq=100):
-    # Ratio of the maximum (right or left) of averaged swing time divided by the minimum (right or left) of
-    # averaged swing time.
+    """Compute the ratio of the maximum (right or left) of averaged swing time divided by the minimum (right or left) of 
+    averaged swing time.
+    
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
 
+    Returns
+    -------
+    float
+        swTr
+    """
+    
     sw_center = [0, 0]
     for foot in [0, 1]:
         steps_lim_f = steps_lim[steps_lim["Foot"] == foot]
@@ -354,13 +418,12 @@ def mean_swing_times_ratio(data_lb, seg_lim, steps_lim, freq=100):
         steps_lim_f = steps_lim[steps_lim["Foot"] == foot]
         hs_f = steps_lim_f["HS"].tolist()
         to_f = steps_lim_f["TO"].tolist()
-        for i in range(sw_center[foot], len(hs_f) - 1):  # on ne prend pas en compte les premiers et le dernier pas
-            # On ne prend pas en compte les pas du demi-tour
+        for i in range(sw_center[foot], len(hs_f) - 1):   # without the first and the last steps
             if sw_center[foot]:
-                if inside([hs_f[i], to_f[i]], seg_lim):
+                if inside([hs_f[i], to_f[i]], seg_lim):  # without u-turn
                     msw[foot].append(hs_f[i] - to_f[i])
             else:
-                if inside([hs_f[i + 1], to_f[i]], seg_lim):
+                if inside([hs_f[i + 1], to_f[i]], seg_lim):  # without u-turn
                     msw[foot].append(hs_f[i + 1] - to_f[i])
 
     msw_lf = np.mean(rmoutliers(msw[0]))
@@ -373,31 +436,50 @@ def mean_swing_times_ratio(data_lb, seg_lim, steps_lim, freq=100):
 
 
 # --------------------------------------
-# Synchronization : refers to inter-limb coordination during gait. => ok
+# Synchronization: refers to inter-limb coordination during gait.
 
 def double_stance_time(data_lb, seg_lim, steps_lim, freq=100):
-    # Time between IC of one foot and the FC of the contralateral foot divided by the total time of the cycle time.
+    """Compute the double stance time ratio : time between IC of one foot and the FC of the contralateral foot divided by the 
+    total time of the gait cycle.
+    
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
 
+    Returns
+    -------
+    float
+        swTr
+    """
+    
     dst_t = get_double_stance_time_list(data_lb, seg_lim, steps_lim, freq=freq)
-
-    if len(dst_t) == 0:
-        print("erreur_dst", steps_lim)
-
     dst_t = rmoutliers(dst_t)
 
     return np.mean(dst_t)*100
 
 
-# ---------------------------- Fonctions utiles générales ----------------------------
+# ---------------------------- Useful functions ----------------------------
 
-def rmoutliers(vec, limite=2):
-    # print("Avant :", vec)
+def rmoutliers(vec, limit=2):
+    """Remove outliers from a vector.
+    
+    Arguments:
+        vec {vector} -- vector
+        limit {float} -- z-score to be considered as outlier. default = 2. 
+
+    Returns
+    -------
+    vector
+        vec 1 : new vector without outliers
+    """
     z = np.abs(stats.zscore(vec))
     vec1 = []
     for i in range(len(vec)):
-        if z[i] < limite:  # La valeur à partir de laquelle on peut supprimer les données peut varier
+        if z[i] < limit:
             vec1.append(vec[i])
-    # print("Après :", vec1)
+
     return vec1
 
 
