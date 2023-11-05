@@ -15,10 +15,7 @@ def ihr_avg(seg_lim, steps_lim, s, ml=False):
             if ft.inside([steps_lim["HS"].iloc[j], steps_lim["HS"].iloc[j + 2]], seg_lim):
                 # On est conscient que la détection de pas n'est pas fiable à 100%.
                 # On va donc prendre le maximum autour de la détection des pas.
-                if not ml:
-                    det = det_max(s, steps_lim["HS"].iloc[j], steps_lim["HS"].iloc[j+2])
-                else:
-                    det = det_max_ml(s, steps_lim["HS"].iloc[j], steps_lim["HS"].iloc[j + 2])
+                det = det_max(s, steps_lim["HS"].iloc[j], steps_lim["HS"].iloc[j+2], ml=ml)
                 if det != 0:
                     ihr_list.append(det)
 
@@ -27,7 +24,7 @@ def ihr_avg(seg_lim, steps_lim, s, ml=False):
     return np.mean(ihr_list), np.std(ihr_list)
 
 
-def det_max(s, start, end):
+def det_max(s, start, end, ml=False):
     # Pour déterminer le maximum du HR au voisinage des points de détection automatique
     det_list = []
     for k in range(30):
@@ -37,35 +34,9 @@ def det_max(s, start, end):
             calcul = ihr(s_step)
             if calcul != 0:
                 det_list.append(calcul)
-            else:
-                print("Voici l'erreur :")
-                plt.plot(s_step)
-                plt.show()
+            if ml:
+                calcul = 100 - calcul
     if len(det_list) != 0:
-        if (det_list[0] == max(det_list)) & (det_list[-1] == max(det_list)):
-            print("Attention valeur extrême !")
-        return max(det_list)
-    else:
-        return 0
-
-
-def det_max_ml(s, start, end):
-    # Pour déterminer le maximum du HR au voisinage des points de détection automatique
-    det_list = []
-    for k in range(30):
-        for kk in range(5):
-            # On fait varier le signal à son origine
-            s_step = s[max(start - 15 + k, 0):end - 15 + k - 2 + kk]
-            calcul = 100 - ihr(s_step)
-            if calcul != 0:
-                det_list.append(calcul)
-            else:
-                print("Voici l'erreur :")
-                plt.plot(s_step)
-                plt.show()
-    if len(det_list) != 0:
-        if (det_list[0] == max(det_list)) & (det_list[-1] == max(det_list)):
-            print("Attention valeur extrême !")
         return max(det_list)
     else:
         return 0
@@ -89,7 +60,7 @@ def ihr(sig):
         
 
 def DFT(x, fs=100):
-    # Function to calculate the discrete Fourier Transform coefficient à partir de la fréquence fondamentale
+    # Function to calculate the discrete Fourier Transform coefficient from the fundamental frequency.
     # https://www.f-legrand.fr/scidoc/docimg/numerique/tfd/periodique2/periodique2.html
 
     f0 = 100 / len(x)
