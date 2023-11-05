@@ -551,4 +551,6 @@ def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_
             axes.scatter(points_M6[:, 0], points_M6[:, 1], linewidth=2, s=50, color='white', edgecolor='black',
                          zorder=10,
                          marker=marker_M6)
+    plt.savefig("semio.svg", dpi=300,
+                    transparent=True, bbox_inches='tight')
 
