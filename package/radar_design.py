@@ -10,8 +10,32 @@ import matplotlib.cm as cm
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
 
-def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_r=-10, max_r=4, color_diff=True, name="test"):
-
+def new_radar_superpose(semio_val_dict, output=0, age=0, min_r=-10, max_r=4, name="test"):
+    """
+    Create the final radar of the semiogram, allowing for it to be a representation with overlay.
+    
+    Arguments
+    ----------
+    semio_val_dict: dict
+                   The dictionnary with different semiogram to plot (1 or 2). The key may be the name of the trial, en the values are 
+                   lists with the 8 semio values in the right order. 
+    output        : str, optional
+                   Folder in which the figure may be saved.
+    age           : int, optional
+                   Indicates the amount of zero padding to be done to the movement
+                   data for estimating the spectral arc length. [default = 4]
+    min_r         : int, optional
+                   The minimum z-score allowed in the final representation. 
+    max_r         : int, optional
+                   The maximum z-score allowed in the final representation. 
+    name          : str, optional
+                   name of the saved file.
+                   
+    Notes
+    -----
+    The function does not return a result but saves a figure corresponding to the requested semiogram.
+    """
+    
     properties = ['Springiness', 'Sturdiness', 'Smoothness',
                   'Steadiness', 'Stability', 'Symmetry',
                   'Synchronisation']
@@ -114,8 +138,7 @@ def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_
             _patch = patches.PathPatch(_path, linestyle=line_, fill=False, linewidth=2,
                                        edgecolor=cmap1(norm(semio_val[7])), label=semio_label)
 
-            if (len(semio_val_dict)==2) & color_diff:
-                print("On entre dans la mise en couleur")
+            if (len(semio_val_dict)==2):
                 if k == 1:
                     points_new = points
                     marker_new = marker_
