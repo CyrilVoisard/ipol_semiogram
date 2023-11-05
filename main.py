@@ -92,8 +92,7 @@ def print_semio_parameters(parameters_dict):
 
     with open("trial_parameters.txt", "wt") as f:
         print(info_msg.format(**display_dict), file=f)
-        #for name, value in metadata_dict.items():
-         #   f.write(f"{name} = {value}\n")
+        
 
 def print_semio_criteria(criteria_dict):
     """Dump the parameters computed from the trial in a text file (trial_info.txt)
@@ -127,8 +126,6 @@ def print_semio_criteria(criteria_dict):
 
     with open("trial_criteria.txt", "wt") as f:
         print(info_msg.format(**display_dict), file=f)
-        #for name, value in metadata_dict.items():
-         #   f.write(f"{name} = {value}\n")
 
 
 if __name__ == "__main__":
