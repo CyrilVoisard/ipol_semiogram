@@ -459,7 +459,7 @@ def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_
 
     # Tracer les points de semio_val_dict
     for k in range(len(semio_val_dict)):
-        print("semio_val_dict", semio_val_dict)
+        print("semio_val_dict", len(semio_val_dict), semio_val_dict)
         print(k)
         semio_label = list(semio_val_dict.keys())[k]
         line_ = line_list[len(semio_val_dict) - 1 - k]
