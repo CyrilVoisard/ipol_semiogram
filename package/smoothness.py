@@ -1,27 +1,6 @@
+# Copyright (c) 2015, Sivakumar Balasubramanian <siva82kb@gmail.com>
+
 import numpy as np
-
-
-def sparc_rot_XS(data_lb, seg_lim, steps_lim, signal="Gyr"):
-
-    start = seg_lim.iloc[0, 0]
-    end = seg_lim.iloc[3, 0]
-
-    # no use of start and end of the signal
-    data = data_lb[(data_lb.iloc[:, 0] > start / 100) & (data_lb.iloc[:, 0] < end / 100)]
-
-    # signals selection
-    sig_X_demi_tour = data[signal + "_X"]
-    sig_Y_demi_tour = data[signal + "_Y"]
-    sig_Z_demi_tour = data[signal + "_Z"]
-
-    sig_n2_demi_tour = np.sqrt(pow(sig_X_demi_tour, 2) + pow(sig_Y_demi_tour, 2) + pow(sig_Z_demi_tour, 2))
-
-    sal_demi_tour, _, _ = sparc(sig_n2_demi_tour, fs=100)
-
-    return sal_demi_tour
-
-
-# Here after Copyright (c) 2015, Sivakumar Balasubramanian <siva82kb@gmail.com>
 
 def sparc(movement, fs, padlevel=4, fc=10.0, amp_th=0.05):
     """
