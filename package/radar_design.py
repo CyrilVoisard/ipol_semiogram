@@ -378,7 +378,7 @@ def new_radar_aggreg(semio_val_ag, date, id, output, age=None, min_r=-10, max_r=
     return None
 
 
-def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_r=-10, max_r=4, color_diff=False):
+def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_r=-10, max_r=4, color_diff=False, name="test"):
     print("color_diff", color_diff)
     properties = ['Springiness', 'Sturdiness', 'Smoothness',
                   'Steadiness', 'Stability', 'Symmetry',
@@ -551,7 +551,7 @@ def new_radar_superpose(semio_val_dict, type_=None, ref=0, output=0, age=0, min_
             axes.scatter(points_M6[:, 0], points_M6[:, 1], linewidth=2, s=50, color='white', edgecolor='black',
                          zorder=10,
                          marker=marker_M6)
-    path_out = os.path.join(output, "semio.svg")
+    path_out = os.path.join(output, name + ".svg")
     plt.savefig(path_out, dpi=200,
                     transparent=True, bbox_inches="tight")
 
