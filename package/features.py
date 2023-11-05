@@ -35,6 +35,7 @@ def stride_time(data_tronc, seg_lim, steps_lim, freq=100):
     # except during the U-turn
 
     t = get_stride_list(data_tronc, seg_lim, steps_lim, freq=freq)
+    print("get_stride_list", t)
 
     return np.mean(t) / freq
 
