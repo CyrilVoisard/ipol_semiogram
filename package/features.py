@@ -287,48 +287,18 @@ def medio_lateral_root_mean_square(data_lb, seg_lim, steps_lim, freq=100):
 
 
 # --------------------------------------
-# Symmetry : refers to inter-limb coordination during gait.
-
-
-def antero_posterior_HR(data_lb, seg_lim, steps_lim, freq=100):
-    # Power ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the antero-posterior
-    # acceleration signal from the trunk.
-
-    s = data_lb["FreeAcc_Z"]  # acceleration selon z
-    steps_lim = steps_lim.sort_values(by="HS")
-
-    hr_s, st_hr_s = hr.hr_ihr_moyen(seg_lim, steps_lim, s, i=0, ml=False)
-
-    # print("AAP_HR_single", hr_s, st_hr_s)
-
-    return hr_s
-
+# Symmetry: refers to inter-limb coordination during gait.
 
 def antero_posterior_iHR(data_lb, seg_lim, steps_lim, freq=100):
-    # Ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the antero-posterior
+    # Power of the first 10 paired harmonics to the first 10 unpaired harmonics of the anteroposterior
     # acceleration signal from the trunk.
 
-    s = data_lb["FreeAcc_Z"]  # acceleration selon z
+    s = data_lb["FreeAcc_Z"] 
     steps_lim = steps_lim.sort_values(by="HS")
 
     ihr_s, st_ihr_s = hr.hr_ihr_moyen(seg_lim, steps_lim, s, i=1, ml=False)
 
-    # print("AAP_IHR_single", ihr_s, st_ihr_s)
-
     return ihr_s
-
-
-def medio_lateral_HR(data_lb, seg_lim, steps_lim, freq=100):
-    # Ratio of the first 10 unpaired harmonics to the first 10 paired harmonics of the medio-lateral
-    # acceleration signal from the trunk.
-    s = data_lb["FreeAcc_Y"]  # acceleration selon y
-    steps_lim = steps_lim.sort_values(by="HS")
-
-    hr_s, st_hr_s = hr.hr_ihr_moyen(seg_lim, steps_lim, s, i=0, ml=True)
-
-    # print("ML_HR_single", hr_s)
-
-    return hr_s
 
 
 def medio_lateral_iHR(data_lb, seg_lim, steps_lim, freq=100):
@@ -342,19 +312,6 @@ def medio_lateral_iHR(data_lb, seg_lim, steps_lim, freq=100):
     # print("ML_IHR_single", ihr_s)
 
     return ihr_s
-
-
-def cranio_caudal_HR(data_lb, seg_lim, steps_lim, freq=100):
-    # Ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the cranio-caudal
-    # acceleration signal from the trunk.
-    s = data_lb["FreeAcc_X"]  # acceleration selon x
-    steps_lim = steps_lim.sort_values(by="HS")
-
-    hr_s, st_hr_s = hr.hr_ihr_moyen(seg_lim, steps_lim, s, i=0, ml=False)
-
-    # print("CC_HR", hr_s, st_hr_s)
-
-    return hr_s
 
 
 def cranio_caudal_iHR(data_lb, seg_lim, steps_lim, freq=100) -> object:
