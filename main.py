@@ -30,20 +30,61 @@ def print_semio_parameters(parameters_dict):
         Parameters of the trial.
     """
 
-    display_dict = {'Subject': "Subject: {Subject}".format(**parameters_dict),
-                    'Trial': "Trial: {Trial}".format(**parameters_dict),
-                    'Age': "Age (year): {Age}".format(**parameters_dict),
-                    'Gender': "Gender: {Gender}".format(**parameters_dict),
-                    'Height': "Height (m): {Height}".format(**parameters_dict),
-                    'Weight': "Weight (kg): {Weight}".format(**parameters_dict)
+    display_dict = {'V': "V: {V}".format(**criteria_dict),
+                    'StrT': "StrT: {StrT}".format(**criteria_dict),
+                    'UTurn': "UTurn: {UTurn}".format(**criteria_dict),
+                    'SteL': "SteL: {SteL}".format(**criteria_dict),
+                    'SPARC_gyr': "SteL: {SteL}".format(**criteria_dict),
+                    'LDLJAcc': "LDLJAcc: {LDLJAcc}".format(**criteria_dict),
+                    'CVStrT': "CVStrT: {CVStrT}".format(**criteria_dict),
+                    'CVdsT': "CVdsT: {CVdsT}".format(**criteria_dict),
+                    'P1_aCC': "P1_aCC: {P1_aCC}".format(**criteria_dict),
+                    'P2_aCC': "P2_aCC: {P2_aCC}".format(**criteria_dict),
+                    'ML_RMS': "ML_RMS: {ML_RMS}".format(**criteria_dict),
+                    'P1P2': "P1P2: {P1P2}".format(**criteria_dict),
+                    'MSwTR': "MSwTR: {MSwTR}".format(**criteria_dict),
+                    'AP_iHR': "AP_iHR: {AP_iHR}".format(**criteria_dict),
+                    'ML_iHR': "ML_iHR: {ML_iHR}".format(**criteria_dict),
+                    'CC_iHR': "CC_iHR: {CC_iHR}".format(**criteria_dict),
+                    'dstT': "dstT: {dstT}".format(**criteria_dict), 
+                    'sd_V': "{sd_V}".format(**criteria_dict),
+                    'sd_StrT': "{sd_StrT}".format(**criteria_dict),
+                    'sd_UTurn': "{sd_UTurn}".format(**criteria_dict),
+                    'sd_SteL': "{sd_SteL}".format(**criteria_dict),
+                    'sd_SPARC_gyr': "{sd_SteL}".format(**criteria_dict),
+                    'sd_LDLJAcc': "{sd_LDLJAcc}".format(**criteria_dict),
+                    'sd_CVStrT': "{sd_CVStrT}".format(**criteria_dict),
+                    'sd_CVdsT': "{sd_CVdsT}".format(**criteria_dict),
+                    'sd_P1_aCC': "{sd_P1_aCC}".format(**criteria_dict),
+                    'sd_P2_aCC': "{sd_P2_aCC}".format(**criteria_dict),
+                    'sd_ML_RMS': "{sd_ML_RMS}".format(**criteria_dict),
+                    'sd_P1P2': "{sd_P1P2}".format(**criteria_dict),
+                    'sd_MSwTR': "{sd_MSwTR}".format(**criteria_dict),
+                    'sd_AP_iHR': "{sd_AP_iHR}".format(**criteria_dict),
+                    'sd_ML_iHR': "{sd_ML_iHR}".format(**criteria_dict),
+                    'sd_CC_iHR': "{sd_CC_iHR}".format(**criteria_dict),
+                    'sd_dstT': "{sd_dstT}".format(**criteria_dict)
+                    
                     }
     info_msg = """
-    {Subject:^30}|{Trial:^30}
-    ------------------------------+------------------------------
-    {Age:<30}| {WalkingSpeed:<30}
-    {Height:<30}| Number of footsteps:
-    {Weight:<30}| {LeftGaitCycles:<30}
-    {UTurnDuration:<30}| {RightGaitCycles:<30}
+    Values| Z-Scores
+    -------------------------------------------------+-------------------------------------------------
+    {V:<30}| {sd_:<30}
+    {StrT:<30}| {sd_StrT:<30}
+    {UTurn:<30}| {sd_UTurn:<30}
+    {SteL:<30}| {sd_SteL:<30}
+    {SPARC_gyr:<30}| {sd_SPARC_gyr:<30}
+    {LDLJAcc:<30}| {sd_LDLJAcc:<30}
+    {CVStrT:<30}| {sd_CVStrT:<30}
+    {CVdsT:<30}| {sd_CVdsT:<30}
+    {P1_aCC:<30}| {sd_P1_aCC:<30}
+    {P2_aCC:<30}| {sd_P2_aCC:<30}
+    {ML_RMS:<30}| {sd_ML_RMS:<30}
+    {P1P2:<30}| {sd_P1P2:<30}
+    {MSwTR:<30}| {sd_MSwTR:<30}
+    {AP_iHR:<30}| {sd_AP_iHR:<30}
+    {ML_iHR:<30}| {sd_ML_iHR:<30}
+    {CC_iHR:<30}| {sd_CC_iHR:<30}
     """
 
     # Dump information
@@ -62,8 +103,6 @@ def print_semio_criteria(criteria_dict):
     parameters_dict : dict
         Parameters of the trial.
     """
-
-    print("criteria_dict", criteria_dict)
 
     display_dict = {'Average Speed': "Average Speed: {Average Speed}".format(**criteria_dict),
                     'Springiness': "Springiness: {Springiness}".format(**criteria_dict),
@@ -125,7 +164,13 @@ if __name__ == "__main__":
     criteria_names, criteria, parameters = compute_semio_val.compute_semio_val(age, steps_lim, seg_lim, data_lb, freq)
 
     # print semiogram values
-    #print_semio_parameters(parameters)
+    parameters_names = ["StrT", "sd_StrT", "UTurn", "sd_UTurn", "SteL", "sd_SteL",
+              "SPARC_gyr", "sd_SPARC_gyr", "LDLJAcc", "sd_LDLJAcc", "CVStrT", "sd_CVStrT", "CVdsT", "sd_CVdsT",
+              "P1_aCC", "sd_P1_aCC", "P2_aCC", "sd_P2_aCC", "ML_RMS", "sd_ML_RMS", "P1P2", "sd_P1P2",
+              "MSwTR", "sd_MSwTR", "AP_iHR", "sd_AP_iHR", "ML_iHR", "sd_ML_iHR", "CC_iHR", "sd_CC_iHR", "dstT", "sd_dstT",
+              "V", "sd_V"]
+    parameters_dict = dict(zip(parameters_names, parameters))
+    print_semio_parameters(parameters_dict)
 
     criteria_dict = dict(zip(criteria_names, criteria))
     print_semio_criteria(criteria_dict)
