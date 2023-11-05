@@ -41,25 +41,21 @@ def load_metadata(subject, trial):
     return metadata_dict
 
 
-def print_trial_info(metadata_dict):
-    """Dump the trial information in a text file (trial_info.txt)
+def print_semio_parameters(parameters_dict):
+    """Dump the parameters computed from the trial in a text file (trial_info.txt)
 
     Parameters
     ----------
-    metadata_dict : dict
-        Metadata of the trial.
+    parameters_dict : dict
+        Parameters of the trial.
     """
 
-    display_dict = {'Subject': "Subject: {Subject}".format(**metadata_dict),
-                    'Trial': "Trial: {Trial}".format(**metadata_dict),
-                    'Age': "Age (year): {Age}".format(**metadata_dict),
-                    'Gender': "Gender: {Gender}".format(**metadata_dict),
-                    'Height': "Height (m): {Height}".format(**metadata_dict),
-                    'Weight': "Weight (kg): {Weight}".format(**metadata_dict),
-                    'WalkingSpeed': "WalkingSpeed (m/s): {}".format(round(2000/(metadata_dict['TrialBoundaries'][1]-metadata_dict['TrialBoundaries'][0]), 3)),
-                    'UTurnDuration': "U-Turn Duration (s): {}".format((metadata_dict['UTurnBoundaries'][1]-metadata_dict['UTurnBoundaries'][0])/100),
-                    'LeftGaitCycles': '    - Left foot: {}'.format(len(metadata_dict['LeftFootEvents'])),
-                    'RightGaitCycles': '    - Right foot: {}'.format(len(metadata_dict['RightFootEvents']))
+    display_dict = {'Subject': "Subject: {Subject}".format(**parameters_dict),
+                    'Trial': "Trial: {Trial}".format(**parameters_dict),
+                    'Age': "Age (year): {Age}".format(**parameters_dict),
+                    'Gender': "Gender: {Gender}".format(**parameters_dict),
+                    'Height': "Height (m): {Height}".format(**parameters_dict),
+                    'Weight': "Weight (kg): {Weight}".format(**parameters_dict)
                     }
     info_msg = """
     {Subject:^30}|{Trial:^30}
@@ -73,7 +69,7 @@ def print_trial_info(metadata_dict):
     # Dump information
     os.chdir(data_WD) # Get back to the normal WD
 
-    with open("trial_info.txt", "wt") as f:
+    with open("trial_parameters.txt", "wt") as f:
         print(info_msg.format(**display_dict), file=f)
         #for name, value in metadata_dict.items():
          #   f.write(f"{name} = {value}\n")
@@ -234,13 +230,13 @@ if __name__ == "__main__":
     
     # compute semio values (dictionnaries)
     criteria_names, criteria, parameters = compute_semio_val.compute_semio_val(age, steps_lim, seg_lim, data_lb, freq)
-    print("ok charge")
-    sys.exit(0)
 
     # print semiogram values
-    print_semio_parameters(parameters)
+    #print_semio_parameters(parameters)
 
-    print_semio_criteria(criteria)
+    #print_semio_criteria(criteria)
 
     # semiogram design
-    radar_design.new_radar_superpose({"unique": semio_val}, None, id_exp, output, age)
+    radar_design.new_radar_superpose({"unique": criteria}, None,  min_r=int(args.min_z), max_r=int(args.max_z))
+    print("ok charge")
+    sys.exit(0)
