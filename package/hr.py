@@ -29,18 +29,6 @@ def DFT(x, fs=100):
     return peak_list
 
 
-def hr(sig):
-    peak_list = DFT(sig)
-
-    peak_pair_sum = sum(peak_list[2:21:2])
-    peak_impair_sum = sum(peak_list[1:21:2])
-
-    if (peak_impair_sum == 0) | (peak_impair_sum == 0):
-        return 0
-    else:
-        return peak_pair_sum / peak_impair_sum
-
-
 def ihr(sig):
     peak_list = DFT(sig)
 
