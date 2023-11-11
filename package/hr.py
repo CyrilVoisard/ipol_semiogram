@@ -55,10 +55,7 @@ def det_max(s, start, end, ml=False):
     for k in range(30):
         for kk in range(5):
             s_step = s[max(start - 15 + k, 0):end - 15 + k - 2 + kk]
-            if ml:
-                calcul = 100 - ihr(s_step)
-            else:
-                calcul = ihr(s_step)
+            calcul = ihr(s_step, ml)
             if calcul != 0:
                 det_list.append(calcul)
             
@@ -68,11 +65,12 @@ def det_max(s, start, end, ml=False):
         return 0
         
 
-def ihr(sig):
+def ihr(sig, ml):
     """Compute the iHR of a signal
     
     Arguments:
         sig {vector} -- time series
+        ml {bool} -- False if anteroposterior/craniocaudal acceleration, True if acceleration mediolateral
 
     Returns
     -------
@@ -93,7 +91,10 @@ def ihr(sig):
     if (peak_impair_sum == 0) | (peak_impair_sum == 0):
         return 0
     else:
-        return 100 * peak_pair_sum / (peak_impair_sum + peak_pair_sum)
+        if ml:
+            return 100 * peak_impair_sum / (peak_impair_sum + peak_pair_sum)
+        else:
+            return 100 * peak_pair_sum / (peak_impair_sum + peak_pair_sum)
         
 
 def DFT(x, fs=100):
