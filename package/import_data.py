@@ -10,7 +10,7 @@ import sys
 
 # XSens data 
 
-def load_XSens(filename):
+def load_XSens(filename, freq):
     """Load the data from a file.
 
     Arguments:
@@ -28,7 +28,7 @@ def load_XSens(filename):
     t_fin = t[len(t) - 1]
 
     time = [i for i in range(int(t_0), int(t_fin) + 1)]
-    time_init_0 = [i / 100 for i in range(len(time))]
+    time_init_0 = [i / freq for i in range(len(time))]
     d = {'PacketCounter': time_init_0}
 
     colonnes = signal.columns
@@ -44,7 +44,7 @@ def load_XSens(filename):
     return signal
 
 
-def import_XSens(path, start=0, end=200, order=8, fc=14):
+def import_XSens(path, freq, start=0, end=200, order=8, fc=14):
     """Import and pre-process the data from a file.
 
     Arguments:
@@ -60,7 +60,7 @@ def import_XSens(path, start=0, end=200, order=8, fc=14):
         data
     """
     
-    data = load_XSens(path)
+    data = load_XSens(path, freq)
     
     data["FreeAcc_X"] = data["Acc_X"] - np.mean(data["Acc_X"][start:end])
     data["FreeAcc_Y"] = data["Acc_Y"] - np.mean(data["Acc_Y"][start:end])
