@@ -670,7 +670,7 @@ def get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=100):
         p1 and p2 for go and back phases 
     """
     
-    # On enlève le demi-tour, on sépare l'aller et le retour et on sélectionne la colonne d'intérêt
+    # consider separatly go and back phases, without uturn phase
     sig_go, sig_back = sig_go_back(data_lb, seg_lim, freq=freq, signal="FreeAcc_X", norm=False)
     go_coeff = autocorr(sig_go)
 
@@ -683,6 +683,20 @@ def get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=100):
     
 
 def peaks_3(vector, data_lb, seg_lim, steps_lim, freq):
+    """Select the best peak detection method between peak_1 and peak_2 in order to find autocorrelation peaks corresponding to P1 and P2.
+    Arguments:
+        vector {numpy array} -- numpy array corresponding to the craniocaudal acceleration autocorrelation indicator
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    tuple (p1_go, p1_back, p2_go, p2_back)
+        p1 and p2 for go and back phases 
+    """
+    
     p1_m1, p2_m1 = peaks_1(vector, data_lb, seg_lim, steps_lim, freq)
     p1_m2, p2_m2 = peaks_2(vector, data_lb, seg_lim, steps_lim, freq)
 
