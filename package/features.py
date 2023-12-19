@@ -656,9 +656,20 @@ def get_double_stance_time_list(data_lb, seg_lim, steps_lim, freq=100):
 
 # ---------------------------- autocorrelation function ----------------------------
 def get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=100):
-    # Get cranio-caudal step (P1) and stride (P2) autocorrelation coefficient = first and seconde peak
-    # of the cranio-caudal correlation coefficient of the lower back.
+    """Get cranio-caudal step (P1) and stride (P2) autocorrelation coefficient = first and second peak of the cranio-caudal acceleration autocorrelation coefficient of the lower back.
 
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    tuple (p1_go, p1_back, p2_go, p2_back)
+        p1 and p2 for go and back phases 
+    """
+    
     # On enlève le demi-tour, on sépare l'aller et le retour et on sélectionne la colonne d'intérêt
     sig_go, sig_back = sig_go_back(data_lb, seg_lim, freq=freq, signal="FreeAcc_X", norm=False)
     go_coeff = autocorr(sig_go)
