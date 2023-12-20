@@ -598,7 +598,7 @@ def get_stride_list(data_lb, seg_lim, steps_lim, freq=100):
 
     Returns
     -------
-    list
+    t : list
         Contains stride duration (s) without outliers
     """
     
@@ -630,7 +630,7 @@ def get_double_stance_time_list(data_lb, seg_lim, steps_lim, freq=100):
 
     Returns
     -------
-    list -- dst_t
+    dst_t : list
         list of double stance time ratio (%) without outliers 
     """
 
@@ -666,7 +666,7 @@ def get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=100):
 
     Returns
     -------
-    tuple (p1_go, p1_back, p2_go, p2_back)
+    (p1_go, p1_back, p2_go, p2_back) : tuple
         p1 and p2 for go and back phases 
     """
     
@@ -694,7 +694,7 @@ def peaks_3(vector, data_lb, seg_lim, steps_lim, freq):
 
     Returns
     -------
-    tuple (p1_go, p1_back, p2_go, p2_back)
+    (p1_go, p1_back, p2_go, p2_back) : tuple 
         p1 and p2 for go and back phases 
     """
     
@@ -706,7 +706,7 @@ def peaks_3(vector, data_lb, seg_lim, steps_lim, freq):
 
 def peaks_2(vector, data_lb, seg_lim, steps_lim, freq):
     """Second peak detection method to find autocorrelation peaks corresponding to P1 and P2.
-    Decrire le principe de la methode.
+    Detection of maximum autocorrelation greater than 0.3 and a frame around the mean stride duration (P2) and half the mean stride duration (P1).
     
     Arguments:
         vector {numpy array} -- numpy array corresponding to the craniocaudal acceleration autocorrelation indicator
@@ -717,7 +717,7 @@ def peaks_2(vector, data_lb, seg_lim, steps_lim, freq):
 
     Returns
     -------
-    tuple (p1, p2)
+    (p1, p2) : tuple 
         p1 and p2 estimation from vector
     """
     
@@ -740,7 +740,7 @@ def peaks_2(vector, data_lb, seg_lim, steps_lim, freq):
 
 def peaks_1(vector, data_lb, seg_lim, steps_lim, freq):
     """ First peak detection method to find autocorrelation peaks corresponding to P1 and P2.
-    Decrire le principe de la methode.
+    Detection of all autocorrelation maxima greater than 0.3, then selection of those closest to the average stride duration (P2) and half the average stride duration (P1). 
     
     Arguments:
         vector {numpy array} -- numpy array corresponding to the craniocaudal acceleration autocorrelation indicator
@@ -751,7 +751,7 @@ def peaks_1(vector, data_lb, seg_lim, steps_lim, freq):
 
     Returns
     -------
-    tuple (p1, p2)
+    (p1, p2) : tuple 
         p1 and p2 estimation from vector
     """
     
@@ -794,7 +794,7 @@ def indexes(y, thres=0.3, min_dist=1, thres_abs=False):
 
     Returns
     -------
-    ndarray
+    peaks : ndarray
         Array containing the numeric indexes of the peaks that were detected.
         When using with Pandas DataFrames, iloc should be used to access the values at the returned positions.
     """
@@ -869,6 +869,19 @@ def indexes(y, thres=0.3, min_dist=1, thres_abs=False):
 
 
 def autocorr(f):
+    """Autocorrelation estimation.
+
+    Arguments
+    ----------
+    f : ndarray
+        1D amplitude data to compute autocorrelation.
+
+    Returns
+    -------
+    acf : ndarray
+        Array containing non biased estimator for autocorrelation
+    """
+    
     N = len(f)
     fvi = np.fft.fft(f, n=2 * N)
     acf = np.real(np.fft.ifft(fvi * np.conjugate(fvi))[:N])
