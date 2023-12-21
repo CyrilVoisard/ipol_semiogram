@@ -158,6 +158,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     freq = int(args.freq)
+    distance = int(args.distance)
     #age = args.age
     age = None 
     
