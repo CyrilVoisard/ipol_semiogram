@@ -149,6 +149,8 @@ if __name__ == "__main__":
                         help='Acquistion frequency.')
     parser.add_argument('-age', metavar='age', type=int,
                         help='Age of the subject.')
+    parser.add_argument('-distance', metavar='distance', type=int,
+                        help='Walked distance (m).')
     parser.add_argument('-min_z', metavar='min_z', type=int,
                         help='Minimum for Z-score.')
     parser.add_argument('-max_z', metavar='max_z', type=int,
@@ -169,9 +171,9 @@ if __name__ == "__main__":
         ref_steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3), seg_lim)
     
     # compute semio values (dictionnaries)
-    criteria_names, criteria, parameters = compute_semio_val.compute_semio_val(age, steps_lim, seg_lim, data_lb, freq)
+    criteria_names, criteria, parameters = compute_semio_val.compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq)
     if compare:
-        ref_criteria_names, ref_criteria, ref_parameters = compute_semio_val.compute_semio_val(age, ref_steps_lim, ref_seg_lim, ref_data_lb, freq)
+        ref_criteria_names, ref_criteria, ref_parameters = compute_semio_val.compute_semio_val(age, distance, ref_steps_lim, ref_seg_lim, ref_data_lb, freq)
 
     # print semiogram values
     parameters_names = ["StrT", "sd_StrT", "UTurn", "sd_UTurn", "SteL", "sd_SteL",
