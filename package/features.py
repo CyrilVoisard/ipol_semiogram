@@ -9,7 +9,7 @@ from package import hr, smoothness
 # --------------------------------------
 # Average speed: refers to velocity during the walk.
 
-def avg_speed(data_lb, seg_lim, steps_lim=0, release_u_turn=False, freq=100):
+def avg_speed(data_lb, seg_lim, steps_lim=0, release_u_turn=False, freq=100, distance = 20):
     """Compute the average speed of the trial.
     
     Arguments:
@@ -18,6 +18,7 @@ def avg_speed(data_lb, seg_lim, steps_lim=0, release_u_turn=False, freq=100):
         steps_lim {dataframe} -- pandas dataframe with gait events
         release_u_turn {bool} -- take into account the u_turn phase
         freq {int} -- acquisition frequency
+        distance {int} -- walked distance (m)
 
     Returns
     -------
@@ -26,7 +27,6 @@ def avg_speed(data_lb, seg_lim, steps_lim=0, release_u_turn=False, freq=100):
     """
     
     seg_lim = pd.DataFrame(seg_lim)
-    distance = 20
 
     start = seg_lim.iloc[0, 0]
     end = seg_lim.iloc[3, 0]
@@ -255,14 +255,15 @@ def p2_acc(data_lb, seg_lim, steps_lim, freq=100):
 # --------------------------------------
 # Sturdiness: refers to gait amplitude.
 
-def step_length(data_lb, seg_lim, steps_lim, freq=100):
-    """Compute the average step length: total length (20 m) divided by the total number of steps after exclusion of the U-turn.
+def step_length(data_lb, seg_lim, steps_lim, freq=100, distance = 20):
+    """Compute the average step length: total length divided by the total number of steps after exclusion of the U-turn.
     
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
         freq {int} -- acquisition frequency
+        distance {int} -- walked distance (m)
 
     Returns
     -------
@@ -275,7 +276,7 @@ def step_length(data_lb, seg_lim, steps_lim, freq=100):
         if inside([steps_lim["HS"][i], steps_lim["TO"][i]], seg_lim): # without u-turn
             n_tot = n_tot + 1
 
-    return 20 / n_tot
+    return distance / n_tot
 
 
 # --------------------------------------
