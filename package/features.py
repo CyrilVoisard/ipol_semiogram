@@ -481,26 +481,26 @@ def double_stance_time(data_lb, seg_lim, steps_lim, freq=100):
 
 # ---------------------------- Useful functions ----------------------------
 
-def rmoutliers(vec, limit=2):
+def rmoutliers(v_in, z_lim=2):
     """Remove outliers from a vector.
     
     Arguments:
-        vec {vector} -- vector
-        limit {float} -- z-score to be considered as outlier. default = 2. 
+        v_in {vector} -- vector
+        z_lim {float} -- z-score to be considered as outlier. default = 2. 
 
     Returns
     -------
     vector
-        vec 1 : new vector without outliers
+        v_out : new vector without outliers
     """
     
-    z = np.abs(stats.zscore(vec))
-    vec1 = []
-    for i in range(len(vec)):
-        if z[i] < limit:
-            vec1.append(vec[i])
+    z_v = np.abs(stats.zscore(v_in))
+    v_out = []
+    for i in range(len(v_in)):
+        if z_v[i] <= z_lim:
+            v_out.append(v_in[i])
 
-    return vec1
+    return v_out
 
 
 def inside(list, seg_lim):
