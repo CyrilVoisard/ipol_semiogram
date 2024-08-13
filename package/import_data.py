@@ -151,10 +151,7 @@ def get_steps(filename, seg_lim):
             to.append(int(steps_left[i][0]))
             hs.append(int(steps_left[i][1]))
 
-    # _dict = {'Foot': foot, 'TO': to, 'HS': hs}
-    # type_dict = {'Foot': int, 'HS': int, 'TO': int}
     steps_lim = pd.DataFrame({'Foot': foot, 'TO': to, 'HS': hs})
-    # steps_lim = steps_lim.astype(type_dict)
     
     return steps_lim
     
