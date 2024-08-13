@@ -29,7 +29,7 @@ def compute_semio_val(distance, steps_lim, seg_lim, data_lb, freq):
     parameters = []
 
     # find the model
-    path = 'reference.json'
+    path = 'models/reference.json'
     with open(path) as json_data:
         norms = np.array(json.load(json_data))
 
