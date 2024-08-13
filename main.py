@@ -151,12 +151,12 @@ def print_error(e):
     plt.savefig(path_out, dpi=200, transparent=True, bbox_inches="tight")
 
     # table 1
-    with open("trial_criteria.txt", "wt") as f:
+    """with open("trial_criteria.txt", "wt") as f:
         print(f"Erreur: {e}")
 
     # table 2
     with open("trial_parameters.txt", "wt") as f:
-        print(f"Erreur: {e}")
+        print(f"Erreur: {e}")"""
 
 
 if __name__ == "__main__":
