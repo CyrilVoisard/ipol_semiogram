@@ -731,7 +731,7 @@ def peaks_2(vector, data_lb, seg_lim, steps_lim, freq):
         p1 and p2 estimation from vector
     """
     
-    strT = int(stride_time(data_lb, seg_lim, steps_lim) * freq)
+    strT = int(stride_time(seg_lim, steps_lim, freq=freq) * freq)
 
     start_p1 = int(strT * 0.35)
     end_p1 = int(strT * 0.65)
@@ -765,7 +765,7 @@ def peaks_1(vector, data_lb, seg_lim, steps_lim, freq):
         p1 and p2 estimation from vector
     """
     
-    strT = int(stride_time(data_lb, seg_lim, steps_lim) * freq)
+    strT = int(stride_time(seg_lim, steps_lim, freq=freq) * freq)
 
     indexes_pic_go = indexes(vector[0:len(vector)//2], min_dist=strT * 0.35)
 
