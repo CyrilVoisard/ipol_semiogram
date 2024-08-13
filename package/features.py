@@ -614,6 +614,8 @@ def get_stride_list(seg_lim, steps_lim):
     
     t = []
 
+    print(steps_lim)
+
     steps_lim = steps_lim.sort_values(by="HS")
     for i in range(1, len(steps_lim) - 4):
         if steps_lim["Foot"].iloc[i] != steps_lim["Foot"].iloc[i+1] != steps_lim["Foot"].iloc[i+2]: # test foot alternation
