@@ -55,7 +55,7 @@ def stride_time(seg_lim, steps_lim, freq):
         Average stride duration (s)
     """
 
-    t = get_stride_list(seg_lim, steps_lim, freq=freq)
+    t = get_stride_list(seg_lim, steps_lim)
 
     return np.mean(t) / freq
 
@@ -181,7 +181,7 @@ def variation_coeff_stride_time(seg_lim, steps_lim, freq):
         CVstrT (%)
     """
     
-    t = get_stride_list(seg_lim, steps_lim, freq=freq)
+    t = get_stride_list(seg_lim, steps_lim)
 
     return 100 * np.std(t) / np.mean(t)
 
@@ -529,29 +529,26 @@ def inside(list, seg_lim):
         if x < seg_lim.iloc[0, 0]:
             out = 1
         else:
-            if (x > seg_lim.iloc[1, 0]) and (x < seg_lim.iloc[2, 0]):
+            if seg_lim.iloc[1, 0] < x < seg_lim.iloc[2, 0]:
                 out = 1
             else:
                 if x > seg_lim.iloc[3, 0]:
                     out = 1
                 else:
-                    if (x <= seg_lim.iloc[1, 0]) and (x >= seg_lim.iloc[0, 0]):
+                    if seg_lim.iloc[0, 0] <= x <= seg_lim.iloc[1, 0]:
                         in_go = 1
                     else:
-                        if (x <= seg_lim.iloc[3, 0]) and (x >= seg_lim.iloc[2, 0]):
-                            in_go = 1
+                        if seg_lim.iloc[2, 0] <= x <= seg_lim.iloc[3, 0]:
+                            in_back = 1
 
-    if out + in_go + in_back == 0:
-        return 0
+    if out + in_go + in_back == 0: 
+        return False
     else:
         if out == 1:
-            return 0
-        else:
-            if in_go + in_back == 2:
-                return 0
-            else:
-                if in_go + in_back == 1:
-                    return 1
+            return False
+        if in_go + in_back == 2:
+            return False
+        return True
 
 
 def find_nearest(array, value):
@@ -572,10 +569,22 @@ def find_nearest(array, value):
 
 
 def sig_go_back(data_lb, seg_lim, freq, signal="none", norm=False):
-    data_lb_go = data_lb[(seg_lim.iloc[0, 0] / freq < data_lb["PacketCounter"])
-                               & (data_lb["PacketCounter"] < seg_lim.iloc[1, 0] / freq)]
-    data_lb_back = data_lb[(seg_lim.iloc[3, 0] / freq > data_lb["PacketCounter"])
-                                 & (data_lb["PacketCounter"] > seg_lim.iloc[2, 0] / freq)]
+    """Extract the parts of a signal that correspond to the straight-line phases (forward and return) of the trial.
+    
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        freq {int} -- acquisition frequency
+        signal {str} -- optionnal, name of the column to be extracted if there is one
+        norm {bool} -- optionnal, only if signal is specified, True if normalization is to be applied
+
+    Returns
+    -------
+    Pandas DataFrame 
+    """
+    
+    data_lb_go = data_lb[(seg_lim.iloc[0, 0] / freq < data_lb["PacketCounter"] < seg_lim.iloc[1, 0] / freq)]
+    data_lb_back = data_lb[(seg_lim.iloc[3, 0] / freq > data_lb["PacketCounter"] > seg_lim.iloc[2, 0] / freq)]
     if signal == "none":
         return data_lb_go, data_lb_back
     else:
@@ -587,20 +596,18 @@ def sig_go_back(data_lb, seg_lim, freq, signal="none", norm=False):
                 data_lb_go = data_lb_back - np.mean(data_lb_back)
             return data_lb_go, data_lb_back
         except:
-            print("Pas possible de trouver le signal : ", signal)
+            print("We did not find: ", signal)
             return data_lb_go, data_lb_back
 
 
 # ---------------------------- Support functions for general features ----------------------------
 
-def get_stride_list(seg_lim, steps_lim, freq):
-    """Compute the list of stride times: time between consecutive initial contact (IC) of the same foot, averaged across all strides 
-    within the trial except during the U-turn.
+def get_stride_list(seg_lim, steps_lim):
+    """Compute the list of stride times: time between consecutive initial contact (HS for heel strike) of the same foot.
     
     Arguments:
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
 
     Returns
     -------
@@ -612,11 +619,9 @@ def get_stride_list(seg_lim, steps_lim, freq):
 
     steps_lim = steps_lim.sort_values(by="HS")
     for i in range(1, len(steps_lim) - 4):
-        t_tot = steps_lim["HS"].iloc[i + 2] - steps_lim["HS"].iloc[i]
-        if ((steps_lim["Foot"].iloc[i] + steps_lim["Foot"].iloc[i + 1] == 1)
-                & (steps_lim["Foot"].iloc[i + 1] + steps_lim["Foot"].iloc[i + 2] == 1)):
-
+        if if steps_lim["Foot"].iloc[i] != steps_lim["Foot"].iloc[i+1] != steps_lim["Foot"].iloc[i+2]: # test foot alternation
             if inside([steps_lim["HS"].iloc[i], steps_lim["HS"].iloc[i + 2]], seg_lim):
+                t_tot = steps_lim["HS"].iloc[i + 2] - steps_lim["HS"].iloc[i]
                 t.append(t_tot)
 
     t = rmoutliers(t)  # remove outliers
@@ -653,7 +658,7 @@ def get_double_stance_time_list(seg_lim, steps_lim, freq):
             if inside([steps_lim["HS"].iloc[i], steps_lim["HS"].iloc[i + 2]], seg_lim):
                 dst_t.append(st)
 
-    dst_t = rmoutliers(dst_t)  # remove outliers
+    dst_t = rmoutliers(dst_t)*100  # remove outliers
 
     return dst_t
 
