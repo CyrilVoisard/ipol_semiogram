@@ -658,7 +658,7 @@ def get_double_stance_time_list(seg_lim, steps_lim, freq):
             if inside([steps_lim["HS"].iloc[i], steps_lim["HS"].iloc[i + 2]], seg_lim):
                 dst_t.append(st)
 
-    dst_t = rmoutliers(dst_t)*100  # remove outliers
+    dst_t = rmoutliers(dst_t)  # remove outliers
 
     return dst_t
 
