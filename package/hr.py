@@ -52,9 +52,9 @@ def det_max(s, start, end, ml=False):
     """
     
     det_list = []
-    for k in range(30):
+    for k in range(-15, 16):
         for kk in range(5):
-            s_step = s[max(start - 15 + k, 0):end - 15 + k - 2 + kk]
+            s_step = s[max(start + k, 0):end + k - 2 + kk]
             calcul = ihr(s_step, ml)
             if calcul != 0:
                 det_list.append(calcul)
@@ -80,21 +80,21 @@ def ihr(sig, ml):
     
     peak_list = DFT(sig)
 
-    peak_pair_sum = 0
+    peak_even_sum = 0
     for peak in peak_list[2:21:2]:
-        peak_pair_sum = peak_pair_sum + peak * peak
+        peak_even_sum = peak_even_sum + peak * peak
 
-    peak_impair_sum = 0
+    peak_odd_sum = 0
     for peak in peak_list[1:21:2]:
-        peak_impair_sum = peak_impair_sum + peak * peak
+        peak_odd_sum = peak_odd_sum + peak * peak
 
-    if (peak_impair_sum == 0) | (peak_impair_sum == 0):
+    if (peak_odd_sum == 0) | (peak_odd_sum == 0):
         return 0
     else:
         if ml:
-            return 100 * peak_impair_sum / (peak_impair_sum + peak_pair_sum)
+            return 100 * peak_odd_sum / (peak_odd_sum + peak_even_sum)
         else:
-            return 100 * peak_pair_sum / (peak_impair_sum + peak_pair_sum)
+            return 100 * peak_even_sum / (peak_odd_sum + peak_even_sum)
         
 
 def DFT(x, fs=100):
