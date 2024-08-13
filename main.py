@@ -147,8 +147,8 @@ if __name__ == "__main__":
         
     parser.add_argument('-freq', metavar='freq',
                         help='Acquistion frequency.')
-    parser.add_argument('-age', metavar='age', type=int,
-                        help='Age of the subject.')
+    #parser.add_argument('-age', metavar='age', type=int,
+     #                   help='Age of the subject.') --> Not available for the moment. 
     parser.add_argument('-distance', metavar='distance', type=int,
                         help='Walked distance (m).')
     parser.add_argument('-min_z', metavar='min_z', type=int,
