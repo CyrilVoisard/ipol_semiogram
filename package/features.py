@@ -10,7 +10,8 @@ from package import hr, smoothness
 # Average speed: refers to velocity during the walk.
 
 def avg_speed(data_lb, seg_lim, steps_lim=0, release_u_turn=False, freq=100, distance = 20):
-    """Compute the average speed of the trial.
+    """Compute the average speed of the trial. 
+    Eq. 1 in the IPOL article. 
     
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
@@ -44,7 +45,8 @@ def avg_speed(data_lb, seg_lim, steps_lim=0, release_u_turn=False, freq=100, dis
 
 def stride_time(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the average stride time : Time between consecutive initial contact (IC) of the same foot, averaged across all strides 
-    within the trial except during the U-turn.
+    within the trial except during the U-turn. 
+    Eq. 2 in the IPOL article. 
     
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
@@ -65,7 +67,8 @@ def stride_time(data_lb, seg_lim, steps_lim, freq=100):
 
 def u_turn_time(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the u_turn time : duration of the turn. Can be detected with the angular velocity around the cranio-caudal axis derived from
-    the IMU positioned on the lower back.
+    the IMU positioned on the lower back. 
+    Eq. 3 in the IPOL article. 
 
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
@@ -88,7 +91,8 @@ def u_turn_time(data_lb, seg_lim, steps_lim, freq=100):
 # Smoothness: refers to gait continuousness or non-intermittency.
 
 def sparc_gyr(data_lb, seg_lim, steps_lim, freq=100):
-    """Compute the gyration SPARC
+    """Compute the gyration SPARC. 
+    Eq. 4 in the IPOL article. 
 
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
@@ -121,7 +125,8 @@ def sparc_gyr(data_lb, seg_lim, steps_lim, freq=100):
 
 
 def ldlj_acc(data_lb, seg_lim, steps_lim, signal='FreeAcc', freq=100):
-    """Compute the log dimensionless jerk computed from linear acceleration
+    """Compute the log dimensionless jerk computed from linear acceleration. 
+    Eq. 5 in the IPOL article. 
 
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
@@ -171,7 +176,8 @@ def ldlj_acc(data_lb, seg_lim, steps_lim, signal='FreeAcc', freq=100):
 # Steadiness: refers to gait regularity.
 
 def variation_coeff_stride_time(data_lb, seg_lim, steps_lim, freq=100):
-    """Compute the variation coefficient of stride time: standard deviation of the vector of stride times divided by its average.
+    """Compute the variation coefficient of stride time: standard deviation of the vector of stride times divided by its average. 
+    Eq. 6 in the IPOL article. 
     
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
@@ -192,6 +198,7 @@ def variation_coeff_stride_time(data_lb, seg_lim, steps_lim, freq=100):
 
 def variation_coeff_double_stance_time(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the variation coefficient of double stance time: Standard deviation of the vector of double stance times divided by its average.
+    Eq. 7 in the IPOL article. 
     
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
@@ -212,6 +219,7 @@ def variation_coeff_double_stance_time(data_lb, seg_lim, steps_lim, freq=100):
 
 def p1_acc(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the cranio-caudal step autocorrelation coefficient: first peak of the cranio-caudal correlation coefficient of the lower back.
+    Eq. 8 in the IPOL article. 
     
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
@@ -233,6 +241,7 @@ def p1_acc(data_lb, seg_lim, steps_lim, freq=100):
 
 def p2_acc(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the cranio-caudal stride autocorrelation coefficient: second peak of the cranio-caudal correlation coefficient of the lower back.
+    Eq. 9 in the IPOL article. 
     
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
@@ -257,6 +266,7 @@ def p2_acc(data_lb, seg_lim, steps_lim, freq=100):
 
 def step_length(data_lb, seg_lim, steps_lim, freq=100, distance = 20):
     """Compute the average step length: total length divided by the total number of steps after exclusion of the U-turn.
+    Eq. 10 in the IPOL article. 
     
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
@@ -284,6 +294,7 @@ def step_length(data_lb, seg_lim, steps_lim, freq=100, distance = 20):
 
 def medio_lateral_root_mean_square(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the dispersion of the medio-lateral acceleration data relative to zero.
+    Eq. 11 in the IPOL article. 
     
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
@@ -314,81 +325,9 @@ def medio_lateral_root_mean_square(data_lb, seg_lim, steps_lim, freq=100):
 # --------------------------------------
 # Symmetry: refers to inter-limb coordination during gait.
 
-def antero_posterior_iHR(data_lb, seg_lim, steps_lim, freq=100):
-    """Compute the power ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the anteroposterior
-    acceleration signal from the trunk.
-    
-    Arguments:
-        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
-        seg_lim {dataframe} -- pandas dataframe with phases events 
-        steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
-
-    Returns
-    -------
-    float
-        iHR_aAP (%)
-    """
-
-    s = data_lb["FreeAcc_Z"]  # anteroposterior acceleration
-    steps_lim = steps_lim.sort_values(by="HS")
-
-    ihr_s, st_ihr_s = hr.ihr_avg(seg_lim, steps_lim, s, ml=False)
-
-    return ihr_s
-
-
-def medio_lateral_iHR(data_lb, seg_lim, steps_lim, freq=100):
-    """Compute the power ratio of the first 10 unpaired harmonics to the first 10 paired harmonics of the mediolateral
-    acceleration signal from the trunk.
-    
-    Arguments:
-        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
-        seg_lim {dataframe} -- pandas dataframe with phases events 
-        steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
-
-    Returns
-    -------
-    float
-        iHR_aML (%)
-    """
-    
-    s = data_lb["FreeAcc_Y"]  # mediolateral acceleration
-    steps_lim = steps_lim.sort_values(by="HS")
-
-    ihr_s, st_ihr_s = hr.ihr_avg(seg_lim, steps_lim, s, ml=True)
-
-
-    return ihr_s
-
-
-def cranio_caudal_iHR(data_lb, seg_lim, steps_lim, freq=100) -> object:
-    """Compute the power ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the craniocaudal
-    acceleration signal from the trunk.
-    
-    Arguments:
-        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
-        seg_lim {dataframe} -- pandas dataframe with phases events 
-        steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
-
-    Returns
-    -------
-    float
-        iHR_aAP (%)
-    """
-    
-    s = data_lb["FreeAcc_X"]  # craniocaudal acceleration
-    steps_lim = steps_lim.sort_values(by="HS")
-
-    ihr_s, st_ihr_s = hr.ihr_avg(seg_lim, steps_lim, s, ml=False)
-
-    return ihr_s
-
-
 def p1_p2_acc(data_lb, seg_lim, steps_lim, freq=100):
-    """Compute the ratio of the first (P1) to the second (P2) peak of the craniocaudal correlation coefficient of the lower back (P1P2aCC)
+    """Compute the ratio of the first (P1) to the second (P2) peak of the craniocaudal correlation coefficient of the lower back (P1P2aCC).
+    Eq. 12 in the IPOL article. 
     
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
@@ -411,7 +350,8 @@ def p1_p2_acc(data_lb, seg_lim, steps_lim, freq=100):
 
 def mean_swing_times_ratio(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the ratio of the maximum (right or left) of averaged swing time divided by the minimum (right or left) of 
-    averaged swing time.
+    averaged swing time. 
+    Eq. 13 in the IPOL article. 
     
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
@@ -454,12 +394,89 @@ def mean_swing_times_ratio(data_lb, seg_lim, steps_lim, freq=100):
     return m2/m1
 
 
+def antero_posterior_iHR(data_lb, seg_lim, steps_lim, freq=100):
+    """Compute the power ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the anteroposterior
+    acceleration signal from the trunk.
+    Eq. 14 in the IPOL article. 
+    
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    float
+        iHR_aAP (%)
+    """
+
+    s = data_lb["FreeAcc_Z"]  # anteroposterior acceleration
+    steps_lim = steps_lim.sort_values(by="HS")
+
+    ihr_s, st_ihr_s = hr.ihr_avg(seg_lim, steps_lim, s, ml=False)
+
+    return ihr_s
+
+
+def medio_lateral_iHR(data_lb, seg_lim, steps_lim, freq=100):
+    """Compute the power ratio of the first 10 unpaired harmonics to the first 10 paired harmonics of the mediolateral
+    acceleration signal from the trunk.
+    Eq. 15 in the IPOL article. 
+    
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    float
+        iHR_aML (%)
+    """
+    
+    s = data_lb["FreeAcc_Y"]  # mediolateral acceleration
+    steps_lim = steps_lim.sort_values(by="HS")
+
+    ihr_s, st_ihr_s = hr.ihr_avg(seg_lim, steps_lim, s, ml=True)
+
+
+    return ihr_s
+
+
+def cranio_caudal_iHR(data_lb, seg_lim, steps_lim, freq=100) -> object:
+    """Compute the power ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the craniocaudal
+    acceleration signal from the trunk.
+    Eq. 16 in the IPOL article. 
+    
+    Arguments:
+        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+        freq {int} -- acquisition frequency
+
+    Returns
+    -------
+    float
+        iHR_aAP (%)
+    """
+    
+    s = data_lb["FreeAcc_X"]  # craniocaudal acceleration
+    steps_lim = steps_lim.sort_values(by="HS")
+
+    ihr_s, st_ihr_s = hr.ihr_avg(seg_lim, steps_lim, s, ml=False)
+
+    return ihr_s
+
+
 # --------------------------------------
 # Synchronization: refers to inter-limb coordination during gait.
 
 def double_stance_time(data_lb, seg_lim, steps_lim, freq=100):
     """Compute the double stance time ratio : time between IC of one foot and the FC of the contralateral foot divided by the 
-    total time of the gait cycle.
+    total time of the gait cycle. 
+    Eq. 17 in the IPOL article. 
     
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
@@ -708,6 +725,7 @@ def peaks_3(vector, data_lb, seg_lim, steps_lim, freq):
 def peaks_2(vector, data_lb, seg_lim, steps_lim, freq):
     """Second peak detection method to find autocorrelation peaks corresponding to P1 and P2.
     Detection of maximum autocorrelation greater than 0.3 and a frame around the mean stride duration (P2) and half the mean stride duration (P1).
+    Eq. 8 and 9 in the IPOL article. 
     
     Arguments:
         vector {numpy array} -- numpy array corresponding to the craniocaudal acceleration autocorrelation indicator
@@ -870,7 +888,7 @@ def indexes(y, thres=0.3, min_dist=1, thres_abs=False):
 
 
 def autocorr(f):
-    """Autocorrelation estimation.
+    """Autocorrelation estimation. Eq. 8 in the IPOL article. 
 
     Arguments
     ----------
