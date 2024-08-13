@@ -398,6 +398,7 @@ def antero_posterior_iHR(data_lb, seg_lim, steps_lim, freq):
     """
 
     s = data_lb["FreeAcc_Z"]  # anteroposterior acceleration
+    print(steps_lim)
     steps_lim = steps_lim.sort_values(by="HS")
 
     ihr_s, st_ihr_s = hr.ihr_avg(seg_lim, steps_lim, s, ml=False)
