@@ -116,15 +116,15 @@ def sparc_gyr(data_lb, seg_lim, freq):
     return sal_
 
 
-def ldlj_acc(data_lb, seg_lim, signal='FreeAcc', freq):
+def ldlj_acc(data_lb, seg_lim, freq, signal='FreeAcc'):
     """Compute the log dimensionless jerk computed from linear acceleration. 
     Eq. 5 in the IPOL article. 
 
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
-        signal {str} -- 'FreeAcc' or 'Acc'
         freq {int} -- acquisition frequency
+        signal {str} -- 'FreeAcc' or 'Acc'
 
     Returns
     -------
