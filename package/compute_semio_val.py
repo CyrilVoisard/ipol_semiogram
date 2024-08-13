@@ -128,5 +128,5 @@ def crit_z_score(crit_feat, crit_ref, parameters):
         parameters.append(f * (val - m) / sd)
         z_scores.append(f * (val - m) / sd)
         
-    return np.average(spr_z_scores), parameters
+    return np.average(z_scores), parameters
     
