@@ -6,11 +6,10 @@ import json
 from package import features as ft
 
 
-def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
+def compute_semio_val(distance, steps_lim, seg_lim, data_lb, freq):
     """Compute the Z-score for each criterion from the calculation of the 17 parameters
 
     Arguments:
-        age {int} -- age 
         distance {int} -- walked distance in meters 
         steps_lim {dataframe} -- pandas dataframe with gait events
         seg_lim {dataframe} -- pandas dataframe with phases events 
@@ -29,19 +28,8 @@ def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
     
     parameters = []
 
-    # choose the model with the age in input
-    ages = [[0, 100], [0, 17], [18, 39], [40, 59], [60, 79], [80, 100]]
-    if age is None:
-        ref = 0
-    else:
-        for i in range(1, 6):
-            if ages[i][0] <= age <= ages[i][1]:
-                ref = i
-
-    age1 = ages[ref][0]
-    age2 = ages[ref][1]
-    r = 'ScoreT7S-' + str(age1) + '-' + str(age2)
-    path = osp.join('models', r) + '.json'
+    # find the model
+    path = 'reference.json'
     with open(path) as json_data:
         norms = np.array(json.load(json_data))
 
