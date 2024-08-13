@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+r#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
 import os
@@ -129,6 +129,10 @@ def print_semio_criteria(criteria_dict):
         print(info_msg.format(**display_dict), file=f)
 
 
+def print_error(str, e):
+    print(f"Error while loading " + str + f"{e}")
+
+
 if __name__ == "__main__":
 
     import argparse
@@ -167,8 +171,8 @@ if __name__ == "__main__":
         seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
         steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
     except Exception as e:
-        print(f"Error while loading main files: {e}")
-        sys.exit(0)
+        print_error("main files", e)
+        sys.exit(1)
     if compare :
         try:
             ref_data_lb = import_data.import_XSens(os.path.join(data_WD, args.i2), freq)
@@ -176,7 +180,7 @@ if __name__ == "__main__":
             ref_steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3), seg_lim)
         except Exception as e:
             print(f"Error while loading main files: {e}")
-            sys.exit(0)
+            sys.exit(1)
     
     # compute semio values (dictionaries)
     criteria_names, criteria, parameters = compute_semio_val.compute_semio_val(distance, steps_lim, seg_lim, data_lb, freq)
