@@ -129,7 +129,7 @@ def print_semio_criteria(criteria_dict):
         print(info_msg.format(**display_dict), file=f)
 
 
-def print_error(e):
+def print_error():
     """Display an error message if the files cannot be read.
     """
 
@@ -149,14 +149,6 @@ def print_error(e):
     # save the fig
     path_out = os.path.join(data_WD, "semio.svg")
     plt.savefig(path_out, dpi=200, transparent=True, bbox_inches="tight")
-
-    # table 1
-    with open("trial_criteria.txt", "wt") as f:
-        print("Unavailable.", file=f)
-
-    # table 2
-    with open("trial_parameters.txt", "wt") as f:
-        print("Unavailable.", file=f)
 
 
 if __name__ == "__main__":
@@ -196,16 +188,16 @@ if __name__ == "__main__":
         data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0), freq)
         seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
         steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
-    except Exception as e:
-        print_error(e)
+    except:
+        print_error()
         sys.exit(0)
     if compare :
         try:
             ref_data_lb = import_data.import_XSens(os.path.join(data_WD, args.i2), freq)
             ref_seg_lim = import_data.get_seg(os.path.join(data_WD, args.i3))
             ref_steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3), seg_lim)
-        except Exception as e:
-            print_error(e)
+        except:
+            print_error()
             sys.exit(0)
     
     # compute semio values (dictionaries)
