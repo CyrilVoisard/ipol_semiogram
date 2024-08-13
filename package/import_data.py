@@ -142,19 +142,19 @@ def get_steps(filename, seg_lim):
     for i in range(len(steps_right)):
         if inside(steps_right[i][0], steps_right[i][1], seg_lim):
             foot.append(1)
-            to.append(steps_right[i][0])
-            hs.append(steps_right[i][1])
+            to.append(int(steps_right[i][0]))
+            hs.append(int(steps_right[i][1]))
 
     for i in range(len(steps_left)):
         if inside(steps_left[i][0], steps_left[i][1], seg_lim):
             foot.append(0)
-            to.append(steps_left[i][0])
-            hs.append(steps_left[i][1])
+            to.append(int(steps_left[i][0]))
+            hs.append(int(steps_left[i][1]))
 
     _dict = {'Foot': foot, 'TO': to, 'HS': hs}
-    type_dict = {'Foot': int, 'HS': int, 'TO': int}
+    # type_dict = {'Foot': int, 'HS': int, 'TO': int}
     steps_lim = pd.DataFrame(_dict)
-    steps_lim = steps_lim.astype(type_dict)
+    # steps_lim = steps_lim.astype(type_dict)
     
     return steps_lim
     
