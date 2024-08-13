@@ -69,7 +69,7 @@ def sparc(movement, fs, padlevel=4, fc=10.0, amp_th=0.05):
     # NOTE: This is a low pass filtering operation to get rid of high frequency
     # noise from affecting the next step (amplitude threshold based cut off for
     # arc length calculation).
-    fc_inx = ((f <= fc) * 1).nonzero()
+    fc_inx = ((f_sel <= fc) * 1).nonzero()
     f_sel = f_sel[fc_inx]
     Mf_sel = Mf_sel[fc_inx]
 
