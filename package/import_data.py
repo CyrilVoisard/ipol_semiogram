@@ -61,7 +61,7 @@ def import_XSens(path, freq, start=0, end=200, order=8, fc=14):
     """
     
     data = load_XSens(path, freq)
-    
+
     data["FreeAcc_X"] = data["Acc_X"] - np.mean(data["Acc_X"][start:end])
     data["FreeAcc_Y"] = data["Acc_Y"] - np.mean(data["Acc_Y"][start:end])
     data["FreeAcc_Z"] = data["Acc_Z"] - np.mean(data["Acc_Z"][start:end])
