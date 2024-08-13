@@ -123,6 +123,7 @@ def get_steps(filename, seg_lim):
 
     Arguments:
         filename {str} -- File path
+        seg_lim {Pandas DataFrame} -- boundaries of the trial
         
     Returns
     -------
@@ -184,14 +185,14 @@ def inside(to, hs, seg_lim):
     Arguments:
         to {int} -- Toe-Off time
         hs {int} -- Heel-Strike time
-        seg_lim {panda DataFrame} -- boundaries of the trial
+        seg_lim {Pandas DataFrame} -- boundaries of the trial
         
     Returns
     -------
     Boolean
         in_
     """
-    seg_lim = pd.DataFrame(seg_lim)
+    
     if (hs <= seg_lim.iloc[1, 0]) & (to <= seg_lim.iloc[1, 0]):
             in_ = True
     else:
