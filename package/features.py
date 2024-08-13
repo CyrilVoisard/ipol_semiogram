@@ -510,10 +510,10 @@ def rmoutliers(v_in, z_lim=2):
 
 
 def inside(list, seg_lim):
-    """Determine if a list of events is located within the bounds of the outbound and return phases of the trial.
+    """Determine if a list of 2 events (corresponding to the HS and TO of a stride) is located within the bounds of the outbound and return phases of the trial.
     
     Arguments:
-        list {list} -- list of events (integers)
+        list {list} -- list of 2 events (integers)
         seg_lim {dataframe} -- panda dataframe with the boundaries of the trial
 
     Returns
