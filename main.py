@@ -135,7 +135,7 @@ def print_error(e):
 
     # fig
     fig, ax = plt.subplots(figsize=(4, 2))
-    text = "The main files are not in the correct format, please check them!" + str(e)
+    text = "The main files are not in the correct format, please check them!"
     fontdict = {'family': 'serif', 'size': 12}
     text_obj = ax.text(0.5, 0.5, text, fontdict=fontdict, ha='center', va='center')
     renderer = fig.canvas.get_renderer()
@@ -151,12 +151,12 @@ def print_error(e):
     plt.savefig(path_out, dpi=200, transparent=True, bbox_inches="tight")
 
     # table 1
-    """with open("trial_criteria.txt", "wt") as f:
-        print(f"Erreur: {e}")
+    with open("trial_criteria.txt", "wt") as f:
+        print("Unavailable.")
 
     # table 2
     with open("trial_parameters.txt", "wt") as f:
-        print(f"Erreur: {e}")"""
+        print("Unavailable.")
 
 
 if __name__ == "__main__":
