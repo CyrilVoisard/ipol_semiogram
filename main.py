@@ -155,6 +155,8 @@ def print_error(error_message):
     with open("trial_criteria.txt", "wt") as f:
         print("Error message:" + error_message, file=f)
 
+    with open("trial_parameters.txt", "wt") as f:
+        print("Error message:" + error_message, file=f)
 
 
 
