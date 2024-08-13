@@ -85,6 +85,7 @@ def print_semio_parameters(parameters_dict):
     {AP_iHR:<30}| {sd_AP_iHR:<30}
     {ML_iHR:<30}| {sd_ML_iHR:<30}
     {CC_iHR:<30}| {sd_CC_iHR:<30}
+    {dstT:<30}| {sd_dstT:<30}
     """
 
     # Dump information
@@ -162,12 +163,30 @@ if __name__ == "__main__":
     
     # load data (only lower back in this demo)
     data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0), freq)
+    if data_lb == None:
+        print("data_lb is unusable !")
+        sys.exit(0)
     seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
+    if seg_lim == None:
+        print("seg_lim is unusable !")
+        sys.exit(0)
     steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
+    if steps_lim == None:
+        print("steps_lim is unusable !")
+        sys.exit(0)
     if compare :
         ref_data_lb = import_data.import_XSens(os.path.join(data_WD, args.i2), freq)
+        if ref_data_lb == None:
+            print("ref_data_lb is unusable !")
+            sys.exit(0)
         ref_seg_lim = import_data.get_seg(os.path.join(data_WD, args.i3))
+        if ref_seg_lim == None:
+            print("ref_seg_lim is unusable !")
+            sys.exit(0)
         ref_steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3), seg_lim)
+        if ref_steps_lim == None:
+            print("ref_steps_lim is unusable !")
+            sys.exit(0)
     
     # compute semio values (dictionaries)
     criteria_names, criteria, parameters = compute_semio_val.compute_semio_val(distance, steps_lim, seg_lim, data_lb, freq)
@@ -191,5 +210,4 @@ if __name__ == "__main__":
     if compare : 
         radar_design.new_radar_superpose({"unique": ref_criteria}, min_r=int(args.min_z), max_r=int(args.max_z), output=data_WD, name="semio_ref")
         radar_design.new_radar_superpose({"ref": ref_criteria, "new": criteria}, min_r=int(args.min_z), max_r=int(args.max_z), output=data_WD, name="semio_sup")
-    print("ok charge")
     sys.exit(0)
