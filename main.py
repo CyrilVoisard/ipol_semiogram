@@ -171,7 +171,7 @@ if __name__ == "__main__":
         ref_seg_lim = import_data.get_seg(os.path.join(data_WD, args.i3))
         ref_steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3), seg_lim)
     
-    # compute semio values (dictionnaries)
+    # compute semio values (dictionaries)
     criteria_names, criteria, parameters = compute_semio_val.compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq)
     if compare:
         ref_criteria_names, ref_criteria, ref_parameters = compute_semio_val.compute_semio_val(age, distance, ref_steps_lim, ref_seg_lim, ref_data_lb, freq)
