@@ -35,7 +35,7 @@ def sparc(movement, fs, padlevel=4, fc=10.0, amp_th=0.05):
                       calculating the spectral arc length.
     Notes
     -----
-    This is the modfieid spectral arc length metric, which has been tested only
+    This is the modified spectral arc length metric, which has been tested only
     for discrete movements.
     Examples
     --------
