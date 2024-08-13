@@ -162,30 +162,20 @@ if __name__ == "__main__":
     distance = int(args.distance)
     
     # load data (only lower back in this demo)
-    data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0), freq)
-    if data_lb == None:
-        print("data_lb is unusable !")
-        sys.exit(0)
-    seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
-    if seg_lim == None:
-        print("seg_lim is unusable !")
-        sys.exit(0)
-    steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
-    if steps_lim == None:
-        print("steps_lim is unusable !")
+    try:
+        data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0), freq)
+        seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
+        steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
+    except Exception as e:
+        print(f"Error while loading main files: {e}")
         sys.exit(0)
     if compare :
-        ref_data_lb = import_data.import_XSens(os.path.join(data_WD, args.i2), freq)
-        if ref_data_lb == None:
-            print("ref_data_lb is unusable !")
-            sys.exit(0)
-        ref_seg_lim = import_data.get_seg(os.path.join(data_WD, args.i3))
-        if ref_seg_lim == None:
-            print("ref_seg_lim is unusable !")
-            sys.exit(0)
-        ref_steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3), seg_lim)
-        if ref_steps_lim == None:
-            print("ref_steps_lim is unusable !")
+        try:
+            ref_data_lb = import_data.import_XSens(os.path.join(data_WD, args.i2), freq)
+            ref_seg_lim = import_data.get_seg(os.path.join(data_WD, args.i3))
+            ref_steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3), seg_lim)
+        except Exception as e:
+            print(f"Error while loading main files: {e}")
             sys.exit(0)
     
     # compute semio values (dictionaries)
