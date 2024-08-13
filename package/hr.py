@@ -114,7 +114,6 @@ def DFT(x, fs=100):
     f0 = fs / len(x)
 
     peak_list = []
-    n_f0 = []
 
     x = np.array(x.to_list())
 
@@ -124,6 +123,5 @@ def DFT(x, fs=100):
         e = np.exp(-2j * np.pi * f0 * k * np.arange(len(x)) / fs)
         peak = abs(sum(x * e))
         peak_list.append(peak)
-        n_f0.append(k)
 
     return peak_list
