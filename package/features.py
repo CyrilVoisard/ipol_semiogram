@@ -579,8 +579,8 @@ def sig_go_back(data_lb, seg_lim, freq, signal="none", norm=False):
     Pandas DataFrame 
     """
     
-    data_lb_go = data_lb[(seg_lim.iloc[0, 0] / freq < data_lb["PacketCounter"] < seg_lim.iloc[1, 0] / freq)]
-    data_lb_back = data_lb[(seg_lim.iloc[3, 0] / freq > data_lb["PacketCounter"] > seg_lim.iloc[2, 0] / freq)]
+    data_lb_go = data_lb[(data_lb["PacketCounter"] > seg_lim.iloc[0, 0] / freq) & (data_lb["PacketCounter"] < seg_lim.iloc[1, 0] / freq)]
+    data_lb_back = data_lb[(data_lb["PacketCounter"] > seg_lim.iloc[2, 0] / freq) & (data_lb["PacketCounter"] < seg_lim.iloc[3, 0] / freq)]
     if signal == "none":
         return data_lb_go, data_lb_back
     else:
