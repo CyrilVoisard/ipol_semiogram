@@ -129,8 +129,25 @@ def print_semio_criteria(criteria_dict):
         print(info_msg.format(**display_dict), file=f)
 
 
-def print_error(str, e):
-    print(f"Error while loading " + str + f"{e}")
+def print_error():
+    """Display an error message if the files cannot be read.
+    """
+    
+    fig, ax = plt.subplots(figsize=(4, 2))
+    text = "The main files are not in the correct format, please check them!"
+    fontdict = {'family': 'serif', 'size': 12}
+    text_obj = ax.text(0.5, 0.5, text, fontdict=fontdict, ha='center', va='center')
+    renderer = fig.canvas.get_renderer()
+    bbox = text_obj.get_window_extent(renderer=renderer)
+    text_width, text_height = bbox.width, bbox.height
+    position = (0.5, 0.5)
+    ax.clear()
+    ax.text(position[0], position[1], text, fontdict=fontdict, ha='center', va='center')
+    ax.axis('off')
+
+    # save the fig
+    path_out = os.path.join(data_WD, name + "semio.svg")
+    plt.savefig(path_out, dpi=200, transparent=True, bbox_inches="tight")
 
 
 if __name__ == "__main__":
@@ -171,7 +188,7 @@ if __name__ == "__main__":
         seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
         steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
     except Exception as e:
-        print_error("main files", e)
+        print_error()
         sys.exit(0)
     if compare :
         try:
@@ -179,7 +196,7 @@ if __name__ == "__main__":
             ref_seg_lim = import_data.get_seg(os.path.join(data_WD, args.i3))
             ref_steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3), seg_lim)
         except Exception as e:
-            print(f"Error while loading main files: {e}")
+            print_error()
             sys.exit(0)
     
     # compute semio values (dictionaries)
