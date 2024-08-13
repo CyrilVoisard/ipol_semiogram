@@ -129,10 +129,11 @@ def print_semio_criteria(criteria_dict):
         print(info_msg.format(**display_dict), file=f)
 
 
-def print_error():
+def print_error(e):
     """Display an error message if the files cannot be read.
     """
-    
+
+    # fig
     fig, ax = plt.subplots(figsize=(4, 2))
     text = "The main files are not in the correct format, please check them!"
     fontdict = {'family': 'serif', 'size': 12}
@@ -146,8 +147,16 @@ def print_error():
     ax.axis('off')
 
     # save the fig
-    path_out = os.path.join(data_WD, name + "semio.svg")
+    path_out = os.path.join(data_WD, "semio.svg")
     plt.savefig(path_out, dpi=200, transparent=True, bbox_inches="tight")
+
+    # table 1
+    with open("trial_criteria.txt", "wt") as f:
+        print(f"Erreur: {e}")
+
+    # table 2
+    with open("trial_parameters.txt", "wt") as f:
+        print(f"Erreur: {e}")
 
 
 if __name__ == "__main__":
@@ -188,7 +197,7 @@ if __name__ == "__main__":
         seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
         steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
     except Exception as e:
-        print_error()
+        print_error(e)
         sys.exit(0)
     if compare :
         try:
@@ -196,7 +205,7 @@ if __name__ == "__main__":
             ref_seg_lim = import_data.get_seg(os.path.join(data_WD, args.i3))
             ref_steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3), seg_lim)
         except Exception as e:
-            print_error()
+            print_error(e)
             sys.exit(0)
     
     # compute semio values (dictionaries)
