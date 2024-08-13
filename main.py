@@ -166,21 +166,21 @@ if __name__ == "__main__":
     distance = int(args.distance)
     
     # load data (only lower back in this demo)
-    try:
-        data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0), freq)
-        seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
-        steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
-    except Exception as e:
+    # try:
+    data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0), freq)
+    seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
+    steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
+    """except Exception as e:
         print_error("main files", e)
-        sys.exit(1)
+        sys.exit(1)"""
     if compare :
-        try:
-            ref_data_lb = import_data.import_XSens(os.path.join(data_WD, args.i2), freq)
-            ref_seg_lim = import_data.get_seg(os.path.join(data_WD, args.i3))
-            ref_steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3), seg_lim)
-        except Exception as e:
+        # try:
+        ref_data_lb = import_data.import_XSens(os.path.join(data_WD, args.i2), freq)
+        ref_seg_lim = import_data.get_seg(os.path.join(data_WD, args.i3))
+        ref_steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3), seg_lim)
+        """except Exception as e:
             print(f"Error while loading main files: {e}")
-            sys.exit(1)
+            sys.exit(1)"""
     
     # compute semio values (dictionaries)
     criteria_names, criteria, parameters = compute_semio_val.compute_semio_val(distance, steps_lim, seg_lim, data_lb, freq)
