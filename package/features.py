@@ -298,8 +298,8 @@ def medio_lateral_root_mean_square(data_lb, seg_lim, freq):
     # without u-turn
     data_lb_go, data_lb_back = sig_go_back(data_lb, seg_lim, freq=freq, signal="FreeAcc_Y", norm=True)
 
-    signal_go = rmoutliers(data_lb_go.values.tolist(), limit=3)
-    signal_back = rmoutliers(data_lb_back.values.tolist(), limit=3)
+    signal_go = rmoutliers(data_lb_go.values.tolist(), z_lim=3)
+    signal_back = rmoutliers(data_lb_back.values.tolist(), z_lim=3)
 
     rms_go = np.sqrt(np.mean(np.square(signal_go)))
     rms_back = np.sqrt(np.mean(np.square(signal_back)))
