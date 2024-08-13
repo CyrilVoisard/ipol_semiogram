@@ -49,48 +49,18 @@ def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
     spr_feat = [ft.stride_time(data_lb, seg_lim, steps_lim, freq=freq),
                 ft.u_turn_time(data_lb, seg_lim, steps_lim, freq=freq)]
     spr_ref = [norms[norms[:, 0] == 'Spr_StrT'], norms[norms[:, 0] == 'Spr_UtrT']]
-    spr_z_scores = []
-    for j in range(len(spr_feat)):
-        feat, m, sd, f = spr_ref[j].tolist()[0]
-        m = float(m)
-        sd = float(sd)
-        f = int(f)
-        val = spr_feat[j]
-        parameters.append(val)
-        parameters.append(f * (val - m) / sd)
-        spr_z_scores.append(f * (val - m) / sd)
-    spr = np.average(spr_z_scores)
+    spr = crit_z_score(spr_feat, spr_ref)
 
     # sturdiness
     stu_feat = [ft.step_length(data_lb, seg_lim, steps_lim, freq=freq, distance=distance)]
     stu_ref = [norms[norms[:, 0] == 'Stu_L']]
-    stu_z_scores = []
-    for j in range(len(stu_feat)):
-        feat, m, sd, f = stu_ref[j].tolist()[0]
-        m = float(m)
-        sd = float(sd)
-        f = int(f)
-        val = stu_feat[j]
-        parameters.append(val)
-        parameters.append(f * (val - m) / sd)
-        stu_z_scores.append(f * (val - m) / sd)
-    stu = np.average(stu_z_scores)
+    stu = crit_z_score(stu_feat, stu_ref)
 
     # smoothness
     smo_feat = [ft.sparc_gyr(data_lb, seg_lim, steps_lim, freq=freq),
                 ft.ldlj_acc(data_lb, seg_lim, steps_lim, freq=freq)]
     smo_ref = [norms[norms[:, 0] == 'Smo_SPARC'], norms[norms[:, 0] == 'Smo_LDLAcc']]
-    smo_z_scores = []
-    for j in range(len(smo_feat)):
-        feat, m, sd, f = smo_ref[j].tolist()[0]
-        m = float(m)
-        sd = float(sd)
-        f = int(f)
-        val = smo_feat[j]
-        parameters.append(val)
-        parameters.append(f * (val - m) / sd)
-        smo_z_scores.append(f * (val - m) / sd)
-    smo = np.average(smo_z_scores)
+    smo = crit_z_score(smo_feat, smo_ref)
 
     # steadiness
     ste_feat = [ft.variation_coeff_stride_time(data_lb, seg_lim, steps_lim, freq=freq),
@@ -99,32 +69,12 @@ def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
                 ft.p2_acc(data_lb, seg_lim, steps_lim, freq=freq)]
     ste_ref = [norms[norms[:, 0] == 'Ste_cvstrT'], norms[norms[:, 0] == 'Ste_cvdsT'], norms[norms[:, 0] == 'Ste_P1_aCC_F2'],
                norms[norms[:, 0] == 'Ste_P2_aCC_LB2']]
-    ste_z_scores = []
-    for j in range(len(ste_feat)):
-        feat, m, sd, f = ste_ref[j].tolist()[0]
-        m = float(m)
-        sd = float(sd)
-        f = int(f)
-        val = ste_feat[j]
-        parameters.append(val)
-        parameters.append(f * (val - m) / sd)
-        ste_z_scores.append(f * (val - m) / sd)
-    ste = np.average(ste_z_scores)
+    ste = crit_z_score(ste_feat, ste_ref)
 
     # stability
     sta_feat = [ft.medio_lateral_root_mean_square(data_lb, seg_lim, steps_lim, freq=freq)]
     sta_ref = [norms[norms[:, 0] == 'Sta_RMS_aML_LB']]
-    sta_z_scores = []
-    for j in range(len(sta_feat)):
-        feat, m, sd, f = sta_ref[j].tolist()[0]
-        m = float(m)
-        sd = float(sd)
-        f = int(f)
-        val = sta_feat[j]
-        parameters.append(val)
-        parameters.append(f * (val - m) / sd)
-        sta_z_scores.append(f * (val - m) / sd)
-    sta = np.average(sta_z_scores)
+    sta = crit_z_score(sta_feat, sta_ref)
 
     # symmetry
     sym_feat = [ft.p1_p2_acc(data_lb, seg_lim, steps_lim, freq=freq),
@@ -134,49 +84,48 @@ def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
                 ft.cranio_caudal_iHR(data_lb, seg_lim, steps_lim, freq=freq)]
     sym_ref = [norms[norms[:, 0] == 'Sym_P1P2_aCC_LB2'], norms[norms[:, 0] == 'Sym_swTr'], norms[norms[:, 0] == 'Sym_HFaAP'],
                norms[norms[:, 0] == 'Sym_HFaML'], norms[norms[:, 0] == 'Sym_HFaCC']]
-    sym_z_scores = []
-    for j in range(len(sym_feat)):
-        feat, m, sd, f = sym_ref[j].tolist()[0]
-        m = float(m)
-        sd = float(sd)
-        f = int(f)
-        val = sym_feat[j]
-        parameters.append(val)
-        parameters.append(f * (val - m) / sd)
-        sym_z_scores.append(f * (val - m) / sd)
-    sym = np.average(sym_z_scores)
+    sym = crit_z_score(sym_feat, sym_ref)
 
     # synchronisation
     syn_feat = [ft.double_stance_time(data_lb, seg_lim, steps_lim, freq=freq)]
     syn_ref = [norms[norms[:, 0] == 'Syn_dsT']]
-    syn_z_scores = []
-    for j in range(len(syn_feat)):
-        feat, m, sd, f = syn_ref[j].tolist()[0]
-        m = float(m)
-        sd = float(sd)
-        f = int(f)
-        val = syn_feat[j]
-        parameters.append(val)
-        parameters.append(f * (val - m) / sd)
-        syn_z_scores.append(f * (val - m) / sd)
-    syn = np.average(syn_z_scores)
+    syn = crit_z_score(syn_feat, syn_ref)
 
     # average speed
     avg_feat = [ft.avg_speed(data_lb, seg_lim, steps_lim, release_u_turn=True, freq=freq, distance=distance)]
     avg_ref = [norms[norms[:, 0] == 'AvgSpeed']]
-    avg_z_scores = []
-    for j in range(len(avg_feat)):
-        feat, m, sd, f = avg_ref[j].tolist()[0]
-        m = float(m)
-        sd = float(sd)
-        f = int(f)
-        val = avg_feat[j]
-        parameters.append(val)
-        parameters.append(f * (val - m) / sd)
-        avg_z_scores.append(f * (val - m) / sd)
-    avg = np.average(avg_z_scores)
+    avg = crit_z_score(avg_feat, avg_ref)
 
     # final values
     semio_val = [spr, stu, smo, ste, sta, sym, syn, avg]
 
     return criteria_names, semio_val, parameters
+
+
+def crit_z_score(crit_feat, crit_ref):
+    """Compute the Z-score for a criterion. 
+    Step 1 of Algorithm 2 in the IPOL article. 
+
+    Arguments:
+        crit_feat {list} -- list of parameter values corresponding to the criterion 
+        crit_ref {list} -- list of parameter references corresponding to the criterion
+
+    Returns
+    -------
+    float
+        Z-score for the criterion
+    """
+    
+    z_scores = []
+    for j in range(len(crit_feat)):
+        feat, m, sd, f = crit_ref[j].tolist()[0]
+        m = float(m)
+        sd = float(sd)
+        f = int(f)
+        val = crit_feat[j]
+        parameters.append(val)
+        parameters.append(f * (val - m) / sd)
+        z_scores.append(f * (val - m) / sd)
+        
+    return np.average(spr_z_scores)
+    
