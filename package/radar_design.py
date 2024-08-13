@@ -168,13 +168,13 @@ def new_radar_superpose(semio_val_dict, output=0, age=0, min_r=-10, max_r=4, nam
                    fontsize="x-large", )
         if len(semio_val_dict) == 2:
 
-            # D'abord le fond
+            # background
             axes.add_patch(area_new)
             axes.add_patch(area_ref)
 
-            # Ensuite les lignes
+            # lines
             for i in rang:
-                if i == 0:  # Pour 0, particulier : pointillés en gras
+                if i == 0:  # reference in bold
                     style = 'dashed'
                     line = 2
                 else:
