@@ -135,7 +135,7 @@ def print_error(e):
 
     # fig
     fig, ax = plt.subplots(figsize=(4, 2))
-    text = "The main files are not in the correct format, please check them!"
+    text = "The main files are not in the correct format, please check them!" + e
     fontdict = {'family': 'serif', 'size': 12}
     text_obj = ax.text(0.5, 0.5, text, fontdict=fontdict, ha='center', va='center')
     renderer = fig.canvas.get_renderer()
