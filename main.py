@@ -159,8 +159,6 @@ if __name__ == "__main__":
 
     freq = int(args.freq)
     distance = int(args.distance)
-    #age = args.age
-    age = None 
     
     # load data (only lower back in this demo)
     data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0), freq)
@@ -172,9 +170,9 @@ if __name__ == "__main__":
         ref_steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3), seg_lim)
     
     # compute semio values (dictionaries)
-    criteria_names, criteria, parameters = compute_semio_val.compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq)
+    criteria_names, criteria, parameters = compute_semio_val.compute_semio_val(distance, steps_lim, seg_lim, data_lb, freq)
     if compare:
-        ref_criteria_names, ref_criteria, ref_parameters = compute_semio_val.compute_semio_val(age, distance, ref_steps_lim, ref_seg_lim, ref_data_lb, freq)
+        ref_criteria_names, ref_criteria, ref_parameters = compute_semio_val.compute_semio_val(distance, ref_steps_lim, ref_seg_lim, ref_data_lb, freq)
 
     # print semiogram values
     parameters_names = ["StrT", "sd_StrT", "UTurn", "sd_UTurn", "SteL", "sd_SteL",
