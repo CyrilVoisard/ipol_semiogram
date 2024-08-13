@@ -35,7 +35,7 @@ def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
         ref = 0
     else:
         for i in range(1, 6):
-            if ages[i][0] < age < ages[i][1]:
+            if ages[i][0] <= age <= ages[i][1]:
                 ref = i
 
     age1 = ages[ref][0]
@@ -43,12 +43,12 @@ def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
     r = 'ScoreT7S-' + str(age1) + '-' + str(age2)
     path = osp.join('models', r) + '.json'
     with open(path) as json_data:
-        d = np.array(json.load(json_data))
+        norms = np.array(json.load(json_data))
 
     # springiness
     spr_feat = [ft.stride_time(data_lb, seg_lim, steps_lim, freq=freq),
                 ft.u_turn_time(data_lb, seg_lim, steps_lim, freq=freq)]
-    spr_ref = [d[d[:, 0] == 'Spr_StrT'], d[d[:, 0] == 'Spr_UtrT']]
+    spr_ref = [norms[norms[:, 0] == 'Spr_StrT'], norms[norms[:, 0] == 'Spr_UtrT']]
     spr_z_scores = []
     for j in range(len(spr_feat)):
         feat, m, sd, f = spr_ref[j].tolist()[0]
@@ -63,7 +63,7 @@ def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
 
     # sturdiness
     stu_feat = [ft.step_length(data_lb, seg_lim, steps_lim, freq=freq, distance=distance)]
-    stu_ref = [d[d[:, 0] == 'Stu_L']]
+    stu_ref = [norms[norms[:, 0] == 'Stu_L']]
     stu_z_scores = []
     for j in range(len(stu_feat)):
         feat, m, sd, f = stu_ref[j].tolist()[0]
@@ -79,7 +79,7 @@ def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
     # smoothness
     smo_feat = [ft.sparc_gyr(data_lb, seg_lim, steps_lim, freq=freq),
                 ft.ldlj_acc(data_lb, seg_lim, steps_lim, freq=freq)]
-    smo_ref = [d[d[:, 0] == 'Smo_SPARC'], d[d[:, 0] == 'Smo_LDLAcc']]
+    smo_ref = [norms[norms[:, 0] == 'Smo_SPARC'], norms[norms[:, 0] == 'Smo_LDLAcc']]
     smo_z_scores = []
     for j in range(len(smo_feat)):
         feat, m, sd, f = smo_ref[j].tolist()[0]
@@ -97,8 +97,8 @@ def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
                 ft.variation_coeff_double_stance_time(data_lb, seg_lim, steps_lim, freq=freq),
                 ft.p1_acc(data_lb, seg_lim, steps_lim, freq=freq),
                 ft.p2_acc(data_lb, seg_lim, steps_lim, freq=freq)]
-    ste_ref = [d[d[:, 0] == 'Ste_cvstrT'], d[d[:, 0] == 'Ste_cvdsT'], d[d[:, 0] == 'Ste_P1_aCC_F2'],
-               d[d[:, 0] == 'Ste_P2_aCC_LB2']]
+    ste_ref = [norms[norms[:, 0] == 'Ste_cvstrT'], norms[norms[:, 0] == 'Ste_cvdsT'], norms[norms[:, 0] == 'Ste_P1_aCC_F2'],
+               norms[norms[:, 0] == 'Ste_P2_aCC_LB2']]
     ste_z_scores = []
     for j in range(len(ste_feat)):
         feat, m, sd, f = ste_ref[j].tolist()[0]
@@ -113,7 +113,7 @@ def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
 
     # stability
     sta_feat = [ft.medio_lateral_root_mean_square(data_lb, seg_lim, steps_lim, freq=freq)]
-    sta_ref = [d[d[:, 0] == 'Sta_RMS_aML_LB']]
+    sta_ref = [norms[norms[:, 0] == 'Sta_RMS_aML_LB']]
     sta_z_scores = []
     for j in range(len(sta_feat)):
         feat, m, sd, f = sta_ref[j].tolist()[0]
@@ -132,8 +132,8 @@ def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
                 ft.antero_posterior_iHR(data_lb, seg_lim, steps_lim, freq=freq),
                 ft.medio_lateral_iHR(data_lb, seg_lim, steps_lim, freq=freq),
                 ft.cranio_caudal_iHR(data_lb, seg_lim, steps_lim, freq=freq)]
-    sym_ref = [d[d[:, 0] == 'Sym_P1P2_aCC_LB2'], d[d[:, 0] == 'Sym_swTr'], d[d[:, 0] == 'Sym_HFaAP'],
-               d[d[:, 0] == 'Sym_HFaML'], d[d[:, 0] == 'Sym_HFaCC']]
+    sym_ref = [norms[norms[:, 0] == 'Sym_P1P2_aCC_LB2'], norms[norms[:, 0] == 'Sym_swTr'], norms[norms[:, 0] == 'Sym_HFaAP'],
+               norms[norms[:, 0] == 'Sym_HFaML'], norms[norms[:, 0] == 'Sym_HFaCC']]
     sym_z_scores = []
     for j in range(len(sym_feat)):
         feat, m, sd, f = sym_ref[j].tolist()[0]
@@ -148,7 +148,7 @@ def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
 
     # synchronisation
     syn_feat = [ft.double_stance_time(data_lb, seg_lim, steps_lim, freq=freq)]
-    syn_ref = [d[d[:, 0] == 'Syn_dsT']]
+    syn_ref = [norms[norms[:, 0] == 'Syn_dsT']]
     syn_z_scores = []
     for j in range(len(syn_feat)):
         feat, m, sd, f = syn_ref[j].tolist()[0]
@@ -163,7 +163,7 @@ def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
 
     # average speed
     avg_feat = [ft.avg_speed(data_lb, seg_lim, steps_lim, release_u_turn=True, freq=freq, distance=distance)]
-    avg_ref = [d[d[:, 0] == 'AvgSpeed']]
+    avg_ref = [norms[norms[:, 0] == 'AvgSpeed']]
     avg_z_scores = []
     for j in range(len(avg_feat)):
         feat, m, sd, f = avg_ref[j].tolist()[0]
