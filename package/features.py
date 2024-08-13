@@ -253,12 +253,11 @@ def p2_acc(data_lb, seg_lim, steps_lim, freq):
 # --------------------------------------
 # Sturdiness: refers to gait amplitude.
 
-def step_length(data_lb, seg_lim, steps_lim, freq, distance = 20):
+def step_length(seg_lim, steps_lim, freq, distance = 20):
     """Compute the average step length: total length divided by the total number of steps after exclusion of the U-turn.
     Eq. 10 in the IPOL article. 
     
     Arguments:
-        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
         freq {int} -- acquisition frequency
@@ -281,14 +280,13 @@ def step_length(data_lb, seg_lim, steps_lim, freq, distance = 20):
 # --------------------------------------
 # Stability: refers to gait balance.
 
-def medio_lateral_root_mean_square(data_lb, seg_lim, steps_lim, freq):
+def medio_lateral_root_mean_square(data_lb, seg_lim, freq):
     """Compute the dispersion of the medio-lateral acceleration data relative to zero.
     Eq. 11 in the IPOL article. 
     
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
-        steps_lim {dataframe} -- pandas dataframe with gait events
         freq {int} -- acquisition frequency
 
     Returns
@@ -337,13 +335,12 @@ def p1_p2_acc(data_lb, seg_lim, steps_lim, freq):
     return (1 - abs(rapp - 1))
 
 
-def mean_swing_times_ratio(data_lb, seg_lim, steps_lim, freq):
+def mean_swing_times_ratio(seg_lim, steps_lim, freq):
     """Compute the ratio of the maximum (right or left) of averaged swing time divided by the minimum (right or left) of 
     averaged swing time. 
     Eq. 13 in the IPOL article. 
     
     Arguments:
-        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
         freq {int} -- acquisition frequency
@@ -462,13 +459,12 @@ def cranio_caudal_iHR(data_lb, seg_lim, steps_lim, freq) -> object:
 # --------------------------------------
 # Synchronization: refers to inter-limb coordination during gait.
 
-def double_stance_time(data_lb, seg_lim, steps_lim, freq):
+def double_stance_time(seg_lim, steps_lim, freq):
     """Compute the double stance time ratio : time between IC of one foot and the FC of the contralateral foot divided by the 
     total time of the gait cycle. 
     Eq. 17 in the IPOL article. 
     
     Arguments:
-        data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
         freq {int} -- acquisition frequency
