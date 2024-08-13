@@ -46,25 +46,25 @@ def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
         norms = np.array(json.load(json_data))
 
     # springiness
-    spr_feat = [ft.stride_time(data_lb, seg_lim, steps_lim, freq=freq),
-                ft.u_turn_time(data_lb, seg_lim, steps_lim, freq=freq)]
+    spr_feat = [ft.stride_time(seg_lim, steps_lim, freq=freq),
+                ft.u_turn_time(seg_lim, freq=freq)]
     spr_ref = [norms[norms[:, 0] == 'Spr_StrT'], norms[norms[:, 0] == 'Spr_UtrT']]
     spr = crit_z_score(spr_feat, spr_ref)
 
     # sturdiness
-    stu_feat = [ft.step_length(data_lb, seg_lim, steps_lim, freq=freq, distance=distance)]
+    stu_feat = [ft.step_length(seg_lim, steps_lim, freq=freq, distance=distance)]
     stu_ref = [norms[norms[:, 0] == 'Stu_L']]
     stu = crit_z_score(stu_feat, stu_ref)
 
     # smoothness
-    smo_feat = [ft.sparc_gyr(data_lb, seg_lim, steps_lim, freq=freq),
-                ft.ldlj_acc(data_lb, seg_lim, steps_lim, freq=freq)]
+    smo_feat = [ft.sparc_gyr(data_lb, seg_lim, freq=freq),
+                ft.ldlj_acc(data_lb, seg_lim, freq=freq)]
     smo_ref = [norms[norms[:, 0] == 'Smo_SPARC'], norms[norms[:, 0] == 'Smo_LDLAcc']]
     smo = crit_z_score(smo_feat, smo_ref)
 
     # steadiness
-    ste_feat = [ft.variation_coeff_stride_time(data_lb, seg_lim, steps_lim, freq=freq),
-                ft.variation_coeff_double_stance_time(data_lb, seg_lim, steps_lim, freq=freq),
+    ste_feat = [ft.variation_coeff_stride_time(seg_lim, steps_lim, freq=freq),
+                ft.variation_coeff_double_stance_time(seg_lim, steps_lim, freq=freq),
                 ft.p1_acc(data_lb, seg_lim, steps_lim, freq=freq),
                 ft.p2_acc(data_lb, seg_lim, steps_lim, freq=freq)]
     ste_ref = [norms[norms[:, 0] == 'Ste_cvstrT'], norms[norms[:, 0] == 'Ste_cvdsT'], norms[norms[:, 0] == 'Ste_P1_aCC_F2'],
@@ -72,13 +72,13 @@ def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
     ste = crit_z_score(ste_feat, ste_ref)
 
     # stability
-    sta_feat = [ft.medio_lateral_root_mean_square(data_lb, seg_lim, steps_lim, freq=freq)]
+    sta_feat = [ft.medio_lateral_root_mean_square(data_lb, seg_lim, freq=freq)]
     sta_ref = [norms[norms[:, 0] == 'Sta_RMS_aML_LB']]
     sta = crit_z_score(sta_feat, sta_ref)
 
     # symmetry
     sym_feat = [ft.p1_p2_acc(data_lb, seg_lim, steps_lim, freq=freq),
-                ft.mean_swing_times_ratio(data_lb, seg_lim, steps_lim, freq=freq),
+                ft.mean_swing_times_ratio(seg_lim, steps_lim, freq=freq),
                 ft.antero_posterior_iHR(data_lb, seg_lim, steps_lim, freq=freq),
                 ft.medio_lateral_iHR(data_lb, seg_lim, steps_lim, freq=freq),
                 ft.cranio_caudal_iHR(data_lb, seg_lim, steps_lim, freq=freq)]
@@ -87,12 +87,12 @@ def compute_semio_val(age, distance, steps_lim, seg_lim, data_lb, freq):
     sym = crit_z_score(sym_feat, sym_ref)
 
     # synchronisation
-    syn_feat = [ft.double_stance_time(data_lb, seg_lim, steps_lim, freq=freq)]
+    syn_feat = [ft.double_stance_time(seg_lim, steps_lim, freq=freq)]
     syn_ref = [norms[norms[:, 0] == 'Syn_dsT']]
     syn = crit_z_score(syn_feat, syn_ref)
 
     # average speed
-    avg_feat = [ft.avg_speed(data_lb, seg_lim, steps_lim, release_u_turn=True, freq=freq, distance=distance)]
+    avg_feat = [ft.avg_speed(seg_lim, freq, distance=distance, release_u_turn=True)]
     avg_ref = [norms[norms[:, 0] == 'AvgSpeed']]
     avg = crit_z_score(avg_feat, avg_ref)
 
