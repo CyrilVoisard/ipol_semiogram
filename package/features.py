@@ -655,7 +655,7 @@ def get_double_stance_time_list(seg_lim, steps_lim, freq):
         t_tot = steps_lim["HS"].iloc[i + 2] - steps_lim["HS"].iloc[i]
         st = (st1 + st2) / t_tot
         if ((steps_lim["Foot"].iloc[i] + steps_lim["Foot"].iloc[i + 1] == 1) &
-            (steps_lim["Foot"].iloc[i + 1] + steps_lim["Foot"].iloc[i + 2] == 1)) & (st1 > 0) & (st2 > 0):
+            (steps_lim["Foot"].iloc[i + 1] + steps_lim["Foot"].iloc[i + 2] == 1)) & (st1 > 0) & (st2 > 0): # test foot alternation
 
             if inside([steps_lim["HS"].iloc[i], steps_lim["HS"].iloc[i + 2]], seg_lim):
                 dst_t.append(st)
