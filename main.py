@@ -152,11 +152,11 @@ def print_error(e):
 
     # table 1
     with open("trial_criteria.txt", "wt") as f:
-        print("Unavailable.")
+        print("Unavailable.", file=f)
 
     # table 2
     with open("trial_parameters.txt", "wt") as f:
-        print("Unavailable.")
+        print("Unavailable.", file=f)
 
 
 if __name__ == "__main__":
