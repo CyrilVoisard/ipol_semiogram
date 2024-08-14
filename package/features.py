@@ -883,6 +883,7 @@ def indexes(y, thres=0.3, min_dist=1, thres_abs=False):
 
 def autocorr(f):
     """Autocorrelation estimation. Eq. 8 in the IPOL article. 
+    Appendix 
 
     Arguments
     ----------
