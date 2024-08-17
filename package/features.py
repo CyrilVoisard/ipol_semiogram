@@ -719,7 +719,7 @@ def peaks_3(vector, data_lb, seg_lim, steps_lim, freq):
 def peaks_2(vector, data_lb, seg_lim, steps_lim, freq):
     """Second peak detection method to find autocorrelation peaks corresponding to P1 and P2.
     Detection of maximum autocorrelation greater than 0.3 and a frame around the mean stride duration (P2) and half the mean stride duration (P1).
-    Eq. 8 and 9 in the IPOL article. 
+    Eq. 10 and 11 in the IPOL article. 
     
     Arguments:
         vector {numpy array} -- numpy array corresponding to the craniocaudal acceleration autocorrelation indicator
@@ -882,7 +882,7 @@ def indexes(y, thres=0.3, min_dist=1, thres_abs=False):
 
 
 def autocorr(f):
-    """Autocorrelation estimation. Eq. 8 in the IPOL article. 
+    """Autocorrelation estimation. Eq. 10 and Appendix B in the IPOL article. 
     Appendix 
 
     Arguments
