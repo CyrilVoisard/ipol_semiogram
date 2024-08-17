@@ -47,14 +47,14 @@ def sparc(movement, fs, padlevel=4, fc=10.0, amp_th=0.05):
     """
     # Number of zeros to be padded.
     # print(len(movement))
-    nfft = int(pow(2, np.ceil(np.log2(len(movement))) + padlevel))
+    nfft = int(pow(2, np.ceil(np.log2(len(movement))) + padlevel))  # Eq. 20 in IPOL article
     # print("nfft", nfft)
 
     # Frequency
     f = np.arange(0, fs, fs / nfft)
     # Normalized magnitude spectrum
     Mf = abs(np.fft.fft(movement, nfft))
-    Mf = Mf / max(Mf)
+    Mf = Mf / max(Mf)  # Eq. 21 in IPOL article
 
     # Choose the amplitude threshold based cut off frequency.
     # Index of the last point on the magnitude spectrum that is greater than
