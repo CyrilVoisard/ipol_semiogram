@@ -705,8 +705,8 @@ def peaks_3(vector, data_lb, seg_lim, steps_lim, freq):
 
     Returns
     -------
-    (p1_go, p1_back, p2_go, p2_back) : tuple 
-        p1 and p2 for go and back phases 
+    (p1, p2_go) : tuple 
+        p1 and p2 estimation from vector
     """
     
     p1_m1, p2_m1 = peaks_1(vector, data_lb, seg_lim, steps_lim, freq)
