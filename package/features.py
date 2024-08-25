@@ -398,7 +398,6 @@ def antero_posterior_iHR(data_lb, seg_lim, steps_lim, freq):
     """
 
     s = data_lb["FreeAcc_Z"]  # anteroposterior acceleration
-    print(steps_lim)
     steps_lim = steps_lim.sort_values(by="HS")
 
     ihr_s, st_ihr_s = hr.ihr_avg(seg_lim, steps_lim, s, ml=False)
@@ -509,17 +508,20 @@ def rmoutliers(v_in, z_lim=2):
 
 def inside(list, seg_lim):
     """Determine if a list of 2 events (corresponding to the HS and TO of a stride) is located within the bounds of the outbound and return phases of the trial.
+    The function works correctly only if list has 2 elements.
     
     Arguments:
         list {list} -- list of 2 events (integers)
-        seg_lim {dataframe} -- panda dataframe with the boundaries of the trial
+        seg_lim {dataframe} -- pandas dataframe with the boundaries of the trial
 
     Returns
     -------
     bool
     """
-    
-    seg_lim = pd.DataFrame(seg_lim)
+
+    if len(list) != 2:
+        return False
+        
     out = 0
     in_go = 0
     in_back = 0
@@ -616,8 +618,6 @@ def get_stride_list(seg_lim, steps_lim):
     
     t = []
 
-    print(steps_lim)
-
     steps_lim = steps_lim.sort_values(by="HS")
     for i in range(0, len(steps_lim) - 3):
         if steps_lim["Foot"].iloc[i] != steps_lim["Foot"].iloc[i+1] != steps_lim["Foot"].iloc[i+2]: # test foot alternation
@@ -654,8 +654,7 @@ def get_double_stance_time_list(seg_lim, steps_lim, freq):
         st2 = (steps_lim["TO"].iloc[i + 1] - steps_lim["HS"].iloc[i])
         t_tot = steps_lim["HS"].iloc[i + 2] - steps_lim["HS"].iloc[i]
         st = (st1 + st2) / t_tot
-        if ((steps_lim["Foot"].iloc[i] + steps_lim["Foot"].iloc[i + 1] == 1) &
-            (steps_lim["Foot"].iloc[i + 1] + steps_lim["Foot"].iloc[i + 2] == 1)) & (st1 > 0) & (st2 > 0): # test foot alternation
+        if (steps_lim["Foot"].iloc[i] != steps_lim["Foot"].iloc[i+1] != steps_lim["Foot"].iloc[i+2]) & (st1 > 0) & (st2 > 0): # test foot alternation
 
             if inside([steps_lim["HS"].iloc[i], steps_lim["HS"].iloc[i + 2]], seg_lim):
                 dst_t.append(st)
@@ -823,7 +822,6 @@ def indexes(y, thres=0.3, min_dist=1, thres_abs=False):
     dy = np.diff(y)
 
     # propagate left and right values successively to fill all plateau pixels (0-value)
-    # print("where", np.where(dy == 0))
     zeros, = np.where(dy == 0)
 
     # check if the signal is totally flat
