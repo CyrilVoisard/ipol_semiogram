@@ -2,12 +2,7 @@
 # -*- coding:utf-8 -*-
 
 import os
-import json
-import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
-from scipy.signal import butter, filtfilt
-from scipy import interpolate
 import sys
 
 from package import import_data, compute_semio_val, radar_design
