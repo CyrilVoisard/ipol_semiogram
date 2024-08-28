@@ -164,14 +164,13 @@ def ldlj_acc(data_lb, seg_lim, freq, signal='FreeAcc'):
 # --------------------------------------
 # Steadiness: refers to gait regularity.
 
-def variation_coeff_stride_time(seg_lim, steps_lim, freq):
+def variation_coeff_stride_time(seg_lim, steps_lim):
     """Compute the variation coefficient of stride time: standard deviation of the vector of stride times divided by its average. 
     Eq. 8 in the IPOL article. 
     
     Arguments:
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
 
     Returns
     -------
@@ -184,14 +183,13 @@ def variation_coeff_stride_time(seg_lim, steps_lim, freq):
     return 100 * np.std(t) / np.mean(t)
 
 
-def variation_coeff_double_stance_time(seg_lim, steps_lim, freq):
+def variation_coeff_double_stance_time(seg_lim, steps_lim):
     """Compute the variation coefficient of double stance time: Standard deviation of the vector of double stance times divided by its average.
     Eq. 9 in the IPOL article. 
     
     Arguments:
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
 
     Returns
     -------
@@ -199,7 +197,7 @@ def variation_coeff_double_stance_time(seg_lim, steps_lim, freq):
         CVdstT (%)
     """
     
-    dst_t = get_double_stance_time_list(seg_lim, steps_lim, freq=freq)
+    dst_t = get_double_stance_time_list(seg_lim, steps_lim)
     
     return 100 * np.std(dst_t) / np.mean(dst_t)
 
@@ -251,14 +249,13 @@ def p2_acc(data_lb, seg_lim, steps_lim, freq):
 # --------------------------------------
 # Sturdiness: refers to gait amplitude.
 
-def step_length(seg_lim, steps_lim, freq, distance = 20):
+def step_length(seg_lim, steps_lim, distance = 20):
     """Compute the average step length: total length divided by the total number of steps after exclusion of the U-turn.
     Eq. 12 in the IPOL article. 
     
     Arguments:
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
         distance {int} -- walked distance (m)
 
     Returns
@@ -378,7 +375,7 @@ def mean_swing_times_ratio(seg_lim, steps_lim, freq):
     return m2/m1
 
 
-def antero_posterior_iHR(data_lb, seg_lim, steps_lim, freq):
+def antero_posterior_iHR(data_lb, seg_lim, steps_lim):
     """Compute the power ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the anteroposterior
     acceleration signal from the trunk.
     Eq. 16 in the IPOL article. 
@@ -387,7 +384,6 @@ def antero_posterior_iHR(data_lb, seg_lim, steps_lim, freq):
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
 
     Returns
     -------
@@ -403,7 +399,7 @@ def antero_posterior_iHR(data_lb, seg_lim, steps_lim, freq):
     return ihr_s
 
 
-def medio_lateral_iHR(data_lb, seg_lim, steps_lim, freq):
+def medio_lateral_iHR(data_lb, seg_lim, steps_lim):
     """Compute the power ratio of the first 10 unpaired harmonics to the first 10 paired harmonics of the mediolateral
     acceleration signal from the trunk.
     Eq. 17 in the IPOL article. 
@@ -412,7 +408,6 @@ def medio_lateral_iHR(data_lb, seg_lim, steps_lim, freq):
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
 
     Returns
     -------
@@ -429,7 +424,7 @@ def medio_lateral_iHR(data_lb, seg_lim, steps_lim, freq):
     return ihr_s
 
 
-def cranio_caudal_iHR(data_lb, seg_lim, steps_lim, freq) -> object:
+def cranio_caudal_iHR(data_lb, seg_lim, steps_lim) -> object:
     """Compute the power ratio of the first 10 paired harmonics to the first 10 unpaired harmonics of the craniocaudal
     acceleration signal from the trunk.
     Eq. 18 in the IPOL article. 
@@ -438,7 +433,6 @@ def cranio_caudal_iHR(data_lb, seg_lim, steps_lim, freq) -> object:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
 
     Returns
     -------
@@ -457,7 +451,7 @@ def cranio_caudal_iHR(data_lb, seg_lim, steps_lim, freq) -> object:
 # --------------------------------------
 # Synchronization: refers to inter-limb coordination during gait.
 
-def double_stance_time(seg_lim, steps_lim, freq):
+def double_stance_time(seg_lim, steps_lim):
     """Compute the double stance time ratio : time between IC of one foot and the FC of the contralateral foot divided by the 
     total time of the gait cycle. 
     Eq. 19 in the IPOL article. 
@@ -465,7 +459,6 @@ def double_stance_time(seg_lim, steps_lim, freq):
     Arguments:
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
 
     Returns
     -------
@@ -473,7 +466,7 @@ def double_stance_time(seg_lim, steps_lim, freq):
         dstT (%)
     """
     
-    dst_t = get_double_stance_time_list(seg_lim, steps_lim, freq=freq)
+    dst_t = get_double_stance_time_list(seg_lim, steps_lim)
     dst_t = rmoutliers(dst_t)
 
     return np.mean(dst_t)*100
@@ -611,7 +604,7 @@ def get_stride_list(seg_lim, steps_lim):
     Returns
     -------
     t : list
-        Contains stride duration (s) without outliers
+        Contains stride duration (in samples) without outliers
     """
     
     t = []
@@ -628,7 +621,7 @@ def get_stride_list(seg_lim, steps_lim):
     return t
 
 
-def get_double_stance_time_list(seg_lim, steps_lim, freq):
+def get_double_stance_time_list(seg_lim, steps_lim):
     """Compute the list of double stance time ratio: time between IC of one foot and the FC of the contralateral foot divided by the 
     total time of the gait cycle.
     Eq. 2 in the IPOL article. 
@@ -636,7 +629,6 @@ def get_double_stance_time_list(seg_lim, steps_lim, freq):
     Arguments:
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
 
     Returns
     -------
