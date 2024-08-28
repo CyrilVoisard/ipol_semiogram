@@ -4,10 +4,9 @@ import matplotlib as mpl
 import matplotlib.path as path
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-from matplotlib.font_manager import FontProperties
 import math
 import matplotlib.cm as cm
-from matplotlib.colors import ListedColormap, LinearSegmentedColormap
+from matplotlib.colors import LinearSegmentedColormap
 
 
 def new_radar_superpose(semio_val_dict, output=0, age=0, min_r=-10, max_r=4, name="test"):
