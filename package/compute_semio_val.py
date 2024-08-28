@@ -1,7 +1,4 @@
 import numpy as np
-import scipy
-import os
-import os.path as osp
 import json
 from package import features as ft
 
