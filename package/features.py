@@ -1,6 +1,4 @@
 import numpy as np
-import pandas as pd
-from matplotlib import pyplot as plt
 from scipy import stats
 
 from package import hr, smoothness
