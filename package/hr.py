@@ -1,8 +1,5 @@
 
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy.integrate import cumtrapz
-from scipy import stats
 
 from package import features as ft
 
