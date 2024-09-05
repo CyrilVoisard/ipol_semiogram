@@ -24,7 +24,7 @@ def load_XSens(filename):
             if line.startswith('PacketCounter'):
                 break
         else:
-            i = -1
+            i = -1  # If 'PacketCounter' is not found
 
     signal = pd.read_csv(filename, delimiter="[,\s]", skiprows=i, header=0)
     t = signal["PacketCounter"]
