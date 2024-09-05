@@ -100,7 +100,7 @@ def sparc_gyr(data_lb, seg_lim, freq):
     end = seg_lim.iloc[3, 0]
 
     # data exclusion 
-    data = data_lb[(data_lb.iloc[:, 0] > start / freq) & (data_lb.iloc[:, 0] < end / freq)]
+    data = data_lb[(data_lb.iloc[:, 0] > start) & (data_lb.iloc[:, 0] < end)]
 
     # signals selection
     sig_X = data["Gyr_X"]
