@@ -202,7 +202,7 @@ def variation_coeff_double_stance_time(seg_lim, steps_lim):
     return 100 * np.std(dst_t) / np.mean(dst_t)
 
 
-def p1_acc(data_lb, seg_lim, steps_lim, freq):
+def p1_acc(data_lb, seg_lim, steps_lim):
     """Compute the cranio-caudal step autocorrelation coefficient: first peak of the cranio-caudal correlation coefficient of the lower back.
     Eq. 10 in the IPOL article. 
     
@@ -210,7 +210,6 @@ def p1_acc(data_lb, seg_lim, steps_lim, freq):
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
 
     Returns
     -------
@@ -218,13 +217,13 @@ def p1_acc(data_lb, seg_lim, steps_lim, freq):
         P1_aCC
     """
     
-    p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=freq)
+    p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_lb, seg_lim, steps_lim)
     p1 = max(p1_go, p1_back)
     
     return p1
 
 
-def p2_acc(data_lb, seg_lim, steps_lim, freq):
+def p2_acc(data_lb, seg_lim, steps_lim):
     """Compute the cranio-caudal stride autocorrelation coefficient: second peak of the cranio-caudal correlation coefficient of the lower back.
     Eq. 11 in the IPOL article. 
     
@@ -232,7 +231,6 @@ def p2_acc(data_lb, seg_lim, steps_lim, freq):
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
 
     Returns
     -------
@@ -240,7 +238,7 @@ def p2_acc(data_lb, seg_lim, steps_lim, freq):
         P2_aCC
     """
     
-    p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=freq)
+    p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_lb, seg_lim, steps_lim)
     p2 = max(p2_go, p2_back)
     
     return p2
@@ -314,7 +312,6 @@ def p1_p2_acc(data_lb, seg_lim, steps_lim, freq):
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
 
     Returns
     -------
@@ -322,7 +319,7 @@ def p1_p2_acc(data_lb, seg_lim, steps_lim, freq):
         P1P2_aCC
     """
 
-    p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq=freq)
+    p1_go, p1_back, p2_go, p2_back = get_p1_p2_autocorr(data_lb, seg_lim, steps_lim)
 
     rapp = find_nearest(np.array([p1_go / p2_go, p1_back / p2_back]), 1)
 
@@ -590,6 +587,23 @@ def sig_go_back(data_lb, seg_lim, signal="none", norm=False):
 
 
 # ---------------------------- Support functions for general features ----------------------------
+def get_stride_list_mean(seg_lim, steps_lim):
+    """Compute the mean of stride list.
+    
+    Arguments:
+        seg_lim {dataframe} -- pandas dataframe with phases events 
+        steps_lim {dataframe} -- pandas dataframe with gait events
+
+    Returns
+    -------
+    float
+        Average stride duration (sample)
+    """
+
+    t = get_stride_list(seg_lim, steps_lim)
+
+    return np.mean(t)
+    
 
 def get_stride_list(seg_lim, steps_lim):
     """Compute the list of stride times: time between consecutive initial contact (HS for heel strike) of the same foot.
@@ -654,14 +668,13 @@ def get_double_stance_time_list(seg_lim, steps_lim):
 
 
 # ---------------------------- autocorrelation function ----------------------------
-def get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq):
+def get_p1_p2_autocorr(data_lb, seg_lim, steps_lim):
     """Get cranio-caudal step (P1) and stride (P2) autocorrelation coefficient = first and second peak of the cranio-caudal acceleration autocorrelation coefficient of the lower back.
 
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
 
     Returns
     -------
@@ -673,15 +686,15 @@ def get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq):
     sig_go, sig_back = sig_go_back(data_lb, seg_lim, signal="FreeAcc_X", norm=False)
     go_coeff = autocorr(sig_go)
 
-    p1_go, p2_go = peaks_3(go_coeff, data_lb, seg_lim, steps_lim, freq)
+    p1_go, p2_go = peaks_3(go_coeff, data_lb, seg_lim, steps_lim)
 
     back_coeff = autocorr(sig_back)
-    p1_back, p2_back = peaks_3(back_coeff, data_lb, seg_lim, steps_lim, freq)
+    p1_back, p2_back = peaks_3(back_coeff, data_lb, seg_lim, steps_lim)
 
     return p1_go, p1_back, p2_go, p2_back
     
 
-def peaks_3(vector, data_lb, seg_lim, steps_lim, freq):
+def peaks_3(vector, data_lb, seg_lim, steps_lim):
     """Select the best peak detection method between peak_1 and peak_2 in order to find autocorrelation peaks corresponding to P1 and P2.
     
     Arguments:
@@ -689,7 +702,6 @@ def peaks_3(vector, data_lb, seg_lim, steps_lim, freq):
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
 
     Returns
     -------
@@ -697,13 +709,13 @@ def peaks_3(vector, data_lb, seg_lim, steps_lim, freq):
         p1 and p2 estimation from vector
     """
     
-    p1_m1, p2_m1 = peaks_1(vector, data_lb, seg_lim, steps_lim, freq)
-    p1_m2, p2_m2 = peaks_2(vector, data_lb, seg_lim, steps_lim, freq)
+    p1_m1, p2_m1 = peaks_1(vector, data_lb, seg_lim, steps_lim)
+    p1_m2, p2_m2 = peaks_2(vector, data_lb, seg_lim, steps_lim)
 
     return max(p1_m1, p1_m2), max(p2_m1, p2_m2)
 
 
-def peaks_2(vector, data_lb, seg_lim, steps_lim, freq):
+def peaks_2(vector, data_lb, seg_lim, steps_lim):
     """Second peak detection method to find autocorrelation peaks corresponding to P1 and P2.
     Detection of maximum autocorrelation greater than 0.3 and a frame around the mean stride duration (P2) and half the mean stride duration (P1).
     Eq. 10 and 11 in the IPOL article. 
@@ -713,7 +725,6 @@ def peaks_2(vector, data_lb, seg_lim, steps_lim, freq):
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
 
     Returns
     -------
@@ -721,7 +732,7 @@ def peaks_2(vector, data_lb, seg_lim, steps_lim, freq):
         p1 and p2 estimation from vector
     """
     
-    strT = int(stride_time(seg_lim, steps_lim, freq=freq) * freq)
+    strT = int(get_stride_list_mean(seg_lim, steps_lim))
 
     start_p1 = int(strT * 0.35)
     end_p1 = int(strT * 0.65)
@@ -738,7 +749,7 @@ def peaks_2(vector, data_lb, seg_lim, steps_lim, freq):
     return p1, p2
 
 
-def peaks_1(vector, data_lb, seg_lim, steps_lim, freq):
+def peaks_1(vector, data_lb, seg_lim, steps_lim):
     """ First peak detection method to find autocorrelation peaks corresponding to P1 and P2.
     Detection of all autocorrelation maxima greater than 0.3, then selection of those closest to the average stride duration (P2) and half the average stride duration (P1). 
     
@@ -747,7 +758,6 @@ def peaks_1(vector, data_lb, seg_lim, steps_lim, freq):
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
 
     Returns
     -------
@@ -755,7 +765,7 @@ def peaks_1(vector, data_lb, seg_lim, steps_lim, freq):
         p1 and p2 estimation from vector
     """
     
-    strT = int(stride_time(seg_lim, steps_lim, freq=freq) * freq)
+    strT = int(get_stride_list_mean(seg_lim, steps_lim))
 
     indexes_pic_go = indexes(vector[0:len(vector)//2], min_dist=strT * 0.35)
 
