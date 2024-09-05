@@ -188,14 +188,14 @@ if __name__ == "__main__":
     distance = int(args.distance)
     
     # load data (only lower back in this demo)
-    try:
-        data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0))
-        seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
-        steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
-    except Exception as e:
-        error_message = str(e)
-        print_error(error_message)
-        sys.exit(0)
+    #try:
+    data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0))
+    seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
+    steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
+    #except Exception as e:
+     #   error_message = str(e)
+      #  print_error(error_message)
+       # sys.exit(0)
     if compare :
         try:
             ref_data_lb = import_data.import_XSens(os.path.join(data_WD, args.i2))
