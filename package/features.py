@@ -128,10 +128,6 @@ def ldlj_acc(data_lb, seg_lim, signal='FreeAcc'):
     float
         LDLJ acc
     """
-    
-    else:
-        raise ValueError(
-            '\n'.join(("The argument signal must be either 'FreeAcc' or 'Acc', otherwise use ldljv_rot_XS.")))
 
     start = seg_lim.iloc[0, 0]
     end = seg_lim.iloc[3, 0]
