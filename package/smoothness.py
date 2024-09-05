@@ -173,16 +173,14 @@ def log_dimensionless_jerk2(movement, fs, data_type):
     return -np.log(abs(dimensionless_jerk2(movement, fs, data_type)))
 
 
-def dimensionless_jerk(movement, fs):
+def dimensionless_jerk(movement):
     """
-    Calculates the smoothness metric for the given speed profile using the
+    Calculates the smoothness metric for the given acceleration profile using the
     dimensionless jerk metric.
     Parameters
     ----------
     movement : np.array
-               The array containing the movement speed profile.
-    fs       : float
-               The sampling frequency of the data.
+               The array containing the movement acceleration profile.
     Returns
     -------
     dl       : float
@@ -203,25 +201,22 @@ def dimensionless_jerk(movement, fs):
 
     # calculate the scale factor and jerk.
     movement_peak = max(abs(movement))
-    dt = 1. / fs
-    movement_dur = len(movement) * dt
-    jerk = np.diff(movement, 2) / pow(dt, 2)
-    scale = pow(movement_dur, 3) / pow(movement_peak, 2)
+    movement_dur = len(movement)
+    movement_diff = np.diff(movement)
+    scale = movement_dur / pow(movement_peak, 2)
 
     # estimate dj
-    return - scale * sum(pow(jerk, 2)) * dt
+    return - scale * sum(pow(movement_diff, 2))
 
 
-def log_dimensionless_jerk(movement, fs):
+def log_dimensionless_jerk(movement):
     """
-    Calculates the smoothness metric for the given speed profile using the
+    Calculates the smoothness metric for the given acceleration profile using the
     log dimensionless jerk metric.
     Parameters
     ----------
     movement : np.array
-               The array containing the movement speed profile.
-    fs       : float
-               The sampling frequency of the data.
+               The array containing the movement acceleration profile.
     Returns
     -------
     ldl      : float
@@ -237,4 +232,4 @@ def log_dimensionless_jerk(movement, fs):
     '%.5f' % ldl
     '-5.81636'
     """
-    return -np.log(abs(dimensionless_jerk(movement, fs)))
+    return -np.log(abs(dimensionless_jerk(movement)))
