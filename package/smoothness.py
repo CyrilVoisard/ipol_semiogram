@@ -56,20 +56,20 @@ def sparc(movement, fs, padlevel=4, fc=10.0, amp_th=0.05):
     Mf = abs(np.fft.fft(movement, nfft))
     Mf = Mf / max(Mf)  # Eq. 21 in IPOL article
 
-    # Choose the amplitude threshold based cut off frequency.
-    # Index of the last point on the magnitude spectrum that is greater than
-    # or equal to the amplitude threshold.
-    inx = ((Mf >= amp_th) * 1).nonzero()[0]
-    fc_inx = range(inx[0], inx[-1] + 1)
-    f_sel = f[fc_inx]
-    Mf_sel = Mf[fc_inx]
-
     # Indices to choose only the spectrum within the given cut off frequency
     # Fc.
     # NOTE: This is a low pass filtering operation to get rid of high frequency
     # noise from affecting the next step (amplitude threshold based cut off for
     # arc length calculation).
-    fc_inx = ((f_sel <= fc) * 1).nonzero()
+    fc_inx = ((f <= fc) * 1).nonzero()
+    f_sel = f[fc_inx]
+    Mf_sel = Mf[fc_inx]
+
+    # Choose the amplitude threshold based cut off frequency.
+    # Index of the last point on the magnitude spectrum that is greater than
+    # or equal to the amplitude threshold.
+    inx = ((Mf_sel >= amp_th) * 1).nonzero()[0]
+    fc_inx = range(inx[0], inx[-1] + 1)
     f_sel = f_sel[fc_inx]
     Mf_sel = Mf_sel[fc_inx]
 
