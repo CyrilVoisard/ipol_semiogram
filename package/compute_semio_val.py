@@ -57,7 +57,7 @@ def compute_semio_val(distance, steps_lim, seg_lim, data_lb, freq):
     ste, parameters = crit_z_score(ste_feat, ste_ref, parameters)
 
     # stability
-    sta_feat = [ft.medio_lateral_root_mean_square(data_lb, seg_lim, freq=freq)]
+    sta_feat = [ft.medio_lateral_root_mean_square(data_lb, seg_lim)]
     sta_ref = [norms[norms[:, 0] == 'Sta_RMS_aML_LB']]
     sta, parameters = crit_z_score(sta_feat, sta_ref, parameters)
 
