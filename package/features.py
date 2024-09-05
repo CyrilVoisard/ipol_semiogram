@@ -678,7 +678,7 @@ def get_p1_p2_autocorr(data_lb, seg_lim, steps_lim):
     """
     
     # consider separatly go and back phases, without uturn phase
-    sig_go, sig_back = sig_go_back(data_lb, seg_lim, signal="FreeAcc_X", norm=False)
+    sig_go, sig_back = sig_go_back(data_lb, seg_lim, signal="FreeAcc_X", norm=True)
     go_coeff = autocorr(sig_go)
 
     p1_go, p2_go = peaks_3(go_coeff, data_lb, seg_lim, steps_lim)
