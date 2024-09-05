@@ -43,7 +43,7 @@ def compute_semio_val(distance, steps_lim, seg_lim, data_lb, freq):
 
     # smoothness
     smo_feat = [ft.sparc_gyr(data_lb, seg_lim, freq=freq),
-                ft.ldlj_acc(data_lb, seg_lim, freq=freq)]
+                ft.ldlj_acc(data_lb, seg_lim)]
     smo_ref = [norms[norms[:, 0] == 'Smo_SPARC'], norms[norms[:, 0] == 'Smo_LDLAcc']]
     smo, parameters = crit_z_score(smo_feat, smo_ref, parameters)
 
