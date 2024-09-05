@@ -63,7 +63,7 @@ def compute_semio_val(distance, steps_lim, seg_lim, data_lb, freq):
 
     # symmetry
     sym_feat = [ft.p1_p2_acc(data_lb, seg_lim, steps_lim),
-                ft.mean_swing_times_ratio(seg_lim, steps_lim, freq=freq),
+                ft.mean_swing_times_ratio(seg_lim, steps_lim),
                 ft.antero_posterior_iHR(data_lb, seg_lim, steps_lim),
                 ft.medio_lateral_iHR(data_lb, seg_lim, steps_lim),
                 ft.cranio_caudal_iHR(data_lb, seg_lim, steps_lim)]
