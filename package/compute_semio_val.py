@@ -50,8 +50,8 @@ def compute_semio_val(distance, steps_lim, seg_lim, data_lb, freq):
     # steadiness
     ste_feat = [ft.variation_coeff_stride_time(seg_lim, steps_lim),
                 ft.variation_coeff_double_stance_time(seg_lim, steps_lim),
-                ft.p1_acc(data_lb, seg_lim, steps_lim, freq=freq),
-                ft.p2_acc(data_lb, seg_lim, steps_lim, freq=freq)]
+                ft.p1_acc(data_lb, seg_lim, steps_lim),
+                ft.p2_acc(data_lb, seg_lim, steps_lim)]
     ste_ref = [norms[norms[:, 0] == 'Ste_cvstrT'], norms[norms[:, 0] == 'Ste_cvdsT'], norms[norms[:, 0] == 'Ste_P1_aCC_F2'],
                norms[norms[:, 0] == 'Ste_P2_aCC_LB2']]
     ste, parameters = crit_z_score(ste_feat, ste_ref, parameters)
@@ -62,7 +62,7 @@ def compute_semio_val(distance, steps_lim, seg_lim, data_lb, freq):
     sta, parameters = crit_z_score(sta_feat, sta_ref, parameters)
 
     # symmetry
-    sym_feat = [ft.p1_p2_acc(data_lb, seg_lim, steps_lim, freq=freq),
+    sym_feat = [ft.p1_p2_acc(data_lb, seg_lim, steps_lim),
                 ft.mean_swing_times_ratio(seg_lim, steps_lim, freq=freq),
                 ft.antero_posterior_iHR(data_lb, seg_lim, steps_lim),
                 ft.medio_lateral_iHR(data_lb, seg_lim, steps_lim),
