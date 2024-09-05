@@ -107,7 +107,7 @@ def sparc_gyr(data_lb, seg_lim, freq):
     sig_Y = data["Gyr_Y"]
     sig_Z = data["Gyr_Z"]
 
-    sig_n2= np.sqrt(pow(sig_X, 2) + pow(sig_Y, 2) + pow(sig_Z, 2))
+    sig_n2 = np.sqrt(pow(sig_X, 2) + pow(sig_Y, 2) + pow(sig_Z, 2))
 
     sal_, _, _ = smoothness.sparc(sig_n2, fs=freq)
     
