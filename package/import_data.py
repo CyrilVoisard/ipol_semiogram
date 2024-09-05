@@ -5,7 +5,7 @@ from scipy import interpolate
 
 # XSens data 
 
-def load_XSens(filename, freq):
+def load_XSens(filename):
     """Load the data from a file.
 
     Arguments:
@@ -53,7 +53,7 @@ def load_XSens(filename, freq):
     return signal
 
 
-def import_XSens(path, freq, start=0, end=200, order=8, fc=14):
+def import_XSens(path, start=0, end=200, order=8, fc=14):
     """Import and pre-process the data from a file.
 
     Arguments:
@@ -69,7 +69,7 @@ def import_XSens(path, freq, start=0, end=200, order=8, fc=14):
         data
     """
     
-    data = load_XSens(path, freq)
+    data = load_XSens(path)
 
     data["FreeAcc_X"] = data["Acc_X"] - np.mean(data["Acc_X"][start:end])
     data["FreeAcc_Y"] = data["Acc_Y"] - np.mean(data["Acc_Y"][start:end])
