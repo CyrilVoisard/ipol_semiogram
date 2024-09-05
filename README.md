@@ -1,10 +1,14 @@
 # Semiogram: a Visual Tool for Gait Quantification in Routine Neurological Follow-Up
 
-## Reference 
+## General informations 
 
 IPOL link: 
 Date: 
 Author mail: cyril.voisard@gmail.com
+
+Please cite these articles whenever you want to make a reference to this demo:
+- [Voisard et al, Innovative multidimensional gait evaluation using IMU in multiple sclerosis: introducing the semiogram, Frontiers in Neurology, 2023, https://doi.org/10.3389/fneur.2023.1237162]
+- [Voisard et al., Semiogram: a Visual Tool for Gait Quantification in Routine Neurological Follow-Up, IPOL, 2024, XXXXX]
 
 ## Context
 
@@ -28,9 +32,3 @@ The format of the input data and the output figures and tables are provided in t
 
 3 datasets are provided in the folder "example_datasets" consisting of 2 gait signals collected using an inertial measurement units (MTw Awinda XSens, in the lower back at the level of the fifth lumbar vertebra), with a gait events segmentation. The data was obtained from a sample of subjects who followed the described protocol: standing still, walking 10 meters, turning around, walking back, and stopping.
 The data output by the algorithm is provided in the same files. 
-
-## Citations 
-
-Please cite these articles whenever you want to make a reference to this demo:
-- [Voisard et al, Innovative multidimensional gait evaluation using IMU in multiple sclerosis: introducing the semiogram, Frontiers in Neurology, 2023, https://doi.org/10.3389/fneur.2023.1237162]
-- [Voisard et al., Semiogram: a Visual Tool for Gait Quantification in Routine Neurological Follow-Up, IPOL, 2024, XXXXX]
