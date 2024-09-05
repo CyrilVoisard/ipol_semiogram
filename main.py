@@ -46,7 +46,7 @@ def print_semio_parameters(parameters_dict):
                     'sd_StrT': "{sd_StrT}".format(**parameters_dict),
                     'sd_UTurn': "{sd_UTurn}".format(**parameters_dict),
                     'sd_SteL': "{sd_SteL}".format(**parameters_dict),
-                    'sd_SPARC_gyr': "{sd_SteL}".format(**parameters_dict),
+                    'sd_SPARC': "{sd_SPARC}".format(**parameters_dict),
                     'sd_LDLJAcc': "{sd_LDLJAcc}".format(**parameters_dict),
                     'sd_CVStrT': "{sd_CVStrT}".format(**parameters_dict),
                     'sd_CVdsT': "{sd_CVdsT}".format(**parameters_dict),
