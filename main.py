@@ -29,7 +29,7 @@ def print_semio_parameters(parameters_dict):
                     'StrT': "StrT: {StrT}".format(**parameters_dict),
                     'UTurn': "UTurn: {UTurn}".format(**parameters_dict),
                     'SteL': "SteL: {SteL}".format(**parameters_dict),
-                    'SPARC_gyr': "SPARC: {SPARC_gyr}".format(**parameters_dict),
+                    'SPARC': "SPARC: {SPARC}".format(**parameters_dict),
                     'LDLJAcc': "LDLJAcc: {LDLJAcc}".format(**parameters_dict),
                     'CVStrT': "CVStrT: {CVStrT}".format(**parameters_dict),
                     'CVdsT': "CVdsT: {CVdsT}".format(**parameters_dict),
@@ -68,7 +68,7 @@ def print_semio_parameters(parameters_dict):
     {StrT:<30}| {sd_StrT:<30}
     {UTurn:<30}| {sd_UTurn:<30}
     {SteL:<30}| {sd_SteL:<30}
-    {SPARC_gyr:<30}| {sd_SPARC_gyr:<30}
+    {SPARC:<30}| {sd_SPARC:<30}
     {LDLJAcc:<30}| {sd_LDLJAcc:<30}
     {CVStrT:<30}| {sd_CVStrT:<30}
     {CVdsT:<30}| {sd_CVdsT:<30}
@@ -213,7 +213,7 @@ if __name__ == "__main__":
 
     # print semiogram values
     parameters_names = ["StrT", "sd_StrT", "UTurn", "sd_UTurn", "SteL", "sd_SteL",
-              "SPARC_gyr", "sd_SPARC_gyr", "LDLJAcc", "sd_LDLJAcc", "CVStrT", "sd_CVStrT", "CVdsT", "sd_CVdsT",
+              "SPARC", "sd_SPARC", "LDLJAcc", "sd_LDLJAcc", "CVStrT", "sd_CVStrT", "CVdsT", "sd_CVdsT",
               "P1_aCC", "sd_P1_aCC", "P2_aCC", "sd_P2_aCC", "ML_RMS", "sd_ML_RMS", "P1P2", "sd_P1P2",
               "MSwTR", "sd_MSwTR", "AP_iHR", "sd_AP_iHR", "ML_iHR", "sd_ML_iHR", "CC_iHR", "sd_CC_iHR", "dstT", "sd_dstT",
               "V", "sd_V"]
