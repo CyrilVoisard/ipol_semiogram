@@ -29,7 +29,7 @@ def print_semio_parameters(parameters_dict):
                     'StrT': "StrT: {StrT}".format(**parameters_dict),
                     'UTurn': "UTurn: {UTurn}".format(**parameters_dict),
                     'SteL': "SteL: {SteL}".format(**parameters_dict),
-                    'SPARC_gyr': "SteL: {SteL}".format(**parameters_dict),
+                    'SPARC_gyr': "SPARC: {SPARC_gyr}".format(**parameters_dict),
                     'LDLJAcc': "LDLJAcc: {LDLJAcc}".format(**parameters_dict),
                     'CVStrT': "CVStrT: {CVStrT}".format(**parameters_dict),
                     'CVdsT': "CVdsT: {CVdsT}".format(**parameters_dict),
