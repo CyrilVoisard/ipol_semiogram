@@ -326,7 +326,7 @@ def p1_p2_acc(data_lb, seg_lim, steps_lim, freq):
     return (1 - abs(rapp - 1))
 
 
-def mean_swing_times_ratio(seg_lim, steps_lim, freq):
+def mean_swing_times_ratio(seg_lim, steps_lim):
     """Compute the ratio of the maximum (right or left) of averaged swing time divided by the minimum (right or left) of 
     averaged swing time. 
     Eq. 15 in the IPOL article. 
@@ -334,7 +334,6 @@ def mean_swing_times_ratio(seg_lim, steps_lim, freq):
     Arguments:
         seg_lim {dataframe} -- pandas dataframe with phases events 
         steps_lim {dataframe} -- pandas dataframe with gait events
-        freq {int} -- acquisition frequency
 
     Returns
     -------
