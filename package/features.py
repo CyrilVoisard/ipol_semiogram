@@ -114,14 +114,13 @@ def sparc_gyr(data_lb, seg_lim, freq):
     return sal_
 
 
-def ldlj_acc(data_lb, seg_lim, freq, signal='FreeAcc'):
+def ldlj_acc(data_lb, seg_lim, signal='FreeAcc'):
     """Compute the log dimensionless jerk computed from linear acceleration. 
     Eq. 7 in the IPOL article. 
 
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
-        freq {int} -- acquisition frequency
         signal {str} -- 'FreeAcc' or 'Acc'
 
     Returns
@@ -130,9 +129,6 @@ def ldlj_acc(data_lb, seg_lim, freq, signal='FreeAcc'):
         LDLJ acc
     """
     
-    if signal in ["FreeAcc", "Acc"]:
-        data_type = "accl"
-
     else:
         raise ValueError(
             '\n'.join(("The argument signal must be either 'FreeAcc' or 'Acc', otherwise use ldljv_rot_XS.")))
@@ -156,9 +152,7 @@ def ldlj_acc(data_lb, seg_lim, freq, signal='FreeAcc'):
     sig_n2_go = np.sqrt(pow(sig_X_go, 2) + pow(sig_Y_go, 2) + pow(sig_Z_go, 2))
     sig_n2_back = np.sqrt(pow(sig_X_back, 2) + pow(sig_Y_back, 2) + pow(sig_Z_back, 2))
 
-    # ldl_acc_go = smoothness.log_dimensionless_jerk2(sig_n2_go, fs=freq, data_type=data_type)
     ldl_acc_go = smoothness.log_dimensionless_jerk(sig_n2_go)
-    # ldl_acc_back = smoothness.log_dimensionless_jerk2(sig_n2_back, fs=freq, data_type=data_type)
     ldl_acc_back = smoothness.log_dimensionless_jerk(sig_n2_back)
 
     return (ldl_acc_go + ldl_acc_back) / 2
