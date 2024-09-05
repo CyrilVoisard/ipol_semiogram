@@ -304,7 +304,7 @@ def medio_lateral_root_mean_square(data_lb, seg_lim):
 # --------------------------------------
 # Symmetry: refers to inter-limb coordination during gait.
 
-def p1_p2_acc(data_lb, seg_lim, steps_lim, freq):
+def p1_p2_acc(data_lb, seg_lim, steps_lim):
     """Compute the ratio of the first (P1) to the second (P2) peak of the craniocaudal correlation coefficient of the lower back (P1P2aCC).
     Eq. 14 in the IPOL article. 
     
