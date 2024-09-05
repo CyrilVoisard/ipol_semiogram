@@ -141,7 +141,7 @@ def ldlj_acc(data_lb, seg_lim, freq, signal='FreeAcc'):
     end = seg_lim.iloc[3, 0]
 
     # without u-turn
-    data_lb_go, data_lb_back = sig_go_back(data_lb, seg_lim, freq=freq)
+    data_lb_go, data_lb_back = sig_go_back(data_lb, seg_lim)
 
     # go phase
     sig_X_go = data_lb_go[signal + "_X"]
@@ -275,14 +275,13 @@ def step_length(seg_lim, steps_lim, distance = 20):
 # --------------------------------------
 # Stability: refers to gait balance.
 
-def medio_lateral_root_mean_square(data_lb, seg_lim, freq):
+def medio_lateral_root_mean_square(data_lb, seg_lim):
     """Compute the dispersion of the medio-lateral acceleration data relative to zero.
     Eq. 13 in the IPOL article. 
     
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
-        freq {int} -- acquisition frequency
 
     Returns
     -------
@@ -291,7 +290,7 @@ def medio_lateral_root_mean_square(data_lb, seg_lim, freq):
     """
 
     # without u-turn
-    data_lb_go, data_lb_back = sig_go_back(data_lb, seg_lim, freq=freq, signal="FreeAcc_Y", norm=True)
+    data_lb_go, data_lb_back = sig_go_back(data_lb, seg_lim, signal="FreeAcc_Y", norm=True)
 
     signal_go = rmoutliers(data_lb_go.values.tolist(), z_lim=3)
     signal_back = rmoutliers(data_lb_back.values.tolist(), z_lim=3)
@@ -559,13 +558,12 @@ def find_nearest(array, value):
     return array[idx]
 
 
-def sig_go_back(data_lb, seg_lim, freq, signal="none", norm=False):
+def sig_go_back(data_lb, seg_lim, signal="none", norm=False):
     """Extract the parts of a signal that correspond to the straight-line phases (forward and return) of the trial.
     
     Arguments:
         data_lb {dataframe} -- pandas dataframe with pre-processed lower back sensor time series
         seg_lim {dataframe} -- pandas dataframe with phases events 
-        freq {int} -- acquisition frequency
         signal {str} -- optionnal, name of the column to be extracted if there is one
         norm {bool} -- optionnal, only if signal is specified, True if normalization is to be applied
 
@@ -574,8 +572,8 @@ def sig_go_back(data_lb, seg_lim, freq, signal="none", norm=False):
     Pandas DataFrame 
     """
     
-    data_lb_go = data_lb[(data_lb["PacketCounter"] > seg_lim.iloc[0, 0] / freq) & (data_lb["PacketCounter"] < seg_lim.iloc[1, 0] / freq)]
-    data_lb_back = data_lb[(data_lb["PacketCounter"] > seg_lim.iloc[2, 0] / freq) & (data_lb["PacketCounter"] < seg_lim.iloc[3, 0] / freq)]
+    data_lb_go = data_lb[(data_lb["PacketCounter"] > seg_lim.iloc[0, 0]) & (data_lb["PacketCounter"] < seg_lim.iloc[1, 0])]
+    data_lb_back = data_lb[(data_lb["PacketCounter"] > seg_lim.iloc[2, 0]) & (data_lb["PacketCounter"] < seg_lim.iloc[3, 0])]
     if signal == "none":
         return data_lb_go, data_lb_back
     else:
@@ -672,7 +670,7 @@ def get_p1_p2_autocorr(data_lb, seg_lim, steps_lim, freq):
     """
     
     # consider separatly go and back phases, without uturn phase
-    sig_go, sig_back = sig_go_back(data_lb, seg_lim, freq=freq, signal="FreeAcc_X", norm=False)
+    sig_go, sig_back = sig_go_back(data_lb, seg_lim, signal="FreeAcc_X", norm=False)
     go_coeff = autocorr(sig_go)
 
     p1_go, p2_go = peaks_3(go_coeff, data_lb, seg_lim, steps_lim, freq)
