@@ -1,5 +1,11 @@
 # Semiogram: a Visual Tool for Gait Quantification in Routine Neurological Follow-Up
 
+## Reference 
+
+IPOL link: 
+Date: 
+Author mail: cyril.voisard@gmail.com
+
 ## Context
 
 This repository provides the code for calculating the parameters of the Semiogram, a tool for quantifying gait using inertial measurement units. In summary, the Semiogram can be defined as a **performance bar** for an individual according to different criteria divided into 7 axes and 1 coloured global axis (speed). 
@@ -18,7 +24,7 @@ The demo applying the calculation and representation of the semiogram to data su
 The format of the input data and the output figures and tables are provided in the attached article. 
 
 
-## Examples and datasets
+## Examples of use
 
 3 datasets are provided in the folder "example_datasets" consisting of 2 gait signals collected using an inertial measurement units (MTw Awinda XSens, in the lower back at the level of the fifth lumbar vertebra), with a gait events segmentation. The data was obtained from a sample of subjects who followed the described protocol: standing still, walking 10 meters, turning around, walking back, and stopping.
 The data output by the algorithm is provided in the same files. 
