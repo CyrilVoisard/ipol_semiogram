@@ -156,8 +156,10 @@ def ldlj_acc(data_lb, seg_lim, freq, signal='FreeAcc'):
     sig_n2_go = np.sqrt(pow(sig_X_go, 2) + pow(sig_Y_go, 2) + pow(sig_Z_go, 2))
     sig_n2_back = np.sqrt(pow(sig_X_back, 2) + pow(sig_Y_back, 2) + pow(sig_Z_back, 2))
 
-    ldl_acc_go = smoothness.log_dimensionless_jerk(sig_n2_go, fs=freq, data_type=data_type)
-    ldl_acc_back = smoothness.log_dimensionless_jerk(sig_n2_back, fs=freq, data_type=data_type)
+    # ldl_acc_go = smoothness.log_dimensionless_jerk2(sig_n2_go, fs=freq, data_type=data_type)
+    ldl_acc_go = smoothness.log_dimensionless_jerk(sig_n2_go)
+    # ldl_acc_back = smoothness.log_dimensionless_jerk2(sig_n2_back, fs=freq, data_type=data_type)
+    ldl_acc_back = smoothness.log_dimensionless_jerk(sig_n2_back)
 
     return (ldl_acc_go + ldl_acc_back) / 2
 
