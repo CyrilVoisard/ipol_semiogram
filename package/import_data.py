@@ -37,7 +37,7 @@ def load_XSens(filename, freq):
     t_fin = t[len(t) - 1]
 
     time = [i for i in range(int(t_0), int(t_fin) + 1)]
-    time_init_0 = [i / freq for i in range(len(time))]
+    time_init_0 = [i for i in range(len(time))]
     d = {'PacketCounter': time_init_0}
 
     colonnes = signal.columns
