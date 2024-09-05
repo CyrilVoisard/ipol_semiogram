@@ -19,21 +19,14 @@ def load_XSens(filename):
         signal
     """
 
-    fileID = open(filename, 'r')
-    i = 0
-    j = 0
-    intro = fileID.readlines()[0][0:13]
-    while (intro != 'PacketCounter'):
-        # print("intro", intro)
-        i = i + 1
-        fileID = open(filename, 'r')
-        intro = fileID.readlines()[i][0:13]
-        if len(intro) == 1:
-            j = j + 1
+    with open(filename, 'r') as fileID:
+    for i, line in enumerate(fileID):
+        if line.startswith('PacketCounter'):
+            break
+    else:
+        i = -1
 
-    skip = i - j
-    
-    signal = pd.read_csv(filename, delimiter="[,\s]", skiprows=skip, header=0)
+    signal = pd.read_csv(filename, delimiter="[,\s]", skiprows=i, header=0)
     t = signal["PacketCounter"]
     t_0 = t[0]
     t_fin = t[len(t) - 1]
