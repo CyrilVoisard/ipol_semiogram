@@ -154,6 +154,29 @@ def print_error(error_message):
         print("Error message:" + error_message, file=f)
 
 
+def print_no_ref():
+    """Display an warning message if no reference is given.
+    """
+
+    # fig
+    fig, ax = plt.subplots(figsize=(4, 2))
+    text = "No reference, no comparaison available!"
+    fontdict = {'family': 'serif', 'size': 12}
+    text_obj = ax.text(0.5, 0.5, text, fontdict=fontdict, ha='center', va='center')
+    renderer = fig.canvas.get_renderer()
+    bbox = text_obj.get_window_extent(renderer=renderer)
+    text_width, text_height = bbox.width, bbox.height
+    position = (0.5, 0.5)
+    ax.clear()
+    ax.text(position[0], position[1], text, fontdict=fontdict, ha='center', va='center')
+    ax.axis('off')
+
+    # save the fig
+    path_out = os.path.join(data_WD, "semio_ref.svg")
+    plt.savefig(path_out, dpi=200, transparent=True, bbox_inches="tight")
+    path_out = os.path.join(data_WD, "semio_sup.svg")
+    plt.savefig(path_out, dpi=200, transparent=True, bbox_inches="tight")
+
 
 if __name__ == "__main__":
 
@@ -192,23 +215,23 @@ if __name__ == "__main__":
         compare = True
     
     # load data (only lower back in this demo)
-    #try:
-    data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0))
-    seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
-    steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
-    """except Exception as e:
+    try:
+        data_lb = import_data.import_XSens(os.path.join(data_WD, args.i0))
+        seg_lim = import_data.get_seg(os.path.join(data_WD, args.i1))
+        steps_lim = import_data.get_steps(os.path.join(data_WD, args.i1), seg_lim)
+    except Exception as e:
         error_message = str(e)
         print_error(error_message)
-        sys.exit(0)"""
+        sys.exit(0)
     if compare :
-        #try:
-        ref_data_lb = import_data.import_XSens(os.path.join(data_WD, args.i2))
-        ref_seg_lim = import_data.get_seg(os.path.join(data_WD, args.i3))
-        ref_steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3), seg_lim)
-    """except Exception as e:
-            error_message = str(e)
-            print_error(error_message)
-            sys.exit(0)"""
+        try:
+            ref_data_lb = import_data.import_XSens(os.path.join(data_WD, args.i2))
+            ref_seg_lim = import_data.get_seg(os.path.join(data_WD, args.i3))
+            ref_steps_lim = import_data.get_steps(os.path.join(data_WD, args.i3), seg_lim)
+        except Exception as e:
+                error_message = str(e)
+                print_error(error_message)
+                sys.exit(0)
     
     # compute semio values (dictionaries)
     criteria_names, criteria, parameters = compute_semio_val.compute_semio_val(distance, steps_lim, seg_lim, data_lb, freq)
@@ -232,4 +255,6 @@ if __name__ == "__main__":
     if compare : 
         radar_design.new_radar_superpose({"unique": ref_criteria}, min_r=int(args.min_z), max_r=int(args.max_z), output=data_WD, name="semio_ref")
         radar_design.new_radar_superpose({"ref": ref_criteria, "new": criteria}, min_r=int(args.min_z), max_r=int(args.max_z), output=data_WD, name="semio_sup")
+    else:
+        print_no_ref()
     sys.exit(0)
