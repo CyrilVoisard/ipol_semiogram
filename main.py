@@ -166,10 +166,10 @@ if __name__ == "__main__":
     parser.add_argument('-i1', metavar='gait_events',
                         help='Metadata with gait events.')
     # comparaison
-    parser.add_argument('-i2', metavar='ref_data_lb',
+    """parser.add_argument('-i2', metavar='ref_data_lb',
                         help='Reference set - Time series for the lower back sensor.') #, required=False)
     parser.add_argument('-i3', metavar='ref_gait_events',
-                        help='Reference set - Metadata with gait events.') #, required=False)
+                        help='Reference set - Metadata with gait events.') #, required=False)"""
         
     parser.add_argument('-freq', metavar='freq',
                         help='Acquistion frequency.')
