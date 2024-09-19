@@ -186,10 +186,7 @@ if __name__ == "__main__":
     freq = int(args.freq)
     distance = int(args.distance)
 
-    if args.i4 is None or args.i3 is None:
-        compare = False
-    else:
-        compare = True
+    compare = True
     
     # load data (only lower back in this demo)
     #try:
