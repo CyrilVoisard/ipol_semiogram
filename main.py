@@ -166,15 +166,10 @@ if __name__ == "__main__":
     parser.add_argument('-i1', metavar='gait_events',
                         help='Metadata with gait events.')
     # comparaison
-    if os.path.isfile('input_2.txt') and os.path.isfile('input_3.json'):
-        parser.add_argument('-i2', metavar='ref_data_lb',
-                                help='Reference set - Time series for the lower back sensor.') #, required=False)
-        parser.add_argument('-i3', metavar='ref_gait_events',
-                                help='Reference set - Metadata with gait events.') #, required=False)
-        compare = True
-    else:
-        compare = False
-    
+    parser.add_argument('-i2', metavar='ref_data_lb',
+                        help='Reference set - Time series for the lower back sensor.') #, required=False)
+    parser.add_argument('-i3', metavar='ref_gait_events',
+                        help='Reference set - Metadata with gait events.') #, required=False)
         
     parser.add_argument('-freq', metavar='freq',
                         help='Acquistion frequency.')
@@ -190,6 +185,11 @@ if __name__ == "__main__":
 
     freq = int(args.freq)
     distance = int(args.distance)
+
+    if args.i3 is None or args.i4 is None:
+        compare = False
+    else:
+        compare = True
     
     # load data (only lower back in this demo)
     #try:
