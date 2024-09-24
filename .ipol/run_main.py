@@ -11,7 +11,7 @@ if os.path.isfile('input_2.txt') and os.path.isfile('input_3.json'):
 
 command = f"python $bin/main.py -i0 $input_0 -i1 $input_1 {ref} -freq $freq -distance $distance -min_z $min_z -max_z $max_z"
 f = open('algo_info.txt','w')
-f.write("compare = " + str(compare))
+f.write("ref = " + str(compare))
 f.close()
 
 subprocess.run(command, shell=True)
