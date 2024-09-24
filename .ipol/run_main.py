@@ -1,6 +1,7 @@
 import argparse
 import os
 import subprocess
+import numpy as np
 
 ref = ""
 compare = 0
