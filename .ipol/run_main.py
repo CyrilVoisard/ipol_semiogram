@@ -4,7 +4,7 @@ import subprocess
 import numpy as np
 
 ref = ""
-compare = 0
+compare = 1
 if os.path.isfile('input_2.txt') and os.path.isfile('input_3.json'):
     ref = "-i2 $input_2 -i3 $input_3"
     compare = 1
