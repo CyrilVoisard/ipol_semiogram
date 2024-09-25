@@ -215,8 +215,8 @@ if __name__ == "__main__":
         compare = True
 
     # os.chdir(data_WD) # Get back to the normal WD
-    with open("algo_info.txt", "wt") as f:
-        print("ref = " + str(compare), file=f)
+    # with open("algo_info.txt", "wt") as f:
+        # print("ref = " + str(compare), file=f)
     
     # load data (only lower back in this demo)
     try:
