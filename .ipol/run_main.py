@@ -4,15 +4,11 @@ import subprocess
 import numpy as np
 
 ref = ""
-compare = 1
+compare = 0
 if os.path.isfile('input_2.txt') and os.path.isfile('input_3.json'):
     ref = "-i2 $input_2 -i3 $input_3"
     compare = 1
 
 command = f"python $bin/main.py -i0 $input_0 -i1 $input_1 {ref} -freq $freq -distance $distance -min_z $min_z -max_z $max_z"
-
-# os.chdir(data_WD) # Get back to the normal WD
-with open("algo_info.txt", "wt") as f:
-    print("ref = " + str(compare), file=f)
 
 subprocess.run(command, shell=True)
