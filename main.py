@@ -258,9 +258,9 @@ if __name__ == "__main__":
     else:
         print_no_ref()
 
-    os.chdir(data_WD) # Get back to the normal WD
-    with open("algo_info.txt", "wt") as f:
-        ref = "ref = " + str(int(compare))
-        f.write(ref)
+    # os.chdir(data_WD) # Get back to the normal WD
+    #with open("algo_info.txt", "wt") as f:
+     #   ref = "ref = " + str(int(compare))
+      #  f.write(ref)
     
     sys.exit(0)
