@@ -213,10 +213,6 @@ if __name__ == "__main__":
         compare = False
     else:
         compare = True
-
-    # os.chdir(data_WD) # Get back to the normal WD
-    # with open("algo_info.txt", "wt") as f:
-        # print("ref = " + str(compare), file=f)
     
     # load data (only lower back in this demo)
     try:
@@ -261,4 +257,10 @@ if __name__ == "__main__":
         radar_design.new_radar_superpose({"ref": ref_criteria, "new": criteria}, min_r=int(args.min_z), max_r=int(args.max_z), output=data_WD, name="semio_sup")
     else:
         print_no_ref()
+
+    os.chdir(data_WD) # Get back to the normal WD
+    with open("algo_info.txt", "wt") as f:
+        ref = "ref = " + str(int(compare))
+        f.write(ref)
+    
     sys.exit(0)
