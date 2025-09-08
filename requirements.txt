@@ -2,3 +2,4 @@ scipy==1.11.1
 numpy
 matplotlib==3.7.2
 pandas==2.0.3
+h5py
