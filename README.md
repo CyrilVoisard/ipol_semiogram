@@ -2,13 +2,13 @@
 
 ## General informations 
 
-IPOL link: 
-Date: 
+IPOL link: https://www.ipol.im/pub/art/2025/535/
+Date: 01/02/2025
 Author mail: cyril.voisard@gmail.com
 
 Please cite these articles whenever you want to make a reference to this demo:
 - [Voisard et al, Innovative multidimensional gait evaluation using IMU in multiple sclerosis: introducing the semiogram, Frontiers in Neurology, 2023, https://doi.org/10.3389/fneur.2023.1237162]
-- [Voisard et al., Semiogram: a Visual Tool for Gait Quantification in Routine Neurological Follow-Up, IPOL, 2024, XXXXX]
+- [Voisard et al., Semiogram: a Visual Tool for Gait Quantification in Routine Neurological Follow-Up, IPOL, 2024, https://doi.org/10.5201/ipol.2025.535]
 
 ## Context
 
@@ -19,12 +19,12 @@ The first stage of scientific validation of this tool was published in 2023 in t
 This article explains each of the 17 parameters and 8 semiological criteria of gait and explores its clinical application in patients with multiple sclerosis. 
 
 An article detailing each of the mathematical formulas used to calculate the parameters and the associated lines of code has also been published in IPOL : 
-[Voisard et al., Semiogram: a Visual Tool for Gait Quantification in Routine Neurological Follow-Up, IPOL, 2024, XXXXX].
+[Voisard et al., Semiogram: a Visual Tool for Gait Quantification in Routine Neurological Follow-Up, IPOL, 2024, https://doi.org/10.5201/ipol.2025.535].
 
 
 ## Demo and accessibility 
 
-The demo applying the calculation and representation of the semiogram to data supplied in the correct format is available here: https://www.ipol.im/pub/art/XXXX.
+The demo applying the calculation and representation of the semiogram to data supplied in the correct format is available here: [https://ipolcore.ipol.im/demo/clientApp/demo.html?id=535].
 The format of the input data and the output figures and tables are provided in the attached article. 
 
 
